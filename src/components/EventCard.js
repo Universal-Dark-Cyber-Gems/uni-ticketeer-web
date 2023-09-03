@@ -4,7 +4,7 @@ import { IoCalendar, IoLocationOutline, IoTimerOutline } from "react-icons/io5";
 export default function EventCard(){
     return(
             <div className="group md:w-[30%] my-4 rounded-xl border-2 border-white relative">
-                <img src={Event1} className="contrast-50 rounded-xl" alt="first event" />
+                <img src={Event1} className="contrast-30 group-hover:contrast-50 rounded-xl" alt="first event" />
                 <div className="absolute w-[98%] border-2 border-white bg-white/30 group-hover:bg-white/80 bottom-1 p-2 text-center rounded-xl left-[50%] translate-x-[-50%]">
                     <h3 className="font-bold capitalize text-primary-light group-hover:text-primary-dark group-hover:text-left">Money Heist</h3>
                     <div className="hidden group-hover:block">

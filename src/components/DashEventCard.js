@@ -1,9 +1,10 @@
 import { IoCalendar,IoLocationOutline, IoTimerOutline } from "react-icons/io5";
 import Event1 from '../images/Event-1.jpg'
+import { Link } from "react-router-dom";
 
 export default function DashEventCard(){
     return(
-        <div className="group w-[25%] bg-white rounded-xl border-2 border-white relative">
+        <div className="group md:w-[23%] bg-white rounded-xl border-2 border-white relative">
             <img src={Event1} className="w-full rounded-xl" alt="" />
             <div className="hidden group-hover:block w-full bg-white rounded-xl px-2 absolute bottom-0">
                 <h3 className="text-primary-dark font-medium">Money Heist</h3>
@@ -19,11 +20,11 @@ export default function DashEventCard(){
                         </div>
                     </div>
                     <div className="flex items-center my-2">
-                                    <IoLocationOutline />
+                        <IoLocationOutline />
                         <p className="ml-2">pegasus ball room </p>
                     </div>
                 </div>
-                <div className="bg-primary-orange text-center rounded-full my-2 font-medium">View Event Details</div>
+                <Link to={'/dashboard/event/details'}><div className="bg-primary-orange text-center rounded-full my-2 font-medium">View Event Details</div></Link>
             </div>
         </div>
     )

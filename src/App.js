@@ -9,6 +9,13 @@ import Login from './Screens/AuthScreens/Login';
 import SignUp from './Screens/AuthScreens/SignUp';
 import DashboardLayout from './Screens/DashboardScreens/DashboardLayout';
 import Dashboard from './Screens/DashboardScreens/Dashboard';
+import DashEvent from './Screens/DashboardScreens/DashEvent';
+import DashWallet from './Screens/DashboardScreens/DashWallet';
+import {register} from 'swiper/element/bundle'
+import Error from './Screens/Error';
+import ViewEventStats from './Screens/DashboardScreens/ViewEventStats';
+
+register();
 
 
 function App() {
@@ -17,6 +24,7 @@ function App() {
     {
     path: "/",
     element: <IndexLayout />,
+    errorElement: <Error />,
     children: [
       {
         path: "/",
@@ -51,7 +59,19 @@ function App() {
         {
           path: "/dashboard",
           element: <Dashboard />
-        }
+        },
+       {
+         path: "events",
+         element: <DashEvent />
+       },
+       {
+         path: "wallet",
+         element: <DashWallet />
+       },
+       {
+        path: "event/details",
+        element: <ViewEventStats />
+       }
       ]
     }
   ])

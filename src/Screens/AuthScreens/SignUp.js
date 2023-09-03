@@ -53,7 +53,7 @@ export default function SignUp(){
                         Forgot password?
                     </Link>
                 </div>
-                <button className="w-full p-2 bg-primary-dark rounded-2xl text-white font-bold border-xl">Login</button>
+                <button className="w-full p-2 bg-primary-dark rounded-2xl text-white font-bold border-xl">Sign up</button>
                 <div className="pt-2">
                     already have an account? <Link to={"/auth/login"}>Login</Link>
                 </div>

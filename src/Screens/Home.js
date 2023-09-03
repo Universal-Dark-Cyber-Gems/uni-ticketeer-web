@@ -3,13 +3,48 @@ import HeroImg from '../images/Hero-image.png'
 import OrganiseImg from '../images/Organise-image.jpg'
 import Section from '../components/Section'
 import PaymentImg from '../images/Payment-image.png'
+import { useEffect} from 'react'
 
 
 export default function Home(){
+
+    function initTestimonySlider(){
+        const swiperEl = document.querySelector('swiper-container')
+        console.log(swiperEl)
+        const swiperParams = {
+            autoplay:{
+                delay: 3000,
+
+            },
+            breakpoints: {
+              640: {
+                slidesPerView: 2,
+              },
+              1024: {
+                slidesPerView: 3,
+              },
+            },
+            on: {
+              init(swiper) {
+                
+              },
+            },
+          };
+        
+          // now we need to assign all parameters to Swiper element
+          Object.assign(swiperEl, swiperParams);
+        
+          // and now initialize it
+          swiperEl.initialize();
+    }
+
+    useEffect(()=>{
+        initTestimonySlider()
+    },[])
+
     return(
         <>
         <Section>
-
         <div className="flex h-[100vh] md:h-auto justify-center flex-col md:flex-row items-center">
             <div className="md:w-[50%]">
                 <h1 className="text-5xl text-white font-bold md:leading-normal">
@@ -79,11 +114,20 @@ export default function Home(){
                 <h1 className='md:w-[45%] m-auto py-20 text-4xl text-white font-bold text-center'>
                     Here's What Our Customers Are Saying
                 </h1>
-                <div className='flex justify-between'>
-                    <TestimonyTabs name={"Dj Hackangel"} title={"Disk Jockey"} testimony={""} />
-                    <TestimonyTabs name={"Onwenu Money"} title={"User"} testimony={""} />
-                    <TestimonyTabs name={"Laurenzoh"} title={"Event Planner"} testimony={""} />
+                <div>
+                    <swiper-container init="false" space-between='20'>
+                        <swiper-slide>
+                            <TestimonyTabs name={"Dj Hackangel"} title={"Disk Jockey"} testimony={""} />
+                        </swiper-slide>
+                        <swiper-slide>
+                            <TestimonyTabs name={"Onwenu Money"} title={"User"} testimony={""} />
+                        </swiper-slide>
+                        <swiper-slide>
+                            <TestimonyTabs name={"Laurenzoh"} title={"Event Planner"} testimony={""} />
+                        </swiper-slide> 
+                    </swiper-container>
                 </div>
+          
             </div>
         </Section>
 
@@ -103,7 +147,7 @@ export default function Home(){
 
 function TestimonyTabs({name, title, testimony}){
     return(
-        <div className='hidden first:block md:block w-full md:w-[25%] rounded-xl bg-[#6B12B6] p-5 relative'>
+        <div className='hidden first:block md:block w-full rounded-xl bg-[#6B12B6] p-5 mt-[50px] relative'>
             <img src={OrganiseImg} className='w-[100px] rounded-full absolute top-[-25%] contrast-50 left-[50%] -translate-x-[50%]' alt="user" />
             <div className='text-center mt-7'>
                 <h3 className='text-white text-xl font-medium'> {name} </h3>

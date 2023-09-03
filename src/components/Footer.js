@@ -57,7 +57,7 @@ export default function Footer(){
 
 function FooterHeaders({title}){
     return(
-        <h4 className="text-white font-medium mb-2">{title}</h4>
+        <h4 className="text-white font-bold md:font-medium mb-2">{title}</h4>
     )
 }
 
