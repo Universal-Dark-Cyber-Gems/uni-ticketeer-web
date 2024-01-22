@@ -1,7 +1,8 @@
 import Event1 from '../images/Event-1.jpg'
 import { IoCalendar, IoLocationOutline, IoTimerOutline } from "react-icons/io5";
+import { Link } from 'react-router-dom'
 
-export default function EventCard(){
+export default function EventCard({link}){
     return(
             <div className="group md:w-[30%] my-4 rounded-xl border-2 border-white relative">
                 <img src={Event1} className="contrast-30 group-hover:contrast-50 rounded-xl" alt="first event" />
@@ -27,7 +28,9 @@ export default function EventCard(){
                         </div>
                         <div className="bottom-1 right-1 w-[50%] ml-auto">
                             <div className="bg-primary-orange w-[100%] text-sm font-medium py-1 hover:cursor-pointer rounded-full">
-                                Get a ticket
+                                <Link to={link}>
+                                    Get a ticket
+                                </Link>
                             </div>
                         </div>
                     </div>

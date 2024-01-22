@@ -2,11 +2,13 @@ import { IoAdd } from "react-icons/io5";
 import DashHeader from "../../components/DashHeader";
 import DashEventCard from "../../components/DashEventCard";
 import { Link, useOutletContext } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import DashTicket from "../../components/DashTicket";
 
 export default function Dashboard(){
     const toggleMenu = useOutletContext()
+    let [activeOrganiserTab, setActiveOrganiserTab] = useState("ongoing events")
+    let [activeUserTab, setActiveUserTab] = useState("ongoing tickets")
     function initOverviewSlider(){
         const swiperEl = document.querySelectorAll('swiper-container')
         console.log(swiperEl)
@@ -50,16 +52,16 @@ export default function Dashboard(){
                 <div>
                     <swiper-container init="false" space-between="20" >
                         <swiper-slide>
-                            <OverviewCard title={"ongoing events"} amount={2} />
+                            <OverviewCard title={"ongoing events"} amount={2} active={activeOrganiserTab} setActive={setActiveOrganiserTab} />
                         </swiper-slide>
                         <swiper-slide>
-                            <OverviewCard title={"ongoing ticket sales"} amount={24} />
+                            <OverviewCard title={"ongoing ticket sales"} amount={24} active={activeOrganiserTab} setActive={setActiveOrganiserTab} />
                         </swiper-slide>
                         <swiper-slide>
-                            <OverviewCard title={"all time events"} amount={7} />
+                            <OverviewCard title={"all time events"} amount={7} active={activeOrganiserTab} setActive={setActiveOrganiserTab} />
                         </swiper-slide>
                         <swiper-slide>
-                            <OverviewCard title={"all time ticket sales"} amount={400} />
+                            <OverviewCard title={"all time ticket sales"} amount={400} active={activeOrganiserTab} setActive={setActiveOrganiserTab} />
                         </swiper-slide>
                     </swiper-container>
                 </div>
@@ -67,7 +69,7 @@ export default function Dashboard(){
             <div>
                 <div className="flex justify-between pt-12 pb-8">
                     <h2 className="text-xl font-bold text-primary-dark">Your Events</h2>
-                    <Link to={"/organisers/addevent"}>
+                    <Link to={"/dashboard/event/create"}>
                         <div className="flex items-center bg-primary-orange p-2 mr-8 rounded-full font-medium"> 
                             New Event 
                             <IoAdd size={20} />
@@ -84,10 +86,10 @@ export default function Dashboard(){
                 <div>
                     <swiper-container init="false" space-between="20" >
                         <swiper-slide>
-                            <OverviewCard title={"ongoing tickets"} amount={2} />
+                            <OverviewCard title={"ongoing tickets"} amount={2} active={activeUserTab} setActive={setActiveUserTab} />
                         </swiper-slide>
                         <swiper-slide>
-                            <OverviewCard title={"all tickets purchased"} amount={13} />
+                            <OverviewCard title={"all tickets purchased"} amount={13} active={activeUserTab} setActive={setActiveUserTab} />
                         </swiper-slide>
                     </swiper-container>
                 </div>
@@ -103,11 +105,11 @@ export default function Dashboard(){
 
 
 
-function OverviewCard({title, amount}){
+function OverviewCard({title, amount, active, setActive}){
     return(
-        <div className="bg-gradient-to-tl from-primary-dark to-purple-400 p-3 rounded-2xl shadow-xl">
-            <p className="text-left text-primary-light capitalize text-lg font-medium">{title}</p>
-            <p className="text-right text-primary-light text-lg font-medium">{amount}</p>
+        <div onClick={()=>{setActive(title)}} className={`cursor-pointer ${active === title && "bg-gradient-to-tl from-primary-dark to-purple-400"} border-[2px] border-primary-dark p-3 rounded-2xl shadow-xl`}>
+            <p className={`text-center ${active === title && "text-primary-light"} text-primary-dark capitalize text-lg font-medium`}>{title}</p>
+            <p className={`text-center ${active === title && "text-primary-light"} text-primary-dark text-lg font-medium`}>{amount}</p>
         </div>
     )
 }

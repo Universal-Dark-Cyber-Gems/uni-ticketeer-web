@@ -14,6 +14,10 @@ import DashWallet from './Screens/DashboardScreens/DashWallet';
 import {register} from 'swiper/element/bundle'
 import Error from './Screens/Error';
 import ViewEventStats from './Screens/DashboardScreens/ViewEventStats';
+import EventLayout from './Screens/DashboardScreens/EventLayout';
+import CreateEvent from './Screens/DashboardScreens/CreateEvent';
+import EditEvent from './Screens/DashboardScreens/EditEvent';
+import ViewEventTickets from './Screens/DashboardScreens/ViewEventTickets';
 
 register();
 
@@ -69,9 +73,26 @@ function App() {
          element: <DashWallet />
        },
        {
-        path: "event/details",
-        element: <ViewEventStats />
-       }
+        path: "event",
+        element: <EventLayout />,
+        children: [
+          {
+            path: 'details',
+            element: <ViewEventStats />
+          },
+          {
+            path: 'create',
+            element: <CreateEvent />
+          },
+          {
+            path: 'edit',
+            element: <EditEvent />
+          },
+          {
+            path: 'tickets',
+            element: <ViewEventTickets />
+          }]
+        }
       ]
     }
   ])
