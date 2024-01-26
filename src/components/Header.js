@@ -18,7 +18,7 @@ export default function Header(){
                     <NavItems name={"About"} url={"/about"} toggleNav={toggleNav} />
                     <NavItems name={"How it works"} url={"/how-it-works"} toggleNav={toggleNav} />
                 </ul>
-                <div className="w-[70px] bg-primary-light hover:bg-transparent hover:text-primary-orange border-2 rounded-full text-center text-[#342E7E] font-medium py-0.5">
+                <div className="w-[70px] bg-primary-light hover:bg-transparent hover:text-primary-orange border-2 rounded-full text-center text-[#342E7E] font-medium py-0.5 transition-all ease-in-out duration-300">
                     <Link to={'/auth/login'}>
                         Log in
                     </Link>
