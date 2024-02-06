@@ -134,7 +134,7 @@ export default function Home(){
         <Section>
             <div className='w-full bg-gradient-to-r from-[#6B12B6] to-[#B07949] pt-12 pb-5 my-4 rounded-xl'>
                 <h1 className='w-[90%] md:w-[45%] text-white text-center text-4xl font-bold m-auto capitalize'>Go Get Yourself that ticket now</h1>
-                <div className='w-[90%] md:w-[30%] bg-primary-dark mx-auto mt-12 p-4 text-center text-primary-light rounded-full text-xl font-bold cursor-pointer transition-all ease-in-out duration-300'>
+                <div className='w-[90%] md:w-[30%] bg-primary-dark mx-auto mt-12 p-4 text-center text-primary-light rounded-full text-xl font-bold hover:bg-[#b07949] cursor-pointer transition-all ease-in-out duration-300'>
                     <Link to={"/auth/signup"}>
                         Get Started
                     </Link>

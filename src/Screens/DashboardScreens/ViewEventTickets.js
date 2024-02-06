@@ -72,7 +72,7 @@ export default function ViewEventTickets(){
                             <p className='text-center text-primary-dark my-4 font-medium'>No tickets to show</p>
                         }
                     </div>
-                    <div className='bg-primary-dark w-[50%] md:w-[20%] p-2 text-primary-orange text-center rounded-full m-auto'>Add to cart</div>
+                    <div className='bg-primary-dark w-[50%] md:w-[20%] p-2 text-primary-orange text-center rounded-full m-auto cursor-pointer'>Add to cart</div>
                 </div>
             </div>
 

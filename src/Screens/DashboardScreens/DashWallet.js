@@ -11,12 +11,12 @@ export default function DashWallet(){
                 <div>
                     <h2 className="text-primary-dark text-xl font-bold my-4 py-2">Wallet Overview</h2>
                     <div className="md:flex justify-between items-center relative pb-12 md:pb-0">
-                        <div className="absolute flex bottom-0 left-4 justify-between items-center p-2 bg-primary-orange rounded-lg shadow-xl" >
+                        <div className="absolute flex bottom-0 left-4 justify-between items-center p-2 bg-primary-orange rounded-lg shadow-xl transition-all duration-300 ease-in-out cursor-pointer hover:scale-105" >
                             <p className="mr-2 font-medium">withdraw</p>
                             <IoCash />
                         </div>
                         <div className="h-auto border-2 md:w-[30%] md:h-[100px] border-primary-dark rounded-xl p-3 m-3 shadow-xl">
-                            <h2 className="text-primary-dark text-lg text-center font-medium">Ballance</h2>
+                            <h2 className="text-primary-dark text-lg text-center font-medium">Balance</h2>
                             <p className="font-medium text-center text-3xl text-primary-dark"><span> &#x20a6; </span> 3000</p>
                         </div>
                         <div className="border-2 border-primary-dark rounded-xl md:w-[30%] p-4 relative m-3 shadow-xl">
@@ -69,7 +69,7 @@ export default function DashWallet(){
                         </table>
                         <div className="flex justify-between p-3">
                             <div>
-                                <span>Rows per page</span>
+                                <span className="cursor-pointer">Rows per page</span>
                                 <select>
                                     <option value='10'>10</option>
                                     <option value='20'>20</option>

@@ -53,9 +53,9 @@ export default function SignUp(){
                         Forgot password?
                     </Link>
                 </div>
-                <button className="w-full p-2 bg-primary-dark rounded-2xl text-white font-bold border-xl">Sign up</button>
+                <button className="w-full p-2 bg-primary-dark rounded-2xl text-white font-bold border-xl transition-all ease-in-out duration-300 cursor-pointer hover:bg-primary-orange">Sign up</button>
                 <div className="pt-2">
-                    already have an account? <Link to={"/auth/login"}>Login</Link>
+                    already have an account? <Link className="cursor-pointer" to={"/auth/login"}>Login</Link>
                 </div>
             </form>
         </div>

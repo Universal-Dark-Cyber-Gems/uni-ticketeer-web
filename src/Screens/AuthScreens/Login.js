@@ -37,14 +37,14 @@ export default function Login(){
                     <input type={passType} value={password} placeholder="*******" onChange={(e)=>{setPassword(e.target.value)}}  className="outline-none w-full" />
                     <IoEye onClick={togglePass} />
                 </div>
-                <div className="text-right p-2">
+                <div className="text-right p-2 cursor-pointer">
                     <Link>
                         Forgot password?
                     </Link>
                 </div>
                 <button className="w-full p-2 bg-primary-dark rounded-2xl text-white font-bold border-xl">Login</button>
                 <div className="pt-2">
-                    don't have an account? <Link to={"/auth/signup"}>Sign Up</Link>
+                    don't have an account? <Link className="cursor-pointer hover:underline" to={"/auth/signup"}>Sign Up</Link>
                 </div>
             </form>
         </div>

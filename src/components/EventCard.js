@@ -27,7 +27,7 @@ export default function EventCard({link}){
                             </div>
                         </div>
                         <div className="bottom-1 right-1 w-[50%] ml-auto">
-                            <div className="bg-primary-orange w-[100%] text-sm font-medium py-1 hover:cursor-pointer rounded-full">
+                            <div className="bg-primary-orange w-[100%] text-sm font-medium py-1 cursor-pointer hover:underline rounded-full">
                                 <Link to={link}>
                                     Get a ticket
                                 </Link>

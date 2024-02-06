@@ -18,7 +18,7 @@ export default function Ticket(){
                         <input className='w-10 border-2 border-black rounded-lg' type='number' min={1} />
                     </div>
                     <Link>
-                        <div className='w-auto items-center text-sm flex bg-primary-orange p-1 rounded-full'>
+                        <div className='w-auto items-center text-sm flex bg-primary-orange p-1 rounded-full cursor-pointer hover:underline'>
                             Add to cart
                             <IoCart />
                         </div>

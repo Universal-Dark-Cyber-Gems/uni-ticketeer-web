@@ -24,7 +24,7 @@ export default function Footer(){
                 <div>
                     <FooterHeaders title={"Affiliate"} />
                     <ul>
-                        <FooterNav title={"Organisers"} />
+                        <FooterNav title={"Organizers"} />
                         <FooterNav title={"Place an advert"} />
                         <FooterNav title={"Sponsorship"} />
                     </ul>
@@ -42,7 +42,7 @@ export default function Footer(){
                     <FooterHeaders title={"Get email notifications"} />
                     <div className="flex justify-between bg-[#6B12B6] rounded-full p-2 ">
                         <input type="email" placeholder="Email Address" className="pl-2 w-[70%] bg-transparent focus:border-0 focus:outline-0 text-white" />
-                        <div className="w-20 text-center text-white font-medium p-1 bg-primary-orange rounded-full">Submit</div>
+                        <div className="w-20 text-center text-white font-medium p-1 bg-primary-orange hover:bg-[#6B12B6] rounded-full cursor-pointer transition-all ease-in-out duration-300 ">Submit</div>
                     </div>
                 </div>
             </div>
