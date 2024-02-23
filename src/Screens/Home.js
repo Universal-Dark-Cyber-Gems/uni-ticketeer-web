@@ -55,7 +55,7 @@ export default function Home(){
                     <br></br>
                     Upload Events sell and buy tickets
                 </p>
-                <div className='md:w-[35%] text-[#6C0C49] hover:bg-transparent hover:text-primary-orange border-2 text-center font-medium py-2 bg-primary-orange rounded-full'>
+                <div className='md:w-[35%] text-[#6C0C49] hover:bg-transparent hover:text-primary-orange border-2 text-center font-medium py-2 bg-primary-orange rounded-full transition-all ease-in-out duration-300 cursor-pointer'>
                     <Link to={"/auth/signup"}>
                         Get Started
                     </Link>
@@ -77,7 +77,7 @@ export default function Home(){
                 <p className='my-7 text-xl text-white font-medium'>
                     We make ticketing and event management stress free, also manage and track your ticket sales online
                 </p>
-                <div className='md:w-[45%] text-[#6C0C49] hover:bg-transparent hover:text-primary-orange border-2 text-center font-medium py-2 bg-primary-orange rounded-full'>
+                <div className='md:w-[45%] text-[#6C0C49] hover:bg-transparent hover:text-primary-orange border-2 text-center font-medium py-2 bg-primary-orange rounded-full cursor-pointer transition-all duration-300 ease-in-out'>
                     <Link to={"/events"}>
                         See Events
                     </Link>
@@ -96,7 +96,7 @@ export default function Home(){
                     <p className='my-7 text-xl text-black font-medium md:w-[70%]'>
                         Our secure and fast payment systems protect you from financial conflicts, and our rates are budget friendly
                     </p>
-                    <div className='md:w-[45%] text-primary-light hover:bg-transparent hover:text-primary-dark border-2 text-center font-medium py-2 bg-primary-dark rounded-full'>
+                    <div className='md:w-[45%] text-primary-light hover:bg-transparent hover:text-primary-dark border-2 text-center font-medium py-2 bg-primary-dark rounded-full cursor-pointer transition-all ease-in-out duration-300'>
                         <Link>
                             View Our Pricing
                         </Link>
@@ -134,7 +134,7 @@ export default function Home(){
         <Section>
             <div className='w-full bg-gradient-to-r from-[#6B12B6] to-[#B07949] pt-12 pb-5 my-4 rounded-xl'>
                 <h1 className='w-[90%] md:w-[45%] text-white text-center text-4xl font-bold m-auto capitalize'>Go Get Yourself that ticket now</h1>
-                <div className='w-[90%] md:w-[30%] bg-primary-dark mx-auto mt-12 p-4 text-center text-primary-light rounded-full text-xl font-bold'>
+                <div className='w-[90%] md:w-[30%] bg-primary-dark mx-auto mt-12 p-4 text-center text-primary-light rounded-full text-xl font-bold hover:bg-[#b07949] cursor-pointer transition-all ease-in-out duration-300'>
                     <Link to={"/auth/signup"}>
                         Get Started
                     </Link>

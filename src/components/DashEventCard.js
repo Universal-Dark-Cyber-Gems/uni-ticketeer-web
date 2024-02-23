@@ -13,25 +13,25 @@ export default function DashEventCard(){
                     <div className="flex justify-between my-2">
                         <div className="flex items-center">
                             <div className="border-[1px] border-primary-dark p-[4px] rounded-md">
-                                <IoCalendar className="text-primary-dark" />
+                                <IoCalendar className="text-primary-dark cursor-pointer" />
                             </div>
                             <p className="ml-2 text-[12px] font-bold">2nd July</p> 
                         </div>
                         <div className="flex items-center">
                             <div className="border-[1px] border-primary-dark p-[4px] rounded-md">
-                                <IoTimerOutline className="text-primary-dark" />
+                                <IoTimerOutline className="text-primary-dark cursor-pointer" />
                             </div>
                             <p className="ml-2 text-[12px] font-bold">3pm</p>
                         </div>
                     </div>
                     <div className="flex items-center my-2">
                         <div className="border-[1px] border-primary-dark p-[4px] rounded-md">
-                            <IoLocationOutline className="text-primary-dark" />
+                            <IoLocationOutline className="text-primary-dark cursor-pointer" />
                         </div>
                         <p className="ml-2 text-[12px] font-bold">pegasus ball room </p>
                     </div>
                 </div>
-                <Link to={'/dashboard/event/details'}><div className="bg-primary-orange text-center rounded-full my-2 font-medium">View Event Details</div></Link>
+                <Link to={'/dashboard/event/details'}><div className="bg-primary-orange text-center rounded-full my-2 font-medium  cursor-pointer hover:underline">View Event Details</div></Link>
             </div>
         </div>
     )

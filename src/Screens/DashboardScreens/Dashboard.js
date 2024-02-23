@@ -72,7 +72,7 @@ export default function Dashboard(){
                     <Link to={"/dashboard/event/create"}>
                         <div className="flex items-center bg-primary-orange p-2 mr-8 rounded-full font-medium"> 
                             New Event 
-                            <IoAdd size={20} />
+                            <IoAdd size={20} className=" cursor-pointer"/>
                         </div>
                     </Link>
                 </div>
