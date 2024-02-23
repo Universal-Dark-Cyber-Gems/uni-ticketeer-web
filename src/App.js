@@ -18,6 +18,7 @@ import EventLayout from './Screens/DashboardScreens/EventLayout';
 import CreateEvent from './Screens/DashboardScreens/CreateEvent';
 import EditEvent from './Screens/DashboardScreens/EditEvent';
 import ViewEventTickets from './Screens/DashboardScreens/ViewEventTickets';
+import Settings from './Screens/DashboardScreens/Settings';
 
 register();
 
@@ -92,6 +93,10 @@ function App() {
             path: 'tickets',
             element: <ViewEventTickets />
           }]
+        },
+        {
+          path: "settings",
+          element: <Settings />
         }
       ]
     }
