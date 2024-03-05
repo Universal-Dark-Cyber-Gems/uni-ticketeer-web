@@ -3,6 +3,7 @@ import DashHeader from "../../components/DashHeader";
 import { useState } from "react";
 import ProfileSettingsForm from "../../components/ProfileSettingsForm";
 import SecuritySettingsForm from "../../components/SecuritySettingsForm";
+import CouponCodeSettings from "../../components/CouponCodeSettings";
 
 
 export default function Settings(){
@@ -14,6 +15,7 @@ export default function Settings(){
             <div className="flex bg-[#FFF] p-[2px]">
                 <SettingsTypeTab title={"profile settings"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />
                 <SettingsTypeTab title={"security settings"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />
+                <SettingsTypeTab title={"coupon codes"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />
             </div>
             <div>
                 {
@@ -25,6 +27,11 @@ export default function Settings(){
                     currentSettingsTab === "security settings"
                     &&
                     <SecuritySettingsForm />
+                }
+                {
+                    currentSettingsTab === "coupon codes"
+                    &&
+                    <CouponCodeSettings />
                 }
             </div>
         </>

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { IoEye } from "react-icons/io5";
 import { Link, useNavigate} from "react-router-dom";
-import { loginUser } from "../../api/login";
+import useLogin from "../../hooks/useLogin";
 
 export default function Login(){
     const navigate = useNavigate()
+    const {login, isLoggedIn, loginLoading, status} = useLogin()
+
     let [passType, setPassType] = useState('password')
 
     let [email, setEmail] = useState('')
@@ -16,10 +18,7 @@ export default function Login(){
 
     async function submitLogin(e){
         e.preventDefault()
-
-        let res = await loginUser({email: email, password: password})
-        console.log(res)
-        navigate('/dashboard')
+        login({email: email, password: password})
     }
     return(
      
@@ -27,6 +26,7 @@ export default function Login(){
             <h1 className="text-2xl text-center font-bold text-primary-dark my-2">Welcome Back</h1>
             <hr></hr>
             <p className="py-3 text-center text-[#CCCCCC] ">Enter your details to sign in</p>
+            {status.error && <div className="text-red-500 text-sm font-medium">{status.message}</div>}
             <form className="" onSubmit={submitLogin}>
                 <div className="font-bold">Email*</div>
                 <div className="p-2 my-2 border-2 rounded-full">
@@ -42,7 +42,7 @@ export default function Login(){
                         Forgot password?
                     </Link>
                 </div>
-                <button className="w-full p-2 bg-primary-dark rounded-2xl text-white font-bold border-xl">Login</button>
+                <button disabled={loginLoading} className="w-full p-2 bg-primary-dark rounded-2xl text-white font-bold border-xl">{loginLoading ? "..." : "Login"}</button>
                 <div className="pt-2">
                     don't have an account? <Link className="cursor-pointer hover:underline" to={"/auth/signup"}>Sign Up</Link>
                 </div>
