@@ -2,7 +2,7 @@ import { IoCalendar,IoLocationOutline, IoTimerOutline } from "react-icons/io5";
 import Event1 from '../images/Event-1.jpg'
 import { Link } from "react-router-dom";
 
-export default function DashEventCard(){
+export default function DashEventCard({link}){
     return(
         <div className="group md:w-[23%] bg-white rounded-xl border-2 border-white relative">
             <img src={Event1} className="w-full rounded-xl" alt="" />
@@ -31,7 +31,7 @@ export default function DashEventCard(){
                         <p className="ml-2 text-[12px] font-bold">pegasus ball room </p>
                     </div>
                 </div>
-                <Link to={'/dashboard/event/details'}><div className="bg-primary-orange text-center rounded-full my-2 font-medium  cursor-pointer hover:underline">View Event Details</div></Link>
+                <Link to={link}><div className="bg-primary-orange text-center rounded-full my-2 font-medium  cursor-pointer hover:underline">View Event Details</div></Link>
             </div>
         </div>
     )

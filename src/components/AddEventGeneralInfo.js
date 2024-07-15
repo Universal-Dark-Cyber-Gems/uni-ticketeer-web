@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 
 import { TbMicrophone2 } from "react-icons/tb";
-import { MdOutlineFastfood } from "react-icons/md";
+import { MdOutlineFastfood, MdTheaterComedy } from "react-icons/md";
 import { BiParty } from "react-icons/bi";
 import { MdPalette } from "react-icons/md";
 import { RiBriefcase4Line } from "react-icons/ri";
@@ -11,20 +11,37 @@ import { GiSewingNeedle } from "react-icons/gi";
 import { MdLaptop } from "react-icons/md";
 import { AiOutlinePicture } from "react-icons/ai";
 import TicketInput from "./TicketInput";
+import useImage from "../hooks/useImage";
+import states from "../global/states";
+import useEvents from "../hooks/useEvents";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../contexts/userContext";
 
 
-export default function AddEventGeneralInfo(){
+
+export default function AddEventGeneralInfo({moveToTickets}){
+    let navigate = useNavigate()
+    let user = useContext(UserContext)
+    const {isImageLoading, imageStatus, uploadImage} = useImage()
+    let { createEvent, eventsLoading, eventsStatus } = useEvents()
     let [isTicketed, setIsTicketed] = useState(false)
+    let [bannerImg, setBannerImg] = useState(null)
+    let [statesArr, setStatesArr] = useState([])
+    let [citiesArr, setCitiesArr] = useState([])
+    let [state, setState] = useState("")
+    let [city, setCity] = useState("")
+    let [landmark, setLandmark] = useState("")
     let [createEventFormData, setCreateEventFormData] = useState(
         {
             title: "",
             venue: "",
+            organiser: user._id,
             start_date: "",
-            end_date: "",
+            end_date: undefined,
             start_time: "",
-            end_time: "",
+            end_time: undefined,
             category: [],
-            banner_img_url: "",
+            banner_image_url: "",
             additional_information: ""
         }
     )
@@ -50,18 +67,72 @@ export default function AddEventGeneralInfo(){
                 [e.target.name]: e.target.value
             })
         }
-        
 
         console.log(createEventFormData)
     }
+
+    async function handleSubmitEvent(e){
+        e.preventDefault();
+        let eventData = {
+            ...createEventFormData, 
+            is_ticketed: isTicketed,
+            location: {
+                state,
+                city,
+                landmark: landmark || undefined
+            }
+        }
+        console.log(eventData)
+        let result = await createEvent(eventData)
+        if(!result.success) return;
+        if(eventData.is_ticketed){
+            moveToTickets()
+        }else{
+            navigate("/dashboard")
+        }
+    }
+
+    async function handleUploadImage(){
+        if(bannerImg){
+            let imageUrl = await uploadImage(bannerImg)
+            console.log("image url:", imageUrl)
+            handleCreateEventChange({
+                target: {
+                    name: "banner_image_url",
+                    value: imageUrl
+                }
+            })
+        }
+    }
+
+    useEffect(()=>{
+        for(let i=0; i < states.length; i++){
+            setStatesArr((prev)=>[...prev, states[i].name])
+        }
+    }, [])
+
+    useEffect(()=>{
+        if(state !== ""){
+            let st = states.find((singleState)=>singleState.name === state)
+            setCitiesArr(st.lgas)
+        }
+    },[state])
+
     return(
-        <form className="md:w-[70%] py-4 m-auto">
+        <form onSubmit={handleSubmitEvent} className="md:w-[70%] py-4 m-auto">
                     <div>
-                        <Title title={"Event name"} />
-                        <TicketInput tagType={"input"} value={createEventFormData.title} name={"title"} onChange={handleCreateEventChange} placeholder={"Event name"} />
+                        <Title title={"Event name *"} />
+                        <TicketInput 
+                            tagType={"input"} 
+                            required
+                            value={createEventFormData.title} 
+                            name={"title"} 
+                            onChange={handleCreateEventChange} 
+                            placeholder={"Event name"} 
+                        />
                     </div>
                     <div>
-                        <Title title={"Categories"} />
+                        <Title title={"Categories *"} />
                         <div className="flex gap-3 flex-wrap">
                             <CategoryTab category={"Music"} onChange={handleCreateEventChange} >
                                 <TbMicrophone2 size={25} />
@@ -98,6 +169,10 @@ export default function AddEventGeneralInfo(){
                             <CategoryTab category={"Classes"} onChange={handleCreateEventChange} >
                                 <MdLaptop size={25} />
                             </CategoryTab>
+
+                            <CategoryTab category={"Comedy"} onChange={handleCreateEventChange}>
+                                <MdTheaterComedy size={25} />
+                            </CategoryTab>
                         </div>
                     </div>
                     <div>
@@ -109,17 +184,28 @@ export default function AddEventGeneralInfo(){
                         <div className="flex gap-3 w-full">
                             <TicketInput
                                 tagType={"select"}
+                                required
                                 label={"state"}
+                                placeholder={"Select State"}
+                                value={state}
+                                options={statesArr}
+                                onChange={(e)=>{setState(e.target.value)}}
                             />
                             <TicketInput
                                 tagType={"select"}
+                                required
                                 label={"city"}
+                                placeholder={"Select City"}
+                                value={city}
+                                options={citiesArr && citiesArr}
+                                onChange={(e)=>{setCity(e.target.value)}}
                             />
                         </div>
                         <TicketInput
                             tagType={"input"}
+                            required
                             placeholder={"Full address"}
-                            label={"Full address"}
+                            label={"Venue"}
                             value={createEventFormData.venue}
                             name={"venue"}
                             onChange={handleCreateEventChange}
@@ -127,8 +213,10 @@ export default function AddEventGeneralInfo(){
                         <div className="w-[50%] m-auto">
                             <TicketInput 
                                 tagType={"input"} 
-                                placeholder={"Address landmark"} 
-                                label={"Address landmark"} 
+                                value={landmark}
+                                onChange={(e)=>{setLandmark(e.target.value)}}
+                                placeholder={"Popular landmark near event address"} 
+                                label={"Landmark (optional)"} 
                             />
                         </div>
                     </div>
@@ -136,7 +224,8 @@ export default function AddEventGeneralInfo(){
                         <Title title={"Date and Time"} />
                         <div className="flex gap-3">
                             <TicketInput 
-                                tagType={"input"} 
+                                tagType={"input"}
+                                required 
                                 type={"date"} 
                                 label={"start date"}
                                 name={"start_date"}
@@ -155,6 +244,7 @@ export default function AddEventGeneralInfo(){
                         <div className="flex gap-3">
                             <TicketInput
                                 tagType={"input"}
+                                required
                                 type={"time"}
                                 label={"start time"}
                                 name={"start_time"}
@@ -174,12 +264,23 @@ export default function AddEventGeneralInfo(){
                     <div>
                         <Title title={"Upload Image"} />
                         <div className="w-[50%] m-auto border border-primary-dark flex flex-col justify-center items-center pb-4">
-                            <label htmlFor="event_banner">
-                                <AiOutlinePicture size={150} fontWeight={2} />
-                            </label>
-                            <input type="file" id="event_banner" />
-                            <div className="py-[3px] px-4 border border-primary-dark w-auto">
-                                Upload file
+                            <div className="text-[10px] text-primary-dark">click on the banner to select an image </div>
+                            {
+                                bannerImg !== null
+                                ?
+                                <label htmlFor="event_banner">
+                                    <img src={URL.createObjectURL(bannerImg)} alt="banner" className="w-[70%] m-auto" />
+                                </label>
+                                :
+                                <label htmlFor="event_banner" className="cursor-pointer border border-primary-dark">
+                                    <AiOutlinePicture size={150} fontWeight={2} />
+                                    <p className="text-[12px] text-center">select image</p>
+                                </label>
+                            }
+                            <input type="file" id="event_banner" accept="image/*" hidden={true} onInput={(e)=>{setBannerImg(e.target.files[0]); console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0])}} />
+                            { imageStatus.error && <div className="text-center text-red-500 font-medium"> {imageStatus.message} </div>}
+                            <div onClick={isImageLoading ? undefined : handleUploadImage} className="py-[3px] cursor-pointer px-4 border border-primary-dark my-2 w-auto">
+                                { isImageLoading ? "Uploading..." : "Upload file" }
                             </div>
                         </div>
                     </div>
@@ -189,6 +290,24 @@ export default function AddEventGeneralInfo(){
                             <TicketedTab priceType={"free"} isTicketed={isTicketed} setIsTicketed={setIsTicketed} />
                             <TicketedTab priceType={"paid"} isTicketed={isTicketed} setIsTicketed={setIsTicketed} />
                         </div>
+                    </div>
+                    {eventsStatus.error && <div className="text-center text-red-500 font-medium"> {eventsStatus.message} </div>}
+                    <div className="flex justify-center">
+                        <button 
+                            className={`p-2 m-4 text-center ${eventsLoading ? "bg-grey-500" : "bg-primary-dark"} text-primary-orange rounded-md`}
+                        >
+                            {
+                                eventsLoading
+                                ?
+                                "..."
+                                :
+                                isTicketed
+                                ?
+                                "Submit and proceed to add tickets"
+                                :
+                                "Create Event (Without tickets)"
+                            }
+                        </button>
                     </div>
                 </form>
     )

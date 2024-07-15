@@ -44,6 +44,10 @@ export default function AddEventTicketInfo(){
         console.log(ticketsDataArr)
     }
 
+    function uploadTicketImage(){
+        
+    }
+
     useEffect(()=>{
         if(ticketTypesCount < 1){
             setTicketTypesCount(1)

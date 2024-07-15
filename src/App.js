@@ -19,6 +19,7 @@ import CreateEvent from './Screens/DashboardScreens/CreateEvent';
 import EditEvent from './Screens/DashboardScreens/EditEvent';
 import ViewEventTickets from './Screens/DashboardScreens/ViewEventTickets';
 import Settings from './Screens/DashboardScreens/Settings';
+import AuthWrapper from './Screens/AuthWrapper';
 
 register();
 
@@ -59,7 +60,7 @@ function App() {
     ]},
     {
       path: "/dashboard",
-      element: <DashboardLayout />,
+      element: <AuthWrapper><DashboardLayout /></AuthWrapper>,
       children: [
         {
           path: "/dashboard",

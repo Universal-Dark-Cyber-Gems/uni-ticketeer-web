@@ -1,6 +1,19 @@
-import { Link, Outlet, useLocation } from "react-router-dom"
+import {useEffect} from "react"
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
+import useLogin from "../../hooks/useLogin"
+
+
 export default function AuthLayout(){
     const location = useLocation()
+    const navigate = useNavigate()
+    const {isLoggedIn} = useLogin()
+
+    useEffect(()=>{
+        if(isLoggedIn){
+            navigate("/dashboard")
+        }
+    })
+
     return(
         <>
             <div className="md:flex">

@@ -1,9 +1,21 @@
 import { CiCamera } from "react-icons/ci";
 import TicketInput from "./TicketInput";
+import { useState } from "react";
 
-export default function ProfileSettingsForm(){
+export default function ProfileSettingsForm({userData}){
+    let [profileFormData, setProfileFormData] = useState({...userData})
 
     let genderOptions = ["male","female"]
+
+    function handleFormDataChange(e){
+        setProfileFormData((prev)=>{
+            return {
+                ...prev,
+                [e.target.name]: e.target.value
+            }
+        })
+    }
+
     function submitProfileSettings(e){
         e.preventDefault()
     }
@@ -23,12 +35,12 @@ export default function ProfileSettingsForm(){
             </div>
             <div className="py-2 md:w-[80%]">
                 <div className="flex gap-3">
-                    <TicketInput label={"Name"} tagType={"input"} />
-                    <TicketInput label={"Username"} tagType={"input"} />
+                    <TicketInput label={"Firstname"} tagType={"input"} value={profileFormData.firstname} name={"firstname"} onChange={handleFormDataChange} />
+                    <TicketInput label={"Lastname"} tagType={"input"} value={profileFormData.lastname} name={"lastname"} onChange={handleFormDataChange} />
                 </div>
                 <div className="flex gap-3">
-                    <TicketInput label={"Email Address"} tagType={"input"} />
-                    <TicketInput label={"Phone Number"} type={"number"} tagType={"input"} />
+                    <TicketInput label={"Email Address"} tagType={"input"} value={profileFormData.email} name={"email"} onChange={handleFormDataChange} />
+                    <TicketInput label={"Username"} tagType={"input"} value={profileFormData?.username} name={"username"} onChange={handleFormDataChange} />
                 </div>
                 <div className="flex gap-3">
                     <TicketInput label={"Country"} tagType={"input"} />

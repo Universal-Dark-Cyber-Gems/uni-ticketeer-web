@@ -18,7 +18,7 @@ export default function SignUp(){
         email: "",
         username: "",
         password: "",
-        location: "",
+        location: "Nigeria",
         confirm_password: "",
         tac: false,
         usertype: null

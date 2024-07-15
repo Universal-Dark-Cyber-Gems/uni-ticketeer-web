@@ -7,7 +7,7 @@ import CouponCodeSettings from "../../components/CouponCodeSettings";
 
 
 export default function Settings(){
-    let toggleMenu = useOutletContext()
+    let {toggleMenu, user} = useOutletContext()
     let [currentSettingsTab, setCurrentSettingsTab] = useState("profile settings")
     return(
         <>
@@ -21,7 +21,7 @@ export default function Settings(){
                 {
                     currentSettingsTab === "profile settings"
                     &&
-                    <ProfileSettingsForm />
+                    <ProfileSettingsForm userData={user} />
                 }
                 {
                     currentSettingsTab === "security settings"
