@@ -75,8 +75,9 @@ export default function OrganiserDashboard(){
                             <div className="pt-8 text-center text-red-500 font-medium"> {eventsStatus.message} </div>
                             :
                             <div className="flex justify-even gap-2 flex-wrap">
-                                <DashEventCard />
-                                <DashEventCard />
+                                {
+                                    events?.map((event)=>(<DashEventCard event={event}  />))
+                                }
                             </div>
                         }
                     </div>
