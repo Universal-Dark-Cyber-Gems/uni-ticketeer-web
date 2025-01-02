@@ -7,7 +7,7 @@ import useEvents from "../../hooks/useEvents";
 export default function DashEvent(){
     const {toggleMenu} = useOutletContext()
     const { events, eventsLoading, eventsStatus } = useEvents()
-    
+    console.log("events", events)
     return(
         <>
             <DashHeader title={"Events"} dashnavtoggle={toggleMenu} />
@@ -34,7 +34,7 @@ export default function DashEvent(){
                     <div className="md:flex justify-even gap-1 flex-wrap px-4 py-8 mb-4">
                         {
                             events?.map((evt)=>(
-                                <DashEventCard link={'/dashboard/event/tickets'} />
+                                <DashEventCard event={evt} link={`/dashboard/event/tickets/${evt._id}`} />
                             ))
                         }
                     </div>

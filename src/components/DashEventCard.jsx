@@ -1,6 +1,7 @@
 import { IoCalendar,IoLocationOutline, IoTimerOutline } from "react-icons/io5";
 import Event1 from '../images/Event-1.jpg'
 import { Link } from "react-router-dom";
+import dayjs from "dayjs"
 
 export default function DashEventCard({link, event}){
     return(

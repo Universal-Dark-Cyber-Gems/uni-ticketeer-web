@@ -79,7 +79,7 @@ function App() {
         element: <EventLayout />,
         children: [
           {
-            path: 'details',
+            path: 'details/:id',
             element: <ViewEventStats />
           },
           {
@@ -87,11 +87,11 @@ function App() {
             element: <CreateEvent />
           },
           {
-            path: 'edit',
+            path: 'edit/:id',
             element: <EditEvent />
           },
           {
-            path: 'tickets',
+            path: 'tickets/:id',
             element: <ViewEventTickets />
           }]
         },

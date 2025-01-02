@@ -48,7 +48,7 @@ export default function Home(){
         <div className="flex h-[100vh] md:h-auto justify-center flex-col md:flex-row items-center">
             <div className="md:w-[50%]">
                 <h1 className="text-5xl text-white font-bold md:leading-normal">
-                    Online Event Ticketing with <span className="text-primary-orange">Uniticketeer</span>
+                    Online Event Ticketing with <span className="text-primary-orange">Emume</span>
                 </h1>
                 <p className='my-7 text-xl text-white font-medium'>
                     Tickets for All your favourite events,
@@ -153,7 +153,7 @@ function TestimonyTabs({name, title, testimony}){
                 <h3 className='text-white text-xl font-medium'> {name} </h3>
                 <h4 className='font-medium text-primary-orange'>{title}</h4>
                 <p className='text-white text-sm py-3'>
-                    Ever since i started using uniticketeer, all my worries have vanished like a lorem ipsum dolor that i don't know
+                    Ever since i started using emume, all my worries have vanished like a lorem ipsum dolor that i don't know
                 </p>
             </div>
         </div>

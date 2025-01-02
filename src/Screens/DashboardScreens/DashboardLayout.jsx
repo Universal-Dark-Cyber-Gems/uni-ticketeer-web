@@ -24,7 +24,7 @@ export default function DashboardLayout(){
         <UserContext.Provider value={user}>
             <div className="flex z-[-10]">
                 <div className={`w-auto md:w-[18%] ${!isMenuOpen ? 'hidden' : 'block'} md:block h-[100vh] z-[20] bg-primary-dark p-6 fixed`}>
-                    <h2 className="text-white text-xl font-bold pb-4 cursor-pointer"><Link to={"/"}>Uniticketeer</Link></h2>
+                    <h2 className="text-white text-xl font-bold pb-4 cursor-pointer"><Link to={"/"}>Emume</Link></h2>
                     <div className="pt-8 pb-6">
                         <h4 className="text-[#CCCCCC] font-medium">Welcome,</h4>
                         <h3 className="text-white font-bold">{user?.firstname} {user?.lastname}</h3>

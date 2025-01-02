@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createEventApi, getAllEvents } from "../api/eventsapi";
+import { createEventApi, getAllEvents, getSingleEvent } from "../api/eventsapi";
 import useLogin from "./useLogin";
 import getErrorMsg from "../utils/getErrorMsg";
 

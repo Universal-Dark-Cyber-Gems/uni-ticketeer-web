@@ -66,7 +66,7 @@ export default function AddEventTicketInfo(){
             </div>
             <div className="flex items-center">
                 <input type="checkbox" />
-                <p>i hearby accept the <span className="text-primary-orange">Terms and Conditions</span> provided by uniticketeer</p>
+                <p>i hearby accept the <span className="text-primary-orange">Terms and Conditions</span> provided by emume</p>
             </div>
             <button className="absolute bg-primary-dark right-0 p-2 text-primary-orange rounded-md">
                 Create Ticket(s)

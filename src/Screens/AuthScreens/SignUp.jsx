@@ -98,7 +98,7 @@ export default function SignUp(){
                 currentStage === 2
                 &&
                 <div className="h-auto bg-white p-5 my-10 rounded-2xl">
-                    <h1 className="text-2xl text-center font-bold text-primary-dark my-2">Welcome to Uniticketeer</h1>
+                    <h1 className="text-2xl text-center font-bold text-primary-dark my-2">Welcome to Emume</h1>
                     <hr></hr>
                     <p className="py-3 text-center text-[#CCCCCC] ">Set up your user account</p>
                     {signupStatus.error && <div className="text-red-500 text-center font-medium">{signupStatus.message}</div>}
@@ -138,7 +138,7 @@ export default function SignUp(){
                         </div>
                         <div>
                             <input type="checkbox" required name="tac" checked={signupData.tac} onChange={handleFormDataChange} />
-                            <label>I have read and understood the <a href="/" className="text-primary-orange font-medium">Terms and Conditions</a> of uniticketeer</label>
+                            <label>I have read and understood the <a href="/" className="text-primary-orange font-medium">Terms and Conditions</a> of emume</label>
                         </div>
                         <div className="text-right p-2">
                             <Link to={"/forgot/password"}>
@@ -167,7 +167,7 @@ export default function SignUp(){
                 currentStage === 2
                 &&
                 <div className="h-auto bg-white p-5 my-10 rounded-2xl">
-                <h1 className="text-2xl text-center font-bold text-primary-dark my-2">Welcome to Uniticketeer</h1>
+                <h1 className="text-2xl text-center font-bold text-primary-dark my-2">Welcome to Emume</h1>
                 <hr></hr>
                 <p className="py-3 text-center text-[#CCCCCC] ">Set up your organiser account</p>
                 {signupStatus.error && <div className="text-red-500 text-center font-medium">{signupStatus.message}</div>}
@@ -206,7 +206,7 @@ export default function SignUp(){
                     </div>
                     <div>
                         <input type="checkbox" required name="tac" checked={signupData.tac} onChange={handleFormDataChange} />
-                        <label>I have read and understood the <a href="/" className="text-primary-orange font-medium">Terms and Conditions</a> of uniticketeer</label>
+                        <label>I have read and understood the <a href="/" className="text-primary-orange font-medium">Terms and Conditions</a> of emume</label>
                     </div>
                     <div className="text-right p-2">
                         <Link to={"/forgot/password"}>

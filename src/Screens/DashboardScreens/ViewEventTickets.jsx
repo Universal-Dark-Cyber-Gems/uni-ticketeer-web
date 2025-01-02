@@ -1,33 +1,38 @@
 import { IoCalendar, IoLocationOutline, IoTimerOutline } from 'react-icons/io5'
+import { useParams } from "react-router"
 import Event1 from '../../images/Event-1.jpg'
 import { useEffect, useState } from 'react'
+import useTickets from "../../hooks/useTickets"
+import useEvents from "../../hooks/useEvents"
 
 export default function ViewEventTickets(){
-    let [tickets, setTickets] = useState([])
+    let { id } = useParams()
+    let { tickets, ticketsLoading, ticketStatus } = useTickets(id)
+    let { events, eventsLoading, eventsStatus } = useEvents()
+    let [ticketsToBuy, setTicketsToBuy] = useState([])
+    let [singleEvent, setSingleEvent] = useState(null)
 
     function setTicketAmount(i, newAmount){
-        tickets[i].amount = newAmount
-        setTickets([...tickets])
+        ticketsToBuy[i].amount = newAmount
+        setTicketsToBuy([...tickets])
     }
 
     useEffect(()=>{
-        if(tickets.length === 0){
-            setTickets([{category: "Regular", price: 1000, amount: 0} , {category: "VIP", price: 3000, amount: 0}])
-        }
-    },[tickets])
+        setSingleEvent(events?.find((event)=>event._id == id))
+        setTicketsToBuy([{category: "Regular", price: 1000, amount: 0} , {category: "VIP", price: 3000, amount: 0}])
+    },[events])
 
     return(
         <>
             <div>
                 <div className='md:w-[50%] h-[45vh] m-auto border-4 border-primary-dark rounded-lg'>
-                    <img src={Event1} alt='event banner' className='w-[100%] h-[100%] rounded-md' />
+                    <img src={singleEvent?.banner_image_url} alt='event banner' className='w-[100%] h-[100%] rounded-md' />
                 </div>
                 <div className='md:w-[70%] m-auto my-2 py-2'>
-                    <h3 className='text-center text-lg font-medium'>Lacasa De Papel</h3>
+                    <h3 className='text-center text-lg font-medium'>{singleEvent?.title}</h3>
                     <p className='font-bold text-primary-dark'>About:</p>
                     <p>
-                        Bole festival is a 2-day annual Rivers food festival that comes up in the city of Port-Harcourt. The event was founded by Kennedy Nonso Iwuh and its maiden edition was held in 2016 in Port-Harcourt city. Usually, attendees enjoy different delicacies of traditional Southern Nigerian food. However, the main meal of the festival is Port-Harcourt’s street food, Bole.
-                        Bole is the traditional name of a popular street delicacy blend of plantain, potatoes, yam, and fresh fish. The delicacy is prepared the local way by roasting using firewood.
+                       {singleEvent?.additional_information}
                     </p>
                     <div className='flex justify-between my-2 py-2'>
                         <div>
@@ -56,24 +61,34 @@ export default function ViewEventTickets(){
                         </div>
                     </div>
                 </div>
-                <div className='my-4'>
-                    <h3 className='font-medium text-primary-dark text-center'>Choose Ticket</h3>
-                    <div className='border-2 border-primary-dark rounded-md p-4 my-4'>
-                        <div className='flex justify-between'>
-                            <p className='w-[30%]' >Categories</p>
-                            <p className='w-[30%]' >Price</p>
-                            <p>Amount</p>
+                {
+                    ticketsLoading
+                    ?
+                    <div>Loading ... </div>
+                    :
+                    ticketStatus.status === 404
+                    ?
+                    <div className='text-center'> No ticket(s) found for this event </div>
+                    :
+                    <div className='my-4'>
+                        <h3 className='font-medium text-primary-dark text-center'>Choose Ticket</h3>
+                        <div className='border-2 border-primary-dark rounded-md p-4 my-4'>
+                            <div className='flex justify-between'>
+                                <p className='w-[30%] font-bold' >Categories</p>
+                                <p className='w-[30%] font-bold' >Price</p>
+                                <p className='font-bold'>Amount</p>
+                            </div>
+                            {
+                                ticketsToBuy.length > 0
+                                ?
+                                ticketsToBuy.map((ticket, i)=><TicketDetailsTab key={i} index={i} category={ticket.category} price={ticket.price} amount={ticket.amount} setAmount={setTicketAmount} />)
+                                :
+                                <p className='text-center text-primary-dark my-4 font-medium'>No tickets to show</p>
+                            }
                         </div>
-                        {
-                            tickets.length > 0
-                            ?
-                            tickets.map((ticket, i)=><TicketDetailsTab key={i} index={i} category={ticket.category} price={ticket.price} amount={ticket.amount} setAmount={setTicketAmount} />)
-                            :
-                            <p className='text-center text-primary-dark my-4 font-medium'>No tickets to show</p>
-                        }
+                        <div className='bg-primary-dark w-[50%] md:w-[20%] p-2 text-primary-orange text-center rounded-full m-auto cursor-pointer'>Add to cart</div>
                     </div>
-                    <div className='bg-primary-dark w-[50%] md:w-[20%] p-2 text-primary-orange text-center rounded-full m-auto cursor-pointer'>Add to cart</div>
-                </div>
+                }
             </div>
 
             <div>

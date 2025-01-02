@@ -10,6 +10,15 @@ async function getAllEvents(){
     }
 }
 
+async function getSingleEvent(id){
+    try{
+        let res = await axios.get(`${baseApiUrlTest}/events/${id}`)
+        return {err: false, result: res}
+    }catch(err){
+        return {err: true, error: err}
+    }
+}
+
 async function createEventApi(payload, token){
     try{
         let res = await axios.post(`${baseApiUrlTest}/events/add`, payload, {
@@ -25,4 +34,4 @@ async function createEventApi(payload, token){
     }
 }
 
-export { getAllEvents, createEventApi }
+export { getAllEvents, getSingleEvent, createEventApi }
