@@ -8,6 +8,7 @@ import useUser from "../../hooks/useUser";
 import useEvents from "../../hooks/useEvents";
 import OrganiserDashboard from "../../components/OrganiserDashboard";
 import UserDashboard from "../../components/UserDashboard";
+import { isUserBasic, isUserOrganiser } from "../../global/helpers"
 
 export default function Dashboard(){
     const {toggleMenu, user} = useOutletContext()
@@ -58,12 +59,12 @@ export default function Dashboard(){
         <>
             <DashHeader title={"Dashboard"} dashnavtoggle={toggleMenu} />
             {
-                user?.usertype === "organiser"
+                isUserOrganiser(user)
                 &&
                 <OrganiserDashboard user={user} />
             }
             {
-                user?.usertype === "basic"
+                isUserBasic(user)
                 &&
                 <UserDashboard />
             }

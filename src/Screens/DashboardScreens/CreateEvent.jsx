@@ -1,28 +1,36 @@
 import { useState } from "react"
+import { useSearchParams, useNavigate } from "react-router-dom"
 import AddEventGeneralInfo from "../../components/AddEventGeneralInfo"
 import AddEventTicketInfo from "../../components/AddEventTicketInfo"
 
 
 export default function CreateEvent(){
-    let [currentTab, setCurrentTab] = useState("General Info")
+    let navigate = useNavigate()
+    let [searchParams] = useSearchParams()
+    let currentTab = searchParams.get("current_tab")
+    let eventId = searchParams.get("ev_id")
 
-    function moveToTicketInfo(){
-        setCurrentTab("Ticket Info")
+    function moveToTicketInfo(event_id){
+        navigate(`/dashboard/event/create?current_tab=ticket&ev_id=${event_id}`)
     }
      
+    console.log("current tab", currentTab)
     return(
         <div>
             <div>
                 <div className="flex justify-between md:w-[50%] m-auto ">
-                    <InfoTab info={"General Info"} currentTab={currentTab} setCurrentTab={setCurrentTab} />
-                    <InfoTab info={"Ticket Info"} currentTab={currentTab} setCurrentTab={setCurrentTab} />
+                    <InfoTab info={"General Info"} currentTab={currentTab || "general"} />
+                    <InfoTab info={"Ticket Info"} currentTab={currentTab} />
                 </div>
             {
-                currentTab === "General Info"
-                ?
-                <AddEventGeneralInfo moveToTickets={moveToTicketInfo} />
-                :
-                <AddEventTicketInfo />
+                !currentTab
+                &&
+                <AddEventGeneralInfo moveToTickets={moveToTicketInfo} /> 
+            }
+            {
+                currentTab === "ticket"
+                &&
+                <AddEventTicketInfo eventId={eventId} />
             }
             </div>
         </div>
@@ -30,8 +38,8 @@ export default function CreateEvent(){
 }
 
 
-function InfoTab({info, currentTab, setCurrentTab}){
-    let active = info === currentTab ? true : false
+function InfoTab({info, currentTab}){
+    let active = info?.split(" ")[0].toLowerCase() === currentTab ? true : false
     return(
         <div className={`${active ? "bg-primary-dark" : "bg-[#F7F7F7]"} p-2 w-full mx-2 text-center text-primary-orange rounded-lg`}>
             {info}

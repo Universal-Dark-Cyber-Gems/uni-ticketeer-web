@@ -22,6 +22,9 @@ export default function useTickets(eventId){
             let errormsg = getErrorMsg(response)
             setTicketStatus({error: true, success: false, message: errormsg, status: response.error.response.status})
             setTicketsLoading(false)
+        }else{
+            setTickets(respons.result?.data?.data)
+            setTicketsLoading(false)
         }
     }
 

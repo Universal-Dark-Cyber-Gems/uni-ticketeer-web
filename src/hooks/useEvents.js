@@ -20,7 +20,7 @@ export default function useEvents(){
             return {success: false}
         }else{
             await getEvents()
-            return {success: true}
+            return {success: true, eventId: response.result.data?.data?._id}
         }
     }
 

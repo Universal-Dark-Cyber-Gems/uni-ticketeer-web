@@ -5,10 +5,12 @@ import { IoAdd } from "react-icons/io5";
 import { useEffect, useState, useContext } from "react";
 import useEvents from "../hooks/useEvents";
 import useTickets from "../hooks/useTickets";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/userContext";
+import { checkMissingTickets } from "../global/helpers";
 
 export default function OrganiserDashboard(){
+    let navigate = useNavigate()
     let [activeOrganiserTab, setActiveOrganiserTab] = useState("ongoing events")
     
     const { events, eventsLoading, eventsStatus } = useEvents()
@@ -20,21 +22,38 @@ export default function OrganiserDashboard(){
 
     useEffect(()=>{
         if(events && events.length > 0){
-            console.log(events)
+            console.log("events from organiser dashboard", events)
+            let allEvents = []
+            let activeEvents = []
             for(let i=0; i < events.length; i++){
                 if(events[i].organiser === user._id){
-                    setOrganiserAllEvents((prev)=> [...prev, events[i]])
+                    allEvents.push(events[i])
+                    setOrganiserAllEvents(allEvents)
                     if(events[i].end_date < Date.now()){
-                        setOrganiserActiveEvents((prev)=> [...prev, events[i]])
+                        activeEvents.push(events[i])
+                        setOrganiserActiveEvents(activeEvents)
                     }
                 }
             }
         }
     }, [events])
 
+    async function checkEventsNeedingTickets(events){
+        console.log("running function to check missing tickets")
+        let result = await checkMissingTickets(events)
+        if(result.isMissing){
+            navigate(`/dashboard/event/create?current_tab=ticket&ev_id=${result.eventId}`)
+        }
+    }
+    
     useEffect(()=>{
-
-    })
+        async function run(){
+            await checkEventsNeedingTickets(organiserActiveEvents)
+        }
+        if(organiserActiveEvents > 0){
+            run()
+        }
+    }, [organiserActiveEvents])
 
     return(
         <div className="w-[100%]">
@@ -76,7 +95,7 @@ export default function OrganiserDashboard(){
                             :
                             <div className="flex justify-even gap-2 flex-wrap">
                                 {
-                                    events?.map((event)=>(<DashEventCard event={event}  />))
+                                    organiserAllEvents?.map((event, i)=>(<DashEventCard key={"event"+i} event={event}  />))
                                 }
                             </div>
                         }

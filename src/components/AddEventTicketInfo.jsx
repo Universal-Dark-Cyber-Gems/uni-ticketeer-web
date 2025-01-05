@@ -61,7 +61,7 @@ export default function AddEventTicketInfo(){
                 <CustomNumberInput value={ticketTypesCount} onChange={ticketTypesCountSet} />
             </div>
             
-            <div className="md:w-[50%] m-auto">
+            <div className="md:w-[70%] m-auto">
                 {tickets}
             </div>
             <div className="flex items-center">
@@ -177,20 +177,27 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
     }, [isAgeRestriction, isGenderRestriction, isRestriction])
 
     return(
-        <div className="w-full my-4 bg-[#FFF] p-4 my-2 border border-primary-dark rounded-md">
-            <div className="md:flex items-center justify-between">
+        <div className="flex w-full my-4 bg-[#FFF] p-4 my-2 border border-primary-dark rounded-md">
+            <div className="w-[50%] items-center justify-between">
                 <label htmlFor={"ticket"+index}><IoImageOutline /></label>
                 <input type="file" accept="image/*" hidden id={"ticket"+index} />
-                <input type="text" value={ticketData.ticket_type} name="ticket_type" placeholder="Enter ticket type/name" onChange={(e)=>{handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md md:w-[45%] w-full p-2 m-2" required />
-                <input type="number" value={ticketData.ticket_price} name="ticket_price" placeholder="Enter ticket price" onChange={(e)=> {handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md md:w-[45%] w-full p-2 m-2" required />
             </div>
-            <div>
+            <div className="w-[50%]">
+                <div>
+                    <div className="font-regular text-primary-dark">Ticket Name</div>
+                    <input type="text" value={ticketData.ticket_type} name="ticket_type" placeholder="Enter ticket type/name" onChange={(e)=>{handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md w-full p-[2px] m-[2px]" required />
+                </div>
+                <div>
+                    <div className="font-regular text-primary-dark">Price</div>
+                    <input type="number" value={ticketData.ticket_price} name="ticket_price" placeholder="Enter ticket price" onChange={(e)=> {handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md w-full p-[2px] m-[2px]" required />
+                </div>
                 <div className="flex items-center">
                     <p className="text-[14px] text-primary-dark">Number of Tickets</p>
                     <input type="number" name="ticket_quantity" value={ticketData.ticket_quantity} onChange={(e)=>{handleInputChange(e, index)}} className="border-2 w-12 text-[12px] border-primary-dark rounded-md p-[2px] m-2" required />
                 </div>
+                <div className="h-[1px] w-full bg-[#CCC]" />
                 <div className="flex">
-                    <p className="text-lg font-bold my-2">Restrictions?</p>
+                    <p className="font-medium text-primary-dark">Restrictions?</p>
                     <input type="checkbox" checked={isRestriction} onChange={()=>{setIsRestriction((prev)=>(!prev))}} className="mx-2"  />
                 </div>
                 {
@@ -199,7 +206,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                     <div>
                         <div className="flex justify-between my-2">
                             <div className="flex items-center">
-                                <p>Age Restrictions</p>
+                                <p>Age</p>
                                 <input 
                                     type="checkbox" 
                                     checked={isAgeRestriction} 
@@ -230,7 +237,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
 
                         <div className="flex justify-between my-4">
                             <div className="flex items-center">             
-                                <p>Gender Restrictions</p>
+                                <p>Gender</p>
                                 <input
                                     type="checkbox"
                                     checked={isGenderRestriction}

@@ -5,6 +5,7 @@ import useLogin from "../../hooks/useLogin";
 import useUser from "../../hooks/useUser";
 import spinner from "../../images/Spinner-1s-200px.svg"
 import { UserContext } from "../../contexts/userContext";
+import { isUserOrganiser } from "../../global/helpers"
 
 export default function DashboardLayout(){
     let navigate = useNavigate()
@@ -44,7 +45,7 @@ export default function DashboardLayout(){
                             </Link>
                         </DashNavLinkCont>
                         {
-                            user?.usertype === "organiser"
+                            isUserOrganiser(user)
                             &&
                             <DashNavLinkCont toggleMenu={toggleMenu} active={location.pathname === '/dashboard/wallet' ? true : false} >
                                 <IoWalletOutline size={25} />

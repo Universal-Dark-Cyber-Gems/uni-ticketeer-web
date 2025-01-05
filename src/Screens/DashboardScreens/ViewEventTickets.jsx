@@ -1,12 +1,16 @@
 import { IoCalendar, IoLocationOutline, IoTimerOutline } from 'react-icons/io5'
 import { useParams } from "react-router"
+import dayjs from "dayjs"
 import Event1 from '../../images/Event-1.jpg'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import useTickets from "../../hooks/useTickets"
 import useEvents from "../../hooks/useEvents"
+import { formatTime, formatDay, isEventPast, isUserOrganiser } from "../../global/helpers"
+import { UserContext } from "../../contexts/userContext"
 
 export default function ViewEventTickets(){
     let { id } = useParams()
+    let user = useContext(UserContext)
     let { tickets, ticketsLoading, ticketStatus } = useTickets(id)
     let { events, eventsLoading, eventsStatus } = useEvents()
     let [ticketsToBuy, setTicketsToBuy] = useState([])
@@ -17,6 +21,7 @@ export default function ViewEventTickets(){
         setTicketsToBuy([...tickets])
     }
 
+    
     useEffect(()=>{
         setSingleEvent(events?.find((event)=>event._id == id))
         setTicketsToBuy([{category: "Regular", price: 1000, amount: 0} , {category: "VIP", price: 3000, amount: 0}])
@@ -40,19 +45,19 @@ export default function ViewEventTickets(){
                                 <div className="border-[1px] border-primary-dark p-[4px] rounded-md">
                                     <IoTimerOutline className="text-primary-dark" />
                                 </div>
-                                <p className="ml-2 text-[12px] font-bold">3pm</p>
+                                <p className="ml-2 text-[12px] font-bold">{singleEvent && formatTime(singleEvent?.start_time)}</p>
                             </div>
                             <div className='flex items-center my-4'>
                                 <div className="border-[1px] border-primary-dark p-[4px] rounded-md">
                                     <IoCalendar className="text-primary-dark" />
                                 </div>
-                                <p className="ml-2 text-[12px] font-bold">2nd July</p> 
+                                <p className="ml-2 text-[12px] font-bold">{formatDay(singleEvent && formatDay(singleEvent?.start_date))}</p> 
                             </div>
                             <div className='flex items-center my-4'>
                             <div className="border-[1px] border-primary-dark p-[4px] rounded-md">
                                 <IoLocationOutline className="text-primary-dark" />
                             </div>
-                            <p className="ml-2 text-[12px] font-bold">pegasus ball room </p>
+                            <p className="ml-2 text-[12px] font-bold">{singleEvent?.venue}</p>
                             </div>
                         </div>
                         <div>
@@ -62,9 +67,17 @@ export default function ViewEventTickets(){
                     </div>
                 </div>
                 {
+                    isUserOrganiser(user)
+                    ?
+                    <div className='text-center'> Organiser Accounts cannot purchase Tickets </div>
+                    :
+                    isEventPast(singleEvent?.end_date || singleEvent?.start_date)
+                    ?
+                    <div className='text-center'> This Event has ended and you can no longer purchase tickets </div>
+                    :
                     ticketsLoading
                     ?
-                    <div>Loading ... </div>
+                    <div className='text-center'>Loading ... </div>
                     :
                     ticketStatus.status === 404
                     ?
@@ -79,11 +92,7 @@ export default function ViewEventTickets(){
                                 <p className='font-bold'>Amount</p>
                             </div>
                             {
-                                ticketsToBuy.length > 0
-                                ?
                                 ticketsToBuy.map((ticket, i)=><TicketDetailsTab key={i} index={i} category={ticket.category} price={ticket.price} amount={ticket.amount} setAmount={setTicketAmount} />)
-                                :
-                                <p className='text-center text-primary-dark my-4 font-medium'>No tickets to show</p>
                             }
                         </div>
                         <div className='bg-primary-dark w-[50%] md:w-[20%] p-2 text-primary-orange text-center rounded-full m-auto cursor-pointer'>Add to cart</div>

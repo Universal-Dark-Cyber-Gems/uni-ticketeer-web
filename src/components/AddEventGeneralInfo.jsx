@@ -16,12 +16,14 @@ import states from "../global/states";
 import useEvents from "../hooks/useEvents";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/userContext";
+import dayjs from "dayjs";
 
 
 
 export default function AddEventGeneralInfo({moveToTickets}){
     let navigate = useNavigate()
     let user = useContext(UserContext)
+    let nextDay = dayjs().add(1, "day").format("YYYY-MM-DD")
     const {isImageLoading, imageStatus, uploadImage} = useImage()
     let { createEvent, eventsLoading, eventsStatus } = useEvents()
     let [isTicketed, setIsTicketed] = useState(false)
@@ -35,7 +37,8 @@ export default function AddEventGeneralInfo({moveToTickets}){
         {
             title: "",
             venue: "",
-            organiser: user._id,
+            organiser: user?._id,
+            organiser_name: user?.username,
             start_date: "",
             end_date: undefined,
             start_time: "",
@@ -86,7 +89,7 @@ export default function AddEventGeneralInfo({moveToTickets}){
         let result = await createEvent(eventData)
         if(!result.success) return;
         if(eventData.is_ticketed){
-            moveToTickets()
+            moveToTickets(result.eventId)
         }else{
             navigate("/dashboard")
         }
@@ -227,6 +230,7 @@ export default function AddEventGeneralInfo({moveToTickets}){
                                 tagType={"input"}
                                 required 
                                 type={"date"} 
+                                min={nextDay}
                                 label={"start date"}
                                 name={"start_date"}
                                 value={createEventFormData.start_date}
@@ -277,7 +281,7 @@ export default function AddEventGeneralInfo({moveToTickets}){
                                     <p className="text-[12px] text-center">select image</p>
                                 </label>
                             }
-                            <input type="file" id="event_banner" accept="image/*" hidden={true} onInput={(e)=>{setBannerImg(e.target.files[0]); console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0])}} />
+                            <input type="file" id="event_banner" accept="image/*" hidden={true} onInput={(e)=>{setBannerImg(e.target.files[0] || bannerImg); console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0])}} />
                             { imageStatus.error && <div className="text-center text-red-500 font-medium"> {imageStatus.message} </div>}
                             <div onClick={isImageLoading ? undefined : handleUploadImage} className="py-[3px] cursor-pointer px-4 border border-primary-dark my-2 w-auto">
                                 { isImageLoading ? "Uploading..." : "Upload file" }
