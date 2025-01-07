@@ -61,7 +61,7 @@ export default function ViewEventTickets(){
                             </div>
                         </div>
                         <div>
-                            <p className='my-4'><b>Organisers:</b> Nonso Nsude live </p>
+                            <p className='my-4'><b>Organisers:</b> {singleEvent?.organiser_name} </p>
                             <p className='my-4'><b>Contacts:</b> </p>
                         </div>
                     </div>

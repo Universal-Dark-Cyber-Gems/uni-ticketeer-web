@@ -89,7 +89,7 @@ export default function AddEventGeneralInfo({moveToTickets}){
         let result = await createEvent(eventData)
         if(!result.success) return;
         if(eventData.is_ticketed){
-            moveToTickets(result.eventId)
+            moveToTickets(result.eventId, eventData.title)
         }else{
             navigate("/dashboard")
         }

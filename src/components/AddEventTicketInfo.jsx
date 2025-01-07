@@ -1,25 +1,41 @@
 import { useEffect, useState } from "react"
-import { IoImageOutline } from "react-icons/io5";
+import { IoAdd, IoImageOutline, IoTrashBin } from "react-icons/io5";
+import useTickets from "../hooks/useTickets";
+import { validateTicketArray } from "../utils/validateTicketArray";
+import useImage from "../hooks/useImage";
+import { useNavigate } from "react-router-dom";
 
-export default function AddEventTicketInfo(){
+export default function AddEventTicketInfo({eventName, eventId}){
     let ticketsData = {
-        event_id:"", 
+        event_id: eventId, 
         ticket_type: "", 
         ticket_price: "", 
-        event_name: "",
+        event_name: eventName,
         ticket_banner_url: "",
-        ticket_quantity: "",
-        restrictions: {}
+        ticket_quantity: undefined,
+        restrictions: undefined
     }
+
+    let { createTicket, ticketsLoading, ticketStatus } = useTickets()
+    let navigate = useNavigate()
 
     let [ticketTypesCount, setTicketTypesCount] = useState(1)
     let [ticketsDataArr, setTicketsDataArr] = useState([ticketsData])
+    let [error, setError] = useState({error: false, message: ""})
 
     let tickets = ticketsDataArr?.map((ticketData, i)=>{
         return (
             <TicketTypeTab key={"Tab"+i} ticketData={ticketData} index={i} handleInputChange={handleInputChange} />
         )
     })
+
+    function showError(msg){
+        setError({error: true, message: msg})
+        window.scrollTo(0, 0)
+        setTimeout(()=>{
+            setError({error: false, message: ""})
+        }, 3000)
+    }
     
 
     function handleInputChange(e, index){
@@ -39,13 +55,34 @@ export default function AddEventTicketInfo(){
         }
     }
 
-    function submitTicketForm(e){
-        e.preventDefault()
-        console.log(ticketsDataArr)
+    function addNewTicket(){
+        let valResult = validateTicketArray(ticketsDataArr)
+        if(valResult.error){
+            showError(valResult.message)
+            return
+        }
+        ticketTypesCountSet(ticketsDataArr.length + 1)
     }
 
-    function uploadTicketImage(){
-        
+    function removeLastTicket(){
+        ticketTypesCountSet(ticketsDataArr.length - 1)
+    }
+
+    async function submitTicketForm(e){
+        e.preventDefault()
+        console.log(ticketsDataArr)
+        let validationResult = validateTicketArray(ticketsDataArr)
+        if(validationResult.error) {
+            showError(validationResult.message)
+        }else {
+            for(let i=0; i < ticketsDataArr.length; i++){
+                let result = await createTicket(ticketsDataArr[i])
+                if(!result.success){
+                    showError(ticketStatus.message)
+                    return
+                }
+            }
+        }
     }
 
     useEffect(()=>{
@@ -56,34 +93,58 @@ export default function AddEventTicketInfo(){
 
     return (
         <form onSubmit={submitTicketForm} className="py-12 relative">
-            <div className="flex flex-col items-center">
+            {/* <div className="flex flex-col items-center">
                 <p className="text-primary-dark text-xl font-medium my-2">How many ticket types?</p>
                 <CustomNumberInput value={ticketTypesCount} onChange={ticketTypesCountSet} />
-            </div>
+            </div> */}
+            <div className="text-bold text-center text-[20px]"> {eventName} </div>
             
             <div className="md:w-[70%] m-auto">
+                {
+                    error.error 
+                    && 
+                    <div className="text-center text-red-500 text-bold">
+                        {error.message}
+                    </div>
+                }
                 {tickets}
+                {
+                    tickets.length > 1
+                    &&
+                    <div onClick={removeLastTicket} className="cursor-pointer flex  ml-auto justify-center items-center gap-2 w-[120px] px-2 py-[2px] text-[12px] text-red-500 border-[1px] border-red-500 text-center rounded-full">
+                        remove ticket
+                        <IoTrashBin />
+                    </div>
+                }
             </div>
-            <div className="flex items-center">
-                <input type="checkbox" />
-                <p>i hearby accept the <span className="text-primary-orange">Terms and Conditions</span> provided by emume</p>
+            <div className="flex gap-2 justify-center items-center">
+                <input type="checkbox" checked />
+                <p className="text-center">i hearby accept the <span className="text-primary-orange">Terms and Conditions</span> provided by emume</p>
             </div>
-            <button className="absolute bg-primary-dark right-0 p-2 text-primary-orange rounded-md">
-                Create Ticket(s)
-            </button>
+            <div className="flex justify-between items-center">
+                <div onClick={addNewTicket} className="flex cursor-pointer items-center gap-2 border-[1px] border-[#CCC] py-2 px-4 rounded-full">
+                    <IoAdd />
+                    Add Ticket
+                </div>
+                <button disabled={ticketsLoading} className={`absolute ${ticketsLoading ? "bg-[#CCC]" : "bg-primary-dark"} right-0 py-2 px-4 text-primary-orange rounded-full`}>
+                    Create Ticket(s)
+                </button>
+            </div>
         </form>
     )
 }
 
 function TicketTypeTab({ticketData, index, handleInputChange}){
+    let { uploadImage, isImageLoading, imageStatus } = useImage()
     let [isRestriction, setIsRestriction] = useState(false)
     let [isAgeRestriction, setIsAgeRestriction] = useState(false)
+    let [ticketImage, setTicketImage] = useState({blob: "", isUploaded: false})
     let [restrictions, setRestrictions] = useState({
         age: {
-            range: "",
-            benchmark: ""
+            range: undefined,
+            benchmark: undefined
         },
-        gender: ""
+        gender: undefined
     })
     let [isGenderRestriction, setIsGenderRestriction] = useState(false)
     
@@ -128,8 +189,8 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
             newval = {
                 ...newval,
                 age: {
-                    range: "",
-                    benchmark: ""
+                    range: undefined,
+                    benchmark: undefined
                 }
             }
             handleInputChange({
@@ -145,7 +206,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
         if(!isGenderRestriction){
             newval = {
                 ...newval,
-                gender: ""
+                gender: undefined
             }
             handleInputChange({
                 target:{
@@ -158,13 +219,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
         }
 
         if(!isRestriction){
-            newval = {
-                age: {
-                    range: "",
-                    benchmark: ""
-                },
-                gender: ""
-            }
+            newval = undefined
             handleInputChange({
                 target:{
                     name: "restrictions",
@@ -176,13 +231,77 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
         }
     }, [isAgeRestriction, isGenderRestriction, isRestriction])
 
+    function selectImage(e){
+        setTicketImage({blob: e.target.files[0], isUploaded: false});
+        console.log(e.target.files[0])
+        handleInputChange({
+            target:{
+                name: "ticket_banner_url",
+                value: ""
+            }
+        }, index)
+    }
+
+    async function uploadimageAndGetUrl(){
+        let imageUrl = await uploadImage(ticketImage.blob)
+            console.log("image url:", imageUrl)
+
+            if(imageStatus.error) return
+
+            handleInputChange({
+                target: {
+                    name: "ticket_banner_url",
+                    value: imageUrl
+                }
+            }, index)
+
+            setTicketImage((prev)=>{
+                return { ...prev, isUploaded: true}
+            })
+    }
+
+    console.log("ticket image", ticketImage)
     return(
-        <div className="flex w-full my-4 bg-[#FFF] p-4 my-2 border border-primary-dark rounded-md">
-            <div className="w-[50%] items-center justify-between">
-                <label htmlFor={"ticket"+index}><IoImageOutline /></label>
-                <input type="file" accept="image/*" hidden id={"ticket"+index} />
+        <div className="flex justify-between w-full my-4 bg-[#FFF] p-4 my-2 border border-primary-dark rounded-md">
+            <div className="w-[50%] my-4 items-center justify-between bg-[#D9D9D9] rounded-md">
+                <label htmlFor={`ticket${index}`}>
+                    {
+                        ticketImage.blob
+                        ?
+                        <div>
+                            <img src={URL.createObjectURL(ticketImage.blob)} alt="banner" className="w-[70%] m-auto" />
+                        </div>
+                        :
+                        <div className="w-[100%] h-[100%] flex flex-col justify-center items-center">
+                            <IoImageOutline />
+                            <div className="text-[12px] text-center">click This box to upload ticket image</div>
+                        </div>
+                    }
+                </label>
+                {
+                    ticketImage.blob
+                    &&
+                    <div className={`${ticketImage.isUploaded ? "" : "cursor-pointer"} text-[12px] text-center border-[1px] border-primary-dark rounded-md p-[2px] w-full m-auto`} onClick={ticketImage.isUploaded ? undefined : uploadimageAndGetUrl}>
+                        {
+                            imageStatus.error
+                            ?
+                            <span>{imageStatus.message}.. Try again</span>
+                            :
+                            isImageLoading
+                            ?
+                            <span>uploading image ...</span>
+                            :
+                            ticketImage.isUploaded 
+                            ? 
+                            <span className="text-green-500">Image has been uploaded</span> 
+                            : 
+                            <span>upload image</span>
+                        }
+                    </div>
+                }
+                <input type="file" accept="image/*" onInput={selectImage} hidden={true} id={`ticket${index}`} />
             </div>
-            <div className="w-[50%]">
+            <div className="w-[45%]">
                 <div>
                     <div className="font-regular text-primary-dark">Ticket Name</div>
                     <input type="text" value={ticketData.ticket_type} name="ticket_type" placeholder="Enter ticket type/name" onChange={(e)=>{handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md w-full p-[2px] m-[2px]" required />
@@ -193,7 +312,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                 </div>
                 <div className="flex items-center">
                     <p className="text-[14px] text-primary-dark">Number of Tickets</p>
-                    <input type="number" name="ticket_quantity" value={ticketData.ticket_quantity} onChange={(e)=>{handleInputChange(e, index)}} className="border-2 w-12 text-[12px] border-primary-dark rounded-md p-[2px] m-2" required />
+                    <input type="number" name="ticket_quantity" value={ticketData.ticket_quantity} onChange={(e)=>{handleInputChange(e, index)}} className="border-2 w-12 text-[12px] border-primary-dark rounded-md p-[2px] m-2" />
                 </div>
                 <div className="h-[1px] w-full bg-[#CCC]" />
                 <div className="flex">
@@ -218,7 +337,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                                 isAgeRestriction
                                 &&
                                 <div>
-                                    <p>Range</p>
+                                    <p className="text-[14px]">Range</p>
                                     <div className="flex">
                                         <AgeRangeTab range={"over"} selectedRange={restrictions.age.range} handleChange={handleRestrictionDataChange} />
                                         <AgeRangeTab range={"under"} selectedRange={restrictions.age.range} handleChange={handleRestrictionDataChange} />
@@ -229,7 +348,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                                 isAgeRestriction
                                 &&
                                 <div>
-                                    <p>Benchmark</p>
+                                    <p className="text-[14px]">Benchmark</p>
                                     <input type="number" name="benchmark" value={restrictions.age.benchmark} onChange={handleRestrictionDataChange} className="w-10 border-2 border-primary-dark rounded-md" required={isAgeRestriction} />
                                 </div>
                             }
@@ -292,8 +411,8 @@ function CustomNumberInput({value, onChange}){
 function AgeRangeTab({range, selectedRange, handleChange}){
     let active = range === selectedRange ? true : false
     return(
-        <div className={`p-2 ${active ? "bg-primary-dark text-primary-orange" : "text-primary-dark"} border border-primary-dark`}>
-            <label htmlFor={range}>{range}</label>
+        <div className={`p-[2px] ${active ? "bg-primary-dark text-primary-orange" : "text-primary-dark"} border border-primary-dark`}>
+            <label htmlFor={range} className="text-[12px]">{range}</label>
             <input type="radio" name="range" value={range} id={range} onChange={handleChange} hidden />
         </div>
     )

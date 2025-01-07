@@ -8,10 +8,11 @@ export default function CreateEvent(){
     let navigate = useNavigate()
     let [searchParams] = useSearchParams()
     let currentTab = searchParams.get("current_tab")
+    let eventName = searchParams.get("event")
     let eventId = searchParams.get("ev_id")
 
-    function moveToTicketInfo(event_id){
-        navigate(`/dashboard/event/create?current_tab=ticket&ev_id=${event_id}`)
+    function moveToTicketInfo(event_id, event_name){
+        navigate(`/dashboard/event/create?current_tab=ticket&event=${event_name}&ev_id=${event_id}`)
     }
      
     console.log("current tab", currentTab)
@@ -30,7 +31,7 @@ export default function CreateEvent(){
             {
                 currentTab === "ticket"
                 &&
-                <AddEventTicketInfo eventId={eventId} />
+                <AddEventTicketInfo eventId={eventId} eventName={eventName} />
             }
             </div>
         </div>

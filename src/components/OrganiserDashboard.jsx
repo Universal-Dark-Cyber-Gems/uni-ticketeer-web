@@ -27,9 +27,10 @@ export default function OrganiserDashboard(){
             let activeEvents = []
             for(let i=0; i < events.length; i++){
                 if(events[i].organiser === user._id){
+                    let comparisonDate = new Date(events[i].end_date || events[i].start_date)
                     allEvents.push(events[i])
                     setOrganiserAllEvents(allEvents)
-                    if(events[i].end_date < Date.now()){
+                    if(comparisonDate > Date.now()){
                         activeEvents.push(events[i])
                         setOrganiserActiveEvents(activeEvents)
                     }
@@ -41,17 +42,16 @@ export default function OrganiserDashboard(){
     async function checkEventsNeedingTickets(events){
         console.log("running function to check missing tickets")
         let result = await checkMissingTickets(events)
+        console.log("result after checking missing tickets", result)
         if(result.isMissing){
-            navigate(`/dashboard/event/create?current_tab=ticket&ev_id=${result.eventId}`)
+            navigate(`/dashboard/event/create?current_tab=ticket&event=${result.eventName}&ev_id=${result.eventId}`)
         }
     }
     
     useEffect(()=>{
-        async function run(){
-            await checkEventsNeedingTickets(organiserActiveEvents)
-        }
-        if(organiserActiveEvents > 0){
-            run()
+        console.log("active events", organiserActiveEvents)
+        if(organiserActiveEvents.length > 0){
+            checkEventsNeedingTickets(organiserActiveEvents)
         }
     }, [organiserActiveEvents])
 

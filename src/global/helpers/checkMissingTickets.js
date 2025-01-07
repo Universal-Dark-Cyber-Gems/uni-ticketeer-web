@@ -1,20 +1,17 @@
 import { getAllTicketsByEvent } from "../../api/ticketsapi"
 
 async function checkMissingTickets(eventsArr){
-    let isMissing = false;
-    let eventId;
-    eventsArr.forEach(event => {
-        if(event.is_ticketed){
-            let res = getAllTicketsByEvent(event._id)
-            if(res.result.status === 404){
-                isMissing = true
-                eventId = event?._id
-                return
+    
+    for(let i=0; i<eventsArr.length; i++){
+        if(eventsArr[i].is_ticketed){
+            let res = await getAllTicketsByEvent(eventsArr[i]._id)
+            if(res?.error?.response?.status == 404){
+                return { isMissing: true, eventId: eventsArr[i]?._id, eventName: eventsArr[i]?.title}
             }
         }
-    });
+    };
 
-    return { isMissing, eventId}
+    return { isMissing: false, eventId: null}
 }
 
 export { checkMissingTickets }
