@@ -1,9 +1,9 @@
 import axios from "axios";
-import { baseApiUrlTest } from "../config";
+import { apiVersion, baseApiUrlTest } from "../config";
 
 async function signupUser(payload){
     try{
-        let res = await axios.post(`${baseApiUrlTest}/users/register`, payload, {
+        let res = await axios.post(`${baseApiUrlTest}${apiVersion}/users/register`, payload, {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json"

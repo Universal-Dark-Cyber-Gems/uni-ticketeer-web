@@ -1,0 +1,12 @@
+import axios from "axios"
+import { baseApiUrlTest } from "../config"
+
+export default async function fetchBankList(){
+    try{
+        let response = await axios.get(`${baseApiUrlTest}/flutterwave-banklist`)
+        console.log("banklist", response)
+        return response.data.data 
+    }catch(err){
+        console.log(err)
+    }
+}

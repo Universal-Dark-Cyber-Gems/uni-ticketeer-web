@@ -10,7 +10,7 @@ import { isUserOrganiser } from "../../global/helpers"
 export default function DashboardLayout(){
     let navigate = useNavigate()
     let { logout } = useLogin()
-    let { user, userLoading, userStatus } = useUser()
+    let { user, accountDetails, userLoading, userStatus } = useUser()
 
     let [isMenuOpen, setIsMenuOpen] = useState(false)
     let location = useLocation()
@@ -87,7 +87,7 @@ export default function DashboardLayout(){
                             {userStatus.message}
                         </div>
                         :
-                        <Outlet context={{toggleMenu, user}} />
+                        <Outlet context={{toggleMenu, user, accountDetails}} />
                     }
                 </div>
             </div>

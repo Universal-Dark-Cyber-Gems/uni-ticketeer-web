@@ -2,10 +2,18 @@ import { useState } from "react";
 import TicketInput from "./TicketInput";
 
 export default function SecuritySettingsForm(){
+    const defaultErrorState = {error: false, message: ""}
+    
     let [passwordFormData, setPasswordFormData] = useState({
         old_password: "",
         new_password: "",
-        confirm_new: ""
+        confirm_new_password: ""
+    })
+
+    let [passwordFormError, setPasswordFormError] = useState({
+        old_password: defaultErrorState,
+        new_password: defaultErrorState,
+        confirm_new_password: defaultErrorState,
     })
 
     function handleFormDataChange(e){

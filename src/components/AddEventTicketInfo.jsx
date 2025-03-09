@@ -80,6 +80,8 @@ export default function AddEventTicketInfo({eventName, eventId}){
                 if(!result.success){
                     showError(ticketStatus.message)
                     return
+                }else if(result.success){
+                    navigate("/dashboard")
                 }
             }
         }

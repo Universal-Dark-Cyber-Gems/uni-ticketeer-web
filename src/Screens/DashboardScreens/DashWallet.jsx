@@ -1,9 +1,10 @@
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import DashHeader from "../../components/DashHeader";
 import { IoCash, IoPencil } from "react-icons/io5";
 
 export default function DashWallet(){
-    const toggleMenu = useOutletContext()
+    const navigate = useNavigate()
+    const {toggleMenu, user, accountDetails} = useOutletContext()
     return(
         <>
             <DashHeader title={"Wallet"} dashnavtoggle={toggleMenu} />
@@ -11,20 +12,32 @@ export default function DashWallet(){
                 <div>
                     <h2 className="text-primary-dark text-xl font-bold my-4 py-2">Wallet Overview</h2>
                     <div className="md:flex justify-between items-center relative pb-12 md:pb-0">
-                        <div className="absolute flex bottom-0 left-4 justify-between items-center p-2 bg-primary-orange rounded-lg shadow-xl transition-all duration-300 ease-in-out cursor-pointer hover:scale-105" >
+                        <div onClick={()=>{}} className="absolute flex bottom-0 left-4 justify-between items-center p-2 bg-primary-orange rounded-lg shadow-xl transition-all duration-300 ease-in-out cursor-pointer hover:scale-105" >
                             <p className="mr-2 font-medium">withdraw</p>
                             <IoCash />
                         </div>
                         <div className="h-auto border-2 md:w-[30%] md:h-[100px] border-primary-dark rounded-xl p-3 m-3 shadow-xl">
                             <h2 className="text-primary-dark text-lg text-center font-medium">Balance</h2>
-                            <p className="font-medium text-center text-3xl text-primary-dark"><span> &#x20a6; </span> 3000</p>
+                            <p className="font-medium text-center text-3xl text-primary-dark"><span> &#x20a6; </span> {user?.account?.balance}</p>
                         </div>
                         <div className="border-2 border-primary-dark rounded-xl md:w-[30%] p-4 relative m-3 shadow-xl">
-                            <div className="absolute flex items-center justify-center w-[30px] h-[30px] p-2 rounded-full bg-[#CCCCCC] hover:bg-[#CCCCCC]/50 hover:cursor-pointer top-2 right-2 "><IoPencil size={25} /></div>
-                            <h3 className="text-primary-dark text-center font-medium">Account Details</h3>
-                            <p className="text-primary-dark font-medium my-2"><span className="font-bold mr-2" >Name:</span> Nonso Nsude</p>
-                            <p className="text-primary-dark font-medium my-2"><span className="font-bold mr-2" >Account Number:</span> 2223857553</p>
-                            <p className="text-primary-dark font-medium my-2"><span className="font-bold mr-2" >Bank:</span> Zenith Bank</p>
+                            <div onClick={()=> navigate("/dashboard/settings?tab=bank account")} className="absolute flex items-center justify-center w-[30px] h-[30px] p-2 rounded-full bg-[#CCCCCC] hover:bg-[#CCCCCC]/50 hover:cursor-pointer top-2 right-2 ">
+                                <IoPencil size={25} />
+                            </div>
+                            <h3 className="text-primary-dark text-center font-bold">Account Details</h3>
+                            {
+                                accountDetails
+                                ?
+                                <div>
+                                    <p className="text-primary-dark font-medium my-2 text-[12px]"><span className="font-bold mr-2 text-[14px]" >Name:</span> {user.first_name} {user.last_name}</p>
+                                    <p className="text-primary-dark font-medium my-2 text-[12px]"><span className="font-bold mr-2 text-[14px]" >Account Number:</span> {accountDetails.account_number}</p>
+                                    <p className="text-primary-dark font-medium my-2 text-[12px]"><span className="font-bold mr-2 text-[14px]" >Bank:</span> {accountDetails.bank_name}</p>
+                                </div>
+                                :
+                                <div className="text-[12px] text-center text-primary-dark">
+                                    No account details added yet... click the pencil icon or go to settings
+                                </div>
+                            }
                         </div>
                         <div className="md:w-[30%] md:h-[100px] rounded-xl p-3 m-3">
                             <h2 className="text-primary-dark text-sm text-left font-small">Withdrawable amount: 30,000</h2>

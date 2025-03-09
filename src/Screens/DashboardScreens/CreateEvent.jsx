@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useSearchParams, useNavigate } from "react-router-dom"
 import AddEventGeneralInfo from "../../components/AddEventGeneralInfo"
 import AddEventTicketInfo from "../../components/AddEventTicketInfo"
+import {ToastContainer, toast} from "react-toastify"
 
 
 export default function CreateEvent(){
@@ -33,6 +34,7 @@ export default function CreateEvent(){
                 &&
                 <AddEventTicketInfo eventId={eventId} eventName={eventName} />
             }
+            <ToastContainer />
             </div>
         </div>
     )

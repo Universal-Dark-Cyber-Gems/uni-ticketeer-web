@@ -18,7 +18,7 @@ export default function AuthLayout(){
         <>
             <div className="md:flex">
                 <div className="w-[25%] hidden md:flex flex-col justify-center items-center h-[100vh] bg-primary-dark fixed">
-                    <h2 className="text-white text-xl absolute top-10 left-10 font-bold cursor-pointer"><Link to={"/"}>Emume</Link></h2>
+                    <div className="text-white text-xl absolute top-10 left-10 font-bold cursor-pointer"><Link to={"/"}><img src="/logo.png" className="w-[50%]"/></Link></div>
                     <h1 className="text-4xl text-white font-bold">Emume</h1>
                     <p className="text-primary-orange text-xl">{location.pathname === "/auth/login" ? "Login" : location.pathname === "/auth/signup" ? "Sign up" : ""}</p>
                 </div>

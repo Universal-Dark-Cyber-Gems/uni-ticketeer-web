@@ -1,19 +1,25 @@
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useSearchParams } from "react-router-dom";
 import DashHeader from "../../components/DashHeader";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProfileSettingsForm from "../../components/ProfileSettingsForm";
 import SecuritySettingsForm from "../../components/SecuritySettingsForm";
 import CouponCodeSettings from "../../components/CouponCodeSettings";
+import { isUserOrganiser } from "../../global/helpers";
+import BankAccountSettingsForm from "../../components/BankAccountSettingsForm";
 
 
 export default function Settings(){
-    let {toggleMenu, user} = useOutletContext()
-    let [currentSettingsTab, setCurrentSettingsTab] = useState("profile settings")
+    let {toggleMenu, user, accountDetails} = useOutletContext()
+    const [searchParams, setSearchParams] = useSearchParams()
+    let tabFromQuery = searchParams.get('tab')
+    let [currentSettingsTab, setCurrentSettingsTab] = useState( tabFromQuery || "profile settings")
+
     return(
         <>
             <DashHeader title={"Settings"} dashnavtoggle={toggleMenu} />
             <div className="flex bg-[#FFF] p-[2px]">
                 <SettingsTypeTab title={"profile settings"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />
+                {isUserOrganiser(user) && <SettingsTypeTab title={"bank account"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />}
                 <SettingsTypeTab title={"security settings"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />
                 <SettingsTypeTab title={"coupon codes"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />
             </div>
@@ -22,6 +28,11 @@ export default function Settings(){
                     currentSettingsTab === "profile settings"
                     &&
                     <ProfileSettingsForm userData={user} />
+                }
+                {
+                    currentSettingsTab === "bank account" && isUserOrganiser(user)
+                    &&
+                    <BankAccountSettingsForm accountData={accountDetails} userData={user} />
                 }
                 {
                     currentSettingsTab === "security settings"

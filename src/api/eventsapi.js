@@ -1,9 +1,9 @@
 import axios from "axios";
-import { baseApiUrlTest } from "../config";
+import { apiVersion, baseApiUrlTest } from "../config";
 
 async function getAllEvents(){
     try{
-        let res = await axios.get(`${baseApiUrlTest}/events`)
+        let res = await axios.get(`${baseApiUrlTest}${apiVersion}/events`)
         return {err: false, result: res}
     }catch(err){
         return {err: true, error: err}
@@ -12,7 +12,7 @@ async function getAllEvents(){
 
 async function getSingleEvent(id){
     try{
-        let res = await axios.get(`${baseApiUrlTest}/events/${id}`)
+        let res = await axios.get(`${baseApiUrlTest}${apiVersion}/events/${id}`)
         return {err: false, result: res}
     }catch(err){
         return {err: true, error: err}
@@ -21,7 +21,7 @@ async function getSingleEvent(id){
 
 async function createEventApi(payload, token){
     try{
-        let res = await axios.post(`${baseApiUrlTest}/events/add`, payload, {
+        let res = await axios.post(`${baseApiUrlTest}${apiVersion}/events`, payload, {
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json",

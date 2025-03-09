@@ -45,7 +45,7 @@ export default function AddEventGeneralInfo({moveToTickets}){
             end_time: undefined,
             category: [],
             banner_image_url: "",
-            additional_information: ""
+            additional_information: undefined
         }
     )
 
@@ -80,6 +80,7 @@ export default function AddEventGeneralInfo({moveToTickets}){
             ...createEventFormData, 
             is_ticketed: isTicketed,
             location: {
+                country: user?.location.country,
                 state,
                 city,
                 landmark: landmark || undefined

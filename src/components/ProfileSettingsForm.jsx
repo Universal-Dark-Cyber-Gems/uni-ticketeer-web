@@ -39,7 +39,7 @@ export default function ProfileSettingsForm({userData}){
                     <TicketInput label={"Lastname"} tagType={"input"} value={profileFormData.lastname} name={"lastname"} onChange={handleFormDataChange} />
                 </div>
                 <div className="flex gap-3">
-                    <TicketInput label={"Email Address"} tagType={"input"} value={profileFormData.email} name={"email"} onChange={handleFormDataChange} />
+                    <TicketInput label={"Email Address"} disabled tagType={"input"} value={profileFormData.email} name={"email"} onChange={handleFormDataChange} />
                     <TicketInput label={"Username"} tagType={"input"} value={profileFormData?.username} name={"username"} onChange={handleFormDataChange} />
                 </div>
                 <div className="flex gap-3">

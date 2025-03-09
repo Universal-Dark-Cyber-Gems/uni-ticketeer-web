@@ -1,9 +1,9 @@
-import { baseApiUrlTest } from "../config"
+import { apiVersion, baseApiUrlTest } from "../config"
 import axios from 'axios'
 
 async function loginUser(payload){
     try{
-        let res = await axios.post(baseApiUrlTest+"/users/login",
+        let res = await axios.post(baseApiUrlTest+apiVersion+"/users/login",
             payload,
             {
                 headers: {

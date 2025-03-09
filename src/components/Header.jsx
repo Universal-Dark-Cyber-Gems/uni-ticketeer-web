@@ -10,8 +10,8 @@ export default function Header(){
     return(
         <div className="w-[80%] mx-auto pt-3">
         <header className="flex w-full justify-between items-center py-4">
-            <div className="text-white font-bold text-lg z-100 cursor-pointer"> <Link to={"/"}>Emume</Link></div>
-            <nav className={`absolute ${navOpen ? 'flex' : 'hidden'} z-10 py-3 flex flex-col justify-center items-center text-center w-full left-0 top-[9%] bg-primary-dark md:visible md:flex md:relative md:w-auto md:bg-transparent md:flex-row shadow-2xl md:shadow-none`}>
+            <div className="text-white font-bold text-lg z-100 cursor-pointer"> <Link to={"/"}><img src="logo.png" alt="emume-logo" className="w-[20%] p-[0px] m-[0px]"/></Link></div>
+            <nav className={`absolute ${navOpen ? 'flex' : 'hidden'} z-10 py-3 flex flex-col justify-center items-center text-center w-full left-0 top-[9%] bg-primary-dark md:visible md:flex md:relative md:w-[60%] md:bg-transparent md:flex-row shadow-2xl md:shadow-none`}>
                 <ul className="md:flex md:justify-between">
                     <NavItems name={"Home"} url={"/"} toggleNav={toggleNav} className=" cursor-pointer" />
                     <NavItems name={"Billboard"} url={"/events"} toggleNav={toggleNav} className=" cursor-pointer"/>
@@ -34,7 +34,7 @@ export default function Header(){
 
 function NavItems({name, url, toggleNav}){
     return(
-        <li className="md:border-0 md:last:mr-10 mx-4 py-4 text-white hover:text-primary-orange cursor-pointer">
+        <li className="md:w-auto md:border-0 md:last:mr-10 mx-4 py-4 text-white hover:text-primary-orange cursor-pointer">
             <Link onClick={toggleNav} to={url}>{name}</Link>
         </li>
     )
