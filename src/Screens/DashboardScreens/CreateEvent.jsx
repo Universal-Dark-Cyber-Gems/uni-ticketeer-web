@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom"
 import AddEventGeneralInfo from "../../components/AddEventGeneralInfo"
 import AddEventTicketInfo from "../../components/AddEventTicketInfo"
 import {ToastContainer, toast} from "react-toastify"
+import { InfoTab } from "../../modules/Events/InfoTab"
 
 
 export default function CreateEvent(){
@@ -36,16 +37,6 @@ export default function CreateEvent(){
             }
             <ToastContainer />
             </div>
-        </div>
-    )
-}
-
-
-function InfoTab({info, currentTab}){
-    let active = info?.split(" ")[0].toLowerCase() === currentTab ? true : false
-    return(
-        <div className={`${active ? "bg-primary-dark" : "bg-[#F7F7F7]"} p-2 w-full mx-2 text-center text-primary-orange rounded-lg`}>
-            {info}
         </div>
     )
 }

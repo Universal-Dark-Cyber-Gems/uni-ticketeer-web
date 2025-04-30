@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { loginUser } from "../api/login";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 let authToken = "ticketeerAuthToken"
@@ -35,6 +36,7 @@ export default function useLogin(){
                             response.error?.message
                 
                 setStatus({error: true, message: errormessage })
+                toast.error(errormessage, {position: "top-center"})
                 setLoginLoading(false)
                 return
             }else{

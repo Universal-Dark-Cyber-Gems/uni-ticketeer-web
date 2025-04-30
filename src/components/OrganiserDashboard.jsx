@@ -14,7 +14,6 @@ export default function OrganiserDashboard(){
     let [activeOrganiserTab, setActiveOrganiserTab] = useState("ongoing events")
     
     const { events, eventsLoading, eventsStatus } = useEvents()
-    const {getTickets, ticketsLoading, ticketStatus} = useTickets()
 
     let [organiserActiveEvents, setOrganiserActiveEvents] = useState([])
     let [organiserAllEvents, setOrganiserAllEvents] = useState([])
@@ -58,21 +57,13 @@ export default function OrganiserDashboard(){
     return(
         <div className="w-[100%]">
                     <h2 className="text-xl py-8 font-bold text-primary-dark">Overview</h2>
-                    <div>
-                        <swiper-container init="false" space-between="20" >
-                            <swiper-slide>
-                                <OverviewCard title={"ongoing events"} amount={organiserActiveEvents.length} active={activeOrganiserTab} setActive={setActiveOrganiserTab} />
-                            </swiper-slide>
-                            <swiper-slide>
-                                <OverviewCard title={"ongoing ticket sales"} amount={24} active={activeOrganiserTab} setActive={setActiveOrganiserTab} />
-                            </swiper-slide>
-                            <swiper-slide>
-                                <OverviewCard title={"all time events"} amount={organiserAllEvents.length} active={activeOrganiserTab} setActive={setActiveOrganiserTab} />
-                            </swiper-slide>
-                            <swiper-slide>
-                                <OverviewCard title={"all time ticket sales"} amount={400} active={activeOrganiserTab} setActive={setActiveOrganiserTab} />
-                            </swiper-slide>
-                        </swiper-container>
+                    <div className="md:grid grid-cols-3 grid-rows-3 gap-5">
+                        <OverviewCard title={"ongoing events"} amount={organiserActiveEvents.length} />          
+                        <OverviewCard title={"ongoing ticket sales"} amount={24} />
+                        <OverviewCard title={"all time events"} amount={organiserAllEvents.length} />
+                        <OverviewCard title={"all time ticket sales"} amount={400} />
+                        <OverviewCard title={"active tickets"} amount={0} />
+                        <OverviewCard title={"all time sales"} amount={0} />             
                     </div>
                     <div>
                         <div className="flex justify-between pt-12 pb-8">
@@ -95,7 +86,7 @@ export default function OrganiserDashboard(){
                             :
                             <div className="flex justify-even gap-2 flex-wrap">
                                 {
-                                    organiserAllEvents?.map((event, i)=>(<DashEventCard key={"event"+i} event={event}  />))
+                                    organiserAllEvents?.map((event, i)=>(<DashEventCard key={"event"+i} event={event} link={`/dashboard/event/details/${event._id}`}  />))
                                 }
                             </div>
                         }

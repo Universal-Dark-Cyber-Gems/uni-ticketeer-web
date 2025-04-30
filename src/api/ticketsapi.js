@@ -3,7 +3,7 @@ import { apiVersion, baseApiUrlTest } from "../config"
 
 async function getAllTicketsByEvent(event_id){
     try{
-        let res = await axios.get(`${baseApiUrlTest}${apiVersion}/tickets/${event_id}`)
+        let res = await axios.get(`${baseApiUrlTest}${apiVersion}/tickets/events/${event_id}`)
         return {err: false, result: res}
     }catch(e){
         console.log(e)

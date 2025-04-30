@@ -16,7 +16,7 @@ export default function AddEventTicketInfo({eventName, eventId}){
         restrictions: undefined
     }
 
-    let { createTicket, ticketsLoading, ticketStatus } = useTickets()
+    let { createTicket, ticketsLoading, ticketStatus } = useTickets(eventId)
     let navigate = useNavigate()
 
     let [ticketTypesCount, setTicketTypesCount] = useState(1)
