@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useSearchParams, useNavigate } from "react-router-dom"
-import AddEventGeneralInfo from "../../components/AddEventGeneralInfo"
-import AddEventTicketInfo from "../../components/AddEventTicketInfo"
+import AddEventGeneralInfo from "../../modules/Events/AddEventGeneralInfo"
+import AddEventTicketInfo from "../../modules/Events/AddEventTicketInfo"
 import {ToastContainer, toast} from "react-toastify"
 import { InfoTab } from "../../modules/Events/InfoTab"
 

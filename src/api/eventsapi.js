@@ -34,4 +34,19 @@ async function createEventApi(payload, token){
     }
 }
 
-export { getAllEvents, getSingleEvent, createEventApi }
+async function editEventApi(id, payload, token){
+    try{
+        let res = await axios.put(`${baseApiUrlTest}${apiVersion}/events/${id}`, payload, {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "ticketeer-auth-token": token
+            }
+        })
+        return {err: false, result: res}
+    }catch(err){
+        return { err: true, error: err}
+    }
+}
+
+export { getAllEvents, getSingleEvent, createEventApi, editEventApi }

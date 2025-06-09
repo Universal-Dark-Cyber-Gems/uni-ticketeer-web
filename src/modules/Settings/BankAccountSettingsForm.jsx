@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import TicketInput from "./TicketInput";
-import { UserContext } from "../contexts/userContext";
-import fetchBankList from "../utils/fetchBankList";
-import useUser from "../hooks/useUser";
+import TicketInput from "../../components/TicketInput";
+import { UserContext } from "../../contexts/UserContext";
+import fetchBankList from "../../utils/fetchBankList";
+import useUser from "../../hooks/useUser";
 
 export default function BankAccountSettingsForm({accountData, userData}){
     const user = useContext(UserContext)

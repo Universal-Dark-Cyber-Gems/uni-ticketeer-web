@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createEventApi, getAllEvents, getSingleEvent } from "../api/eventsapi";
+import { createEventApi, editEventApi, getAllEvents, getSingleEvent } from "../api/eventsapi";
 import useLogin from "./useLogin";
 import getErrorMsg from "../utils/getErrorMsg";
 import { toast } from "react-toastify";
@@ -30,8 +30,24 @@ export default function useEvents(){
         }
     }
 
-    async function editEvent(){
-
+    async function editEvent(id, payload){
+        setEventsLoading(true)
+        let response = await editEventApi(id, payload, accessToken)
+        console.log("res from editing event", response)
+        if(response?.err){
+            let errmsg = getErrorMsg(response)
+            if(response?.error?.response?.status === 401){
+                logout()
+                return
+            }
+            setEventsStatus({error: true, success: false, message: errmsg})
+            toast.error(errmsg, {position: "top-center"})
+            setEventsLoading(false)
+            return {success: false}
+        }else{
+            await getEvents()
+            return {success: true, eventId: response.result.data?.data?._id}
+        }
     }
 
     async function getEvents(){
@@ -52,9 +68,15 @@ export default function useEvents(){
         }
     }
 
+    function getSingleEvent(id){
+        let _singleEvent = events?.find((ev)=>(ev._id === id))
+        console.log("single event inside event hook", _singleEvent)
+        return _singleEvent
+    }
+
     useEffect(()=>{
         getEvents()
     },[])
 
-    return { events, eventsLoading, eventsStatus, createEvent, editEvent }
+    return { events, getSingleEvent, eventsLoading, eventsStatus, createEvent, editEvent }
 }

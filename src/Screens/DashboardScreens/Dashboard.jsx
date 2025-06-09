@@ -6,12 +6,15 @@ import { useEffect, useState } from "react";
 import DashTicket from "../../components/DashTicket";
 import useUser from "../../hooks/useUser";
 import useEvents from "../../hooks/useEvents";
-import OrganiserDashboard from "../../components/OrganiserDashboard";
-import UserDashboard from "../../components/UserDashboard";
+import OrganiserDashboard from "../../modules/Dashboard/OrganiserDashboard";
+import UserDashboard from "../../modules/Dashboard/UserDashboard";
 import { isUserBasic, isUserOrganiser } from "../../global/helpers"
+import { useUserProvider } from "../../contexts/UserContext";
 
 export default function Dashboard(){
-    const {toggleMenu, user} = useOutletContext()
+    const {toggleMenu} = useOutletContext()
+    let userProvider = useUserProvider()
+    let user = userProvider?.user
 
     let [ongoingSoldTickets, setOngoingSoldTickets] = useState(null)
     let [allOrganiserTickets, setAllOrganiserTickets] = useState(null)

@@ -1,11 +1,11 @@
 import { useOutletContext, useSearchParams } from "react-router-dom";
 import DashHeader from "../../components/DashHeader";
 import { useEffect, useState } from "react";
-import ProfileSettingsForm from "../../components/ProfileSettingsForm";
-import SecuritySettingsForm from "../../components/SecuritySettingsForm";
-import CouponCodeSettings from "../../components/CouponCodeSettings";
+import ProfileSettingsForm from "../../modules/Settings/ProfileSettingsForm";
+import SecuritySettingsForm from "../../modules/Settings/SecuritySettingsForm";
+import CouponCodeSettings from "../../modules/Settings/CouponCodeSettings";
 import { isUserOrganiser } from "../../global/helpers";
-import BankAccountSettingsForm from "../../components/BankAccountSettingsForm";
+import BankAccountSettingsForm from "../../modules/Settings/BankAccountSettingsForm";
 
 
 export default function Settings(){

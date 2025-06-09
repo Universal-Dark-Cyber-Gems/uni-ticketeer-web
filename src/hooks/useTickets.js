@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createTicketApi, getAllTicketsByEvent } from "../api/ticketsapi";
+import { createTicketApi, editTicketApi, getAllTicketsByEvent, getSingleTicketApi } from "../api/ticketsapi";
 import getErrorMsg from "../utils/getErrorMsg";
 import useLogin from "./useLogin";
 import { toast } from "react-toastify";
@@ -51,6 +51,46 @@ export default function useTickets(id){
         }
     }
 
+    async function editTicket(id, payload){
+        setTicketsLoading(true)
+        let response = await editTicketApi(id, payload, accessToken)
+        console.log("edit ticket response", response)
+        if(response.err){
+            let errormsg = getErrorMsg(response)
+            if(response.error?.response?.status === 401){
+                logout()
+                return
+            }
+            setTicketStatus({error: true, success: false, message: errormsg})
+            toast.error(JSON.stringify(errormsg), {position: 'top-center'})
+            setTicketsLoading(false)
+            return { success: false }
+        }else{
+            setTicketStatus({error: false, success: true, message: "Ticket created successfully" })
+            setTicketsLoading(false)
+            return { success: true }
+        }
+    }
+
+    async function getSingleTicket(ticketid){
+        setTicketsLoading(true)
+        let result = await getSingleTicketApi(ticketid, accessToken)
+        console.log("result from getting single ticket", result)
+        if(result.err){
+            let errormsg = getErrorMsg(response)
+            if(response.error?.response?.status === 401){
+                logout()
+                return
+            }
+            toast.error(JSON.stringify(errormsg), {position: 'top-center'})
+            setTicketsLoading(false)
+            return {success: false}
+        }else{
+            setTicketsLoading(false)
+            return { success: true, ticket: result.result.data.data }
+        }
+    }
+
     useEffect(()=>{
         if(id){
             getTicketsByEventId()
@@ -61,6 +101,8 @@ export default function useTickets(id){
         tickets,
         ticketsLoading, 
         ticketStatus, 
-        createTicket 
+        createTicket,
+        editTicket,
+        getSingleTicket
     }
 }

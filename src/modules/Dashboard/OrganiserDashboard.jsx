@@ -1,23 +1,27 @@
 import { Link } from "react-router-dom";
-import OverviewCard from "./OverviewCard";
-import DashEventCard from "./DashEventCard";
-import { IoAdd } from "react-icons/io5";
+import OverviewCard from "../../components/OverviewCard";
+import DashEventCard from "../../components/DashEventCard";
+import { IoAdd, IoClose } from "react-icons/io5";
 import { useEffect, useState, useContext } from "react";
-import useEvents from "../hooks/useEvents";
-import useTickets from "../hooks/useTickets";
+import useEvents from "../../hooks/useEvents";
+import useTickets from "../../hooks/useTickets";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../contexts/userContext";
-import { checkMissingTickets } from "../global/helpers";
+import { UserContext, useUserProvider } from "../../contexts/UserContext";
+import { checkMissingTickets } from "../../global/helpers";
+import CustomModal from "../../components/CustomModal";
 
 export default function OrganiserDashboard(){
     let navigate = useNavigate()
+    const {user} = useUserProvider()
+
     let [activeOrganiserTab, setActiveOrganiserTab] = useState("ongoing events")
     
     const { events, eventsLoading, eventsStatus } = useEvents()
 
     let [organiserActiveEvents, setOrganiserActiveEvents] = useState([])
     let [organiserAllEvents, setOrganiserAllEvents] = useState([])
-    const user = useContext(UserContext)
+    let [needTicketModalOpen, setNeedTicketModalOpen] = useState(false)
+    let [eventNeedingTickets, setEventNeedingTickets] = useState("")
 
     useEffect(()=>{
         if(events && events.length > 0){
@@ -43,7 +47,8 @@ export default function OrganiserDashboard(){
         let result = await checkMissingTickets(events)
         console.log("result after checking missing tickets", result)
         if(result.isMissing){
-            navigate(`/dashboard/event/create?current_tab=ticket&event=${result.eventName}&ev_id=${result.eventId}`)
+            setEventNeedingTickets({name: result.event.title, banner_image_url: result.event.banner_image_url, id: result.event._id})
+            setNeedTicketModalOpen(true)
         }
     }
     
@@ -91,6 +96,40 @@ export default function OrganiserDashboard(){
                             </div>
                         }
                     </div>
+                    <CustomModal 
+                        isOpen={needTicketModalOpen} 
+                        closeModal={()=> {}}
+                    >
+                        <div>
+                            <p className="text-center text-primary-dark font-medium">
+                                An event with the name <span className="font-bold text-primary-orange">{eventNeedingTickets.name}</span> was found to be ticketed but no tickets were found.
+                            </p>
+                            <div className="w-[60%] h-[50vh] m-auto mt-4 mb-4">
+                                <img 
+                                    className="w-[100%] h-[100%] rounded-[20px] shadow-2xl"
+                                    src={eventNeedingTickets.banner_image_url}
+                                />
+                            </div>
+                            <p className="text-center text-primary-dark font-medium">
+                                The event cannot be published until you either create a ticket or set the event to a free event
+                            </p>
+
+                            <div className="flex justify-between p-4">
+                                <div 
+                                    onClick={()=> navigate(`/dashboard/event/edit/${eventNeedingTickets.id}`)} 
+                                    className="bg-primary-dark text-primary-orange font-medium cursor-pointer p-2 border-[1px] border-primary-dark rounded-full"
+                                >
+                                    Edit Event
+                                </div>
+                                <div 
+                                    onClick={()=>navigate(`/dashboard/event/create?current_tab=ticket&event=${eventNeedingTickets.name}&ev_id=${eventNeedingTickets.id}`)} 
+                                    className="bg-primary-dark text-primary-orange font-medium cursor-pointer p-2 border-[1px] border-primary-dark rounded-full"
+                                >
+                                    Add Tickets
+                                </div>
+                            </div>
+                        </div>
+                    </CustomModal>
                 </div>
     )
 }

@@ -6,7 +6,7 @@ import { useEffect, useState, useContext } from 'react'
 import useTickets from "../../hooks/useTickets"
 import useEvents from "../../hooks/useEvents"
 import { formatTime, formatDay, isEventPast, isUserOrganiser } from "../../global/helpers"
-import { UserContext } from "../../contexts/userContext"
+import { UserContext } from "../../contexts/UserContext"
 
 export default function ViewEventTickets(){
     let { id } = useParams()

@@ -2,6 +2,7 @@ import { useState } from "react"
 import useLogin from "./useLogin"
 import { uploadImageApi } from "../api/imageapi"
 import { baseApiUrlTest } from "../config"
+import { toast } from "react-toastify"
 
 export default function useImage(){
     const { accessToken } = useLogin()
@@ -22,9 +23,11 @@ export default function useImage(){
                         response.error?.response?.data?.message
                         :
                         response.error?.message
+            toast.error(errmsg, {position: 'top-center'})
             setImageStatus({error: true, success: false, message: errmsg})
             setIsImageLoading(false)
         }else{
+            toast.success("Image uploaded Successfully")
             setImageStatus({error: false, success: true, message: "Image uploaded successfully"})
             setIsImageLoading(false)
             return response.data?.data?.url

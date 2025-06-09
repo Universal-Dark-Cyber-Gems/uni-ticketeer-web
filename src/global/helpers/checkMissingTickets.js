@@ -6,7 +6,7 @@ async function checkMissingTickets(eventsArr){
         if(eventsArr[i].is_ticketed){
             let res = await getAllTicketsByEvent(eventsArr[i]._id)
             if(res?.error?.response?.status == 404){
-                return { isMissing: true, eventId: eventsArr[i]?._id, eventName: eventsArr[i]?.title}
+                return { isMissing: true, event: eventsArr[i]}
             }
         }
     };

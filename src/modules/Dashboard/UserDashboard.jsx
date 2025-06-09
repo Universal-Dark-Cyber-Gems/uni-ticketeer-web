@@ -1,6 +1,6 @@
 import { useState } from "react";
-import DashTicket from "./DashTicket";
-import OverviewCard from "./OverviewCard";
+import DashTicket from "../../components/DashTicket";
+import OverviewCard from "../../components/OverviewCard";
 
 export default function UserDashboard({user}){
     let [activeUserTab, setActiveUserTab] = useState("ongoing tickets")

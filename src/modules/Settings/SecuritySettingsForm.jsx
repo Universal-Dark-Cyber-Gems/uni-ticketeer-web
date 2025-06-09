@@ -1,5 +1,5 @@
 import { useState } from "react";
-import TicketInput from "./TicketInput";
+import TicketInput from "../../components/TicketInput";
 
 export default function SecuritySettingsForm(){
     const defaultErrorState = {error: false, message: ""}

@@ -4,25 +4,24 @@ import NairaSymbol from '../../components/NairaSymbol'
 import ProgressBar from '../../components/ProgressBar'
 import IconsWrap from '../../components/IconsWrap'
 import Tooltip from '../../components/Tooltip'
-import { useParams } from 'react-router-dom'
-import { UserContext } from '../../contexts/userContext'
+import { useNavigate, useNavigation, useParams } from 'react-router-dom'
+import { UserContext } from '../../contexts/UserContext'
 import { useContext, useEffect, useState } from 'react'
 import useTickets from '../../hooks/useTickets'
 import useEvents from '../../hooks/useEvents'
 import { formatDay, formatTime } from '../../global/helpers'
 
 export default function ViewEventStats(){
+    const navigate = useNavigate()
     const { id } = useParams()
     let user = useContext(UserContext)
     let { tickets, ticketStatus, ticketsLoading } = useTickets(id)
-    let { events, eventsLoading, eventsStatus } = useEvents()
+    let { events, getSingleEvent, eventsLoading, eventsStatus } = useEvents()
 
     let [singleEvent, setSingleEvent] = useState(null)
 
     useEffect(()=>{
-        let _singleEvent = events?.find((ev)=>(ev._id === id))
-        console.log("single event inside event stats", _singleEvent)
-        setSingleEvent(_singleEvent)
+        setSingleEvent(getSingleEvent(id))
     }, [events])
 
     console.log("tickets inside event stats", tickets)
@@ -31,7 +30,7 @@ export default function ViewEventStats(){
         <>
             <div className='py-4 my-4'>
             <div className='w-[90%] relative md:flex m-auto border-2 border-primary-dark rounded-xl'>
-                <div onClick={()=>{}} className='absolute cursor-pointer shadow-lg right-2 top-2 bg-white flex w-[30px] h-[30px] rounded-full justify-center items-center'>
+                <div onClick={()=>{ navigate(`/dashboard/event/edit/${id}`) }} className='absolute cursor-pointer shadow-lg right-2 top-2 bg-white flex w-[30px] h-[30px] rounded-full justify-center items-center'>
                     <IoPencil />
                 </div>
                 <div className='md:w-[50%] md:h-[100%]'>
@@ -136,7 +135,7 @@ export default function ViewEventStats(){
             </div>
 
             <h3 className='my-4 font-bold text-2xl text-primary-dark'>Tickets</h3>
-            <div className='pt-16'>
+            <div className='flex pt-16'>
                 {
                     tickets?.map((ticket)=>(
                         <TicketStats details={ticket} />
@@ -150,6 +149,7 @@ export default function ViewEventStats(){
 }
 
 function TicketStats({details}){
+    let navigate = useNavigate()
     return(
         <div className='relative shadow-2xl border-[2px] border-primary-dark md:w-[45%] pt-[70px] pb-4 m-4 rounded-[20px]'>
             <img src={details?.ticket_banner_url || Event1} className='rounded-[10px] shadow-xl shadow-xl/30 absolute top-[-75px] left-5 h-[150px] w-[90%]' alt='ticket banner' />
@@ -181,6 +181,14 @@ function TicketStats({details}){
                     <div className='flex justify-between'><h3 className='font-semibold'>Age:</h3> <div className='font-medium text-sm'>Under 18</div></div>
                     <div className='flex justify-between'><h3 className='font-semibold'>Gender:</h3> <div className='font-medium text-sm'>male</div></div>
                 </div> */}
+                <div className='flex justify-between'>
+                    <div onClick={()=> navigate(`/dashboard/event/${details?.event_name}/tickets/edit/${details?.event_id}/${details?._id}`)} className='bg-primary-dark cursor-pointer hover:shadow-xl text-primary-orange font-medium pt-2 pb-2 pr-4 pl-4 rounded-full'>
+                        Edit Ticket
+                    </div>
+                    <div className='bg-primary-dark cursor-pointer hover:shadow-xl text-primary-orange font-medium pt-2 pb-2 pr-4 pl-4 rounded-full'>
+                        Delete Ticket
+                    </div>
+                </div>
             </div>
         </div>
     )

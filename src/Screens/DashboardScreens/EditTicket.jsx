@@ -1,97 +1,64 @@
 import { useEffect, useState } from "react"
 import { IoAdd, IoImageOutline, IoTrashBin } from "react-icons/io5";
-import useTickets from "../hooks/useTickets";
-import { validateTicketArray } from "../utils/validateTicketArray";
-import useImage from "../hooks/useImage";
-import { useNavigate } from "react-router-dom";
+import useTickets from "../../hooks/useTickets";
+import { validateTicketArray } from "../../utils/validateTicketArray";
+import useImage from "../../hooks/useImage";
+import { useNavigate, useParams } from "react-router-dom";
+import { editEventApi } from "../../api/eventsapi";
+import useEvents from "../../hooks/useEvents";
+import { toast } from "react-toastify";
+import { useEventProvider } from "../../contexts/EventContext";
 
-export default function AddEventTicketInfo({eventName, eventId}){
-    let ticketsData = {
-        event_id: eventId, 
+export default function EditTicket(){
+    let {eventid, ticketid, eventname} = useParams()
+    let [ticketData, setTicketData] = useState({
+        event_id: eventid,
         ticket_type: "", 
         ticket_price: "", 
-        event_name: eventName,
+        event_name: eventname,
         ticket_banner_url: "",
         ticket_quantity: undefined,
         restrictions: undefined
-    }
-
-    let { createTicket, ticketsLoading, ticketStatus } = useTickets(eventId)
-    let navigate = useNavigate()
-
-    let [ticketTypesCount, setTicketTypesCount] = useState(1)
-    let [ticketsDataArr, setTicketsDataArr] = useState([ticketsData])
-    let [error, setError] = useState({error: false, message: ""})
-
-    let tickets = ticketsDataArr?.map((ticketData, i)=>{
-        return (
-            <TicketTypeTab key={"Tab"+i} ticketData={ticketData} index={i} handleInputChange={handleInputChange} />
-        )
     })
 
-    function showError(msg){
-        setError({error: true, message: msg})
-        window.scrollTo(0, 0)
-        setTimeout(()=>{
-            setError({error: false, message: ""})
-        }, 3000)
-    }
-    
+    let { tickets, ticketStatus, getSingleTicket, editTicket, ticketsLoading } = useTickets()
+    let navigate = useNavigate()
+    let [error, setError] = useState({error: false, message: ""})
+
 
     function handleInputChange(e, index){
-        console.log(ticketsDataArr)
-        ticketsDataArr[index][e.target.name] = e.target.value
-        setTicketsDataArr([...ticketsDataArr])
-    }
-
-    function ticketTypesCountSet(newValue){
-        setTicketTypesCount(newValue)
-        if(newValue > ticketsDataArr.length){
-            ticketsDataArr.push(ticketsData)
-            setTicketsDataArr(ticketsDataArr)
-        }else if(newValue < ticketsDataArr.length){
-            ticketsDataArr.pop()
-            setTicketsDataArr(ticketsDataArr)
-        }
-    }
-
-    function addNewTicket(){
-        let valResult = validateTicketArray(ticketsDataArr)
-        if(valResult.error){
-            showError(valResult.message)
-            return
-        }
-        ticketTypesCountSet(ticketsDataArr.length + 1)
-    }
-
-    function removeLastTicket(){
-        ticketTypesCountSet(ticketsDataArr.length - 1)
+        console.log(ticketData)
+        ticketData[e.target.name] = e.target.value
+        setTicketData({...ticketData})
     }
 
     async function submitTicketForm(e){
         e.preventDefault()
-        console.log(ticketsDataArr)
-        let validationResult = validateTicketArray(ticketsDataArr)
-        if(validationResult.error) {
-            showError(validationResult.message)
-        }else {
-            for(let i=0; i < ticketsDataArr.length; i++){
-                let result = await createTicket(ticketsDataArr[i])
-                if(!result.success){
-                    showError(ticketStatus.message)
-                    return
-                }else if(result.success){
-                    navigate("/dashboard")
-                }
-            }
+        console.log("data being submited", ticketData)
+        let result = await editTicket(ticketid, ticketData)
+        if(!result.success){
+            toast(ticketStatus.message)
+            return
+        }else{
+            toast.success("Ticket edited Successfully", {position: "top-center"})
+            navigate("/dashboard")
         }
     }
 
     useEffect(()=>{
-        if(ticketTypesCount < 1){
-            setTicketTypesCount(1)
-        }  
-    },[ticketTypesCount])
+       getSingleTicket(ticketid).then((res)=>{
+           console.log("single ticket", res.ticket)
+           setTicketData({
+                event_id: res?.ticket.event_id,
+                ticket_type: res?.ticket.ticket_type, 
+                ticket_price: res?.ticket.ticket_price, 
+                event_name: res?.ticket.event_name,
+                ticket_banner_url: res?.ticket.ticket_banner_url,
+                ticket_quantity: res?.ticket.ticket_quantity || undefined,
+                restrictions: res?.ticket.restrictions || undefined
+           })
+       })
+    },[tickets])
 
     return (
         <form onSubmit={submitTicketForm} className="py-12 relative">
@@ -99,7 +66,7 @@ export default function AddEventTicketInfo({eventName, eventId}){
                 <p className="text-primary-dark text-xl font-medium my-2">How many ticket types?</p>
                 <CustomNumberInput value={ticketTypesCount} onChange={ticketTypesCountSet} />
             </div> */}
-            <div className="text-bold text-center text-[20px]"> {eventName} </div>
+            <div className="text-bold text-center text-[20px]"> {eventname} </div>
             
             <div className="md:w-[70%] m-auto">
                 {
@@ -109,27 +76,16 @@ export default function AddEventTicketInfo({eventName, eventId}){
                         {error.message}
                     </div>
                 }
-                {tickets}
-                {
-                    tickets.length > 1
-                    &&
-                    <div onClick={removeLastTicket} className="cursor-pointer flex  ml-auto justify-center items-center gap-2 w-[120px] px-2 py-[2px] text-[12px] text-red-500 border-[1px] border-red-500 text-center rounded-full">
-                        remove ticket
-                        <IoTrashBin />
-                    </div>
-                }
+                <TicketTypeTab ticketData={ticketData} handleInputChange={handleInputChange} />
             </div>
             <div className="flex gap-2 justify-center items-center">
                 <input type="checkbox" checked />
                 <p className="text-center">i hearby accept the <span className="text-primary-orange">Terms and Conditions</span> provided by emume</p>
             </div>
             <div className="flex justify-between items-center">
-                <div onClick={addNewTicket} className="flex cursor-pointer items-center gap-2 border-[1px] border-[#CCC] py-2 px-4 rounded-full">
-                    <IoAdd />
-                    Add Ticket
-                </div>
+                
                 <button disabled={ticketsLoading} className={`absolute ${ticketsLoading ? "bg-[#CCC]" : "bg-primary-dark"} right-0 py-2 px-4 text-primary-orange rounded-full`}>
-                    Create Ticket(s)
+                    Edit Ticket
                 </button>
             </div>
         </form>
@@ -275,8 +231,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                         </div>
                         :
                         <div className="w-[100%] h-[100%] flex flex-col justify-center items-center">
-                            <IoImageOutline />
-                            <div className="text-[12px] text-center">click This box to upload ticket image</div>
+                            <img src={ticketData.ticket_banner_url} alt="banner" className="w-[70%] m-auto" />
                         </div>
                     }
                 </label>
@@ -306,15 +261,15 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
             <div className="w-[45%]">
                 <div>
                     <div className="font-regular text-primary-dark">Ticket Name</div>
-                    <input type="text" value={ticketData.ticket_type} name="ticket_type" placeholder="Enter ticket type/name" onChange={(e)=>{handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md w-full p-[2px] m-[2px]" required />
+                    <input type="text" value={ticketData?.ticket_type} name="ticket_type" placeholder="Enter ticket type/name" onChange={(e)=>{handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md w-full p-[2px] m-[2px]" required />
                 </div>
                 <div>
                     <div className="font-regular text-primary-dark">Price</div>
-                    <input type="number" value={ticketData.ticket_price} name="ticket_price" placeholder="Enter ticket price" onChange={(e)=> {handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md w-full p-[2px] m-[2px]" required />
+                    <input type="number" value={ticketData?.ticket_price} name="ticket_price" placeholder="Enter ticket price" onChange={(e)=> {handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md w-full p-[2px] m-[2px]" required />
                 </div>
                 <div className="flex items-center">
                     <p className="text-[14px] text-primary-dark">Number of Tickets</p>
-                    <input type="number" name="ticket_quantity" value={ticketData.ticket_quantity} onChange={(e)=>{handleInputChange(e, index)}} className="border-2 w-12 text-[12px] border-primary-dark rounded-md p-[2px] m-2" />
+                    <input type="number" name="ticket_quantity" value={ticketData?.ticket_quantity} onChange={(e)=>{handleInputChange(e, index)}} className="border-2 w-12 text-[12px] border-primary-dark rounded-md p-[2px] m-2" />
                 </div>
                 <div className="h-[1px] w-full bg-[#CCC]" />
                 <div className="flex">
@@ -341,8 +296,8 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                                 <div>
                                     <p className="text-[14px]">Range</p>
                                     <div className="flex">
-                                        <AgeRangeTab range={"over"} selectedRange={restrictions.age.range} handleChange={handleRestrictionDataChange} />
-                                        <AgeRangeTab range={"under"} selectedRange={restrictions.age.range} handleChange={handleRestrictionDataChange} />
+                                        <AgeRangeTab range={"over"} selectedRange={restrictions?.age.range} handleChange={handleRestrictionDataChange} />
+                                        <AgeRangeTab range={"under"} selectedRange={restrictions?.age.range} handleChange={handleRestrictionDataChange} />
                                     </div>
                                 </div>
                             }
@@ -351,7 +306,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                                 &&
                                 <div>
                                     <p className="text-[14px]">Benchmark</p>
-                                    <input type="number" name="benchmark" value={restrictions.age.benchmark} onChange={handleRestrictionDataChange} className="w-10 border-2 border-primary-dark rounded-md" required={isAgeRestriction} />
+                                    <input type="number" name="benchmark" value={restrictions?.age.benchmark} onChange={handleRestrictionDataChange} className="w-10 border-2 border-primary-dark rounded-md" required={isAgeRestriction} />
                                 </div>
                             }
                         </div>

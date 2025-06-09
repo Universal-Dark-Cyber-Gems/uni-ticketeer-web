@@ -10,22 +10,23 @@ import { PiHandsPrayingFill } from "react-icons/pi";
 import { GiSewingNeedle } from "react-icons/gi";
 import { MdLaptop } from "react-icons/md";
 import { AiOutlinePicture } from "react-icons/ai";
-import TicketInput from "./TicketInput";
-import useImage from "../hooks/useImage";
-import states from "../global/states";
-import useEvents from "../hooks/useEvents";
+import TicketInput from "../../components/TicketInput";
+import useImage from "../../hooks/useImage";
+import states from "../../global/states";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../contexts/userContext";
+import { useUserProvider } from "../../contexts/UserContext";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
+import { useEventProvider } from "../../contexts/EventContext";
 
 
 
-export default function AddEventGeneralInfo({moveToTickets}){
+export default function AddEventGeneralInfo({moveToTickets, event}){
     let navigate = useNavigate()
-    let user = useContext(UserContext)
+    let userProvider = useUserProvider()
     let nextDay = dayjs().add(1, "day").format("YYYY-MM-DD")
     const {isImageLoading, imageStatus, uploadImage} = useImage()
-    let { createEvent, eventsLoading, eventsStatus } = useEvents()
+    let { createEvent, editEvent, eventsLoading, eventsStatus } = useEventProvider()
     let [isTicketed, setIsTicketed] = useState(false)
     let [bannerImg, setBannerImg] = useState(null)
     let [statesArr, setStatesArr] = useState([])
@@ -37,8 +38,8 @@ export default function AddEventGeneralInfo({moveToTickets}){
         {
             title: "",
             venue: "",
-            organiser: user?._id,
-            organiser_name: user?.username,
+            organiser: userProvider?.user?._id,
+            organiser_name: userProvider?.user?.username,
             start_date: "",
             end_date: undefined,
             start_time: "",
@@ -75,24 +76,38 @@ export default function AddEventGeneralInfo({moveToTickets}){
     }
 
     async function handleSubmitEvent(e){
+        console.log("location", userProvider?.user)
         e.preventDefault();
         let eventData = {
             ...createEventFormData, 
             is_ticketed: isTicketed,
+            status: event ? undefined : isTicketed ? 'draft' : 'published',
             location: {
-                country: user?.location.country,
+                country: userProvider?.user?.location?.country,
                 state,
                 city,
                 landmark: landmark || undefined
             }
         }
-        console.log(eventData)
-        let result = await createEvent(eventData)
-        if(!result.success) return;
-        if(eventData.is_ticketed){
-            moveToTickets(result.eventId, eventData.title)
+        console.log("submitting:", eventData)
+        let result
+        if(!event){
+            result = await createEvent(eventData)
+            if(!result.success) return;
+            toast.success("Event Created Successfully", {position: 'top-center'})
+            if(eventData.is_ticketed){
+                moveToTickets(result.eventId, eventData.title)
+            }else{
+                navigate("/dashboard")
+            }
         }else{
-            navigate("/dashboard")
+            result = await editEvent(event._id, eventData)
+            if(!result.success) return;
+            toast.success("Event Edited Successfully")
+            setTimeout(()=>{
+                navigate("/dashboard")
+
+            }, 1000)
         }
     }
 
@@ -114,6 +129,27 @@ export default function AddEventGeneralInfo({moveToTickets}){
             setStatesArr((prev)=>[...prev, states[i].name])
         }
     }, [])
+
+    useEffect(()=>{
+        if(event){
+            setCreateEventFormData({
+                title: event.title,
+                venue: event.venue,
+                organiser: event.organiser,
+                organiser_name: event.organiser_name,
+                start_date: event.start_date.split("T")[0],
+                end_date: event.end_date || undefined,
+                start_time: event.start_time,
+                end_time: event.end_time || undefined,
+                category: event.category,
+                banner_image_url: event.banner_image_url,
+                additional_information: event.additional_information || undefined
+            })
+            setIsTicketed(event.is_ticketed)
+            setState(event.location.state)
+            setCity(event.location.city)
+        }
+    }, [event])
 
     useEffect(()=>{
         if(state !== ""){
@@ -138,43 +174,43 @@ export default function AddEventGeneralInfo({moveToTickets}){
                     <div>
                         <Title title={"Categories *"} />
                         <div className="flex gap-3 flex-wrap">
-                            <CategoryTab category={"Music"} onChange={handleCreateEventChange} >
+                            <CategoryTab value={createEventFormData.category} category={"Music"} onChange={handleCreateEventChange} >
                                 <TbMicrophone2 size={25} />
                             </CategoryTab>
 
-                            <CategoryTab category={"Food and Drink"} onChange={handleCreateEventChange}>
+                            <CategoryTab value={createEventFormData.category} category={"Food and Drink"} onChange={handleCreateEventChange}>
                                 <MdOutlineFastfood size={25} />
                             </CategoryTab>
 
-                            <CategoryTab category={"Party and Nightlife"} onChange={handleCreateEventChange} >
+                            <CategoryTab value={createEventFormData.category} category={"Party and Nightlife"} onChange={handleCreateEventChange} >
                                 <BiParty size={25} />
                             </CategoryTab>
 
-                            <CategoryTab category={"Art and Culture"} onChange={handleCreateEventChange} >
+                            <CategoryTab value={createEventFormData.category} category={"Art and Culture"} onChange={handleCreateEventChange} >
                                 <MdPalette size={25} />
                             </CategoryTab>
 
-                            <CategoryTab category={"Career and Business"} onChange={handleCreateEventChange} >
+                            <CategoryTab value={createEventFormData.category} category={"Career and Business"} onChange={handleCreateEventChange} >
                                 <RiBriefcase4Line size={25} />
                             </CategoryTab>
 
-                            <CategoryTab category={"Fitness and Wellness"} onChange={handleCreateEventChange} >
+                            <CategoryTab value={createEventFormData.category} category={"Fitness and Wellness"} onChange={handleCreateEventChange} >
                                 <IoFitnessOutline size={25} />
                             </CategoryTab>
 
-                            <CategoryTab category={"Spirituality and Religion"} onChange={handleCreateEventChange} >
+                            <CategoryTab value={createEventFormData.category} category={"Spirituality and Religion"} onChange={handleCreateEventChange} >
                                 <PiHandsPrayingFill size={25} />
                             </CategoryTab>
 
-                            <CategoryTab category={"Fashion Design"} onChange={handleCreateEventChange} >
+                            <CategoryTab value={createEventFormData.category} category={"Fashion Design"} onChange={handleCreateEventChange} >
                                 <GiSewingNeedle size={25} />
                             </CategoryTab>
 
-                            <CategoryTab category={"Classes"} onChange={handleCreateEventChange} >
+                            <CategoryTab value={createEventFormData.category} category={"Classes"} onChange={handleCreateEventChange} >
                                 <MdLaptop size={25} />
                             </CategoryTab>
 
-                            <CategoryTab category={"Comedy"} onChange={handleCreateEventChange}>
+                            <CategoryTab value={createEventFormData.category} category={"Comedy"} onChange={handleCreateEventChange}>
                                 <MdTheaterComedy size={25} />
                             </CategoryTab>
                         </div>
@@ -234,7 +270,7 @@ export default function AddEventGeneralInfo({moveToTickets}){
                                 min={nextDay}
                                 label={"start date"}
                                 name={"start_date"}
-                                value={createEventFormData.start_date}
+                                value={createEventFormData.start_date.split("T")[0]}
                                 onChange={handleCreateEventChange}
                             />
                             <TicketInput 
@@ -278,15 +314,26 @@ export default function AddEventGeneralInfo({moveToTickets}){
                                 </label>
                                 :
                                 <label htmlFor="event_banner" className="cursor-pointer border border-primary-dark">
-                                    <AiOutlinePicture size={150} fontWeight={2} />
+                                    {
+                                        createEventFormData.banner_image_url
+                                        ?
+                                        <img src={createEventFormData.banner_image_url} alt="banner" className="w-[70%] m-auto" />
+                                        :
+                                        <AiOutlinePicture size={150} fontWeight={2} />
+                                    }
                                     <p className="text-[12px] text-center">select image</p>
                                 </label>
                             }
                             <input type="file" id="event_banner" accept="image/*" hidden={true} onInput={(e)=>{setBannerImg(e.target.files[0] || bannerImg); console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0])}} />
                             { imageStatus.error && <div className="text-center text-red-500 font-medium"> {imageStatus.message} </div>}
-                            <div onClick={isImageLoading ? undefined : handleUploadImage} className="py-[3px] cursor-pointer px-4 border border-primary-dark my-2 w-auto">
-                                { isImageLoading ? "Uploading..." : "Upload file" }
-                            </div>
+                            { imageStatus.success && <div className="text-center text-green-500 font-medium"> {imageStatus.message} </div>}
+                            {
+                                bannerImg
+                                && 
+                                <div onClick={isImageLoading ? undefined : handleUploadImage} className="py-[3px] cursor-pointer px-4 border border-primary-dark my-2 w-auto">
+                                    { isImageLoading ? "Uploading..." : "Upload file" }
+                                </div>
+                            }
                         </div>
                     </div>
                     <div>
@@ -296,15 +343,19 @@ export default function AddEventGeneralInfo({moveToTickets}){
                             <TicketedTab priceType={"paid"} isTicketed={isTicketed} setIsTicketed={setIsTicketed} />
                         </div>
                     </div>
-                    {eventsStatus.error && <div className="text-center text-red-500 font-medium"> {eventsStatus.message} </div>}
+                   
                     <div className="flex justify-center">
                         <button 
-                            className={`p-2 m-4 text-center ${eventsLoading ? "bg-grey-500" : "bg-primary-dark"} text-primary-orange rounded-md`}
+                            className={`p-2 m-4 text-center ${eventsLoading ? "bg-grey-700" : "bg-primary-dark"} text-primary-orange rounded-md`}
                         >
                             {
                                 eventsLoading
                                 ?
                                 "..."
+                                :
+                                event
+                                ?
+                                "Submit"
                                 :
                                 isTicketed
                                 ?
@@ -318,8 +369,14 @@ export default function AddEventGeneralInfo({moveToTickets}){
     )
 }
 
-function CategoryTab({category, children, onChange}){
+function CategoryTab({value, category, children, onChange}){
     let [isChecked, setIsChecked] = useState(false)
+
+    useEffect(()=>{
+        if(value?.includes(category)){
+            setIsChecked(true)
+        }
+    }, [value])
 
     return(
         <div className="w-[72px]">

@@ -27,4 +27,35 @@ async function createTicketApi(payload, token){
         return { err: true, error: e}
     }
 }
-export { getAllTicketsByEvent, createTicketApi }
+
+async function editTicketApi(id, payload, token){
+    try{
+        let res = await axios.put(`${baseApiUrlTest}${apiVersion}/tickets/${id}`, payload, {
+            headers: {
+                "Accept": 'application/json',
+                "Content-Type": "application/json",
+                "ticketeer-auth-token": token
+            }
+        })
+        return { err: false, result: res}
+    }catch(e){
+        return { err: true, error: e}
+    }
+}
+
+async function getSingleTicketApi(ticketid, token){
+    try{
+        let res = await axios.get(`${baseApiUrlTest}${apiVersion}/tickets/${ticketid}`, {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "ticketeer-auth-token": token
+            }
+        })
+
+        return{ err: false, result: res}
+    }catch(e){
+        return { err: true, error: e}
+    }
+}
+export { getAllTicketsByEvent, createTicketApi, editTicketApi, getSingleTicketApi }

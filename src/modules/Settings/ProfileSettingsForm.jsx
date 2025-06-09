@@ -1,5 +1,5 @@
 import { CiCamera } from "react-icons/ci";
-import TicketInput from "./TicketInput";
+import TicketInput from "../../components/TicketInput";
 import { useState } from "react";
 
 export default function ProfileSettingsForm({userData}){

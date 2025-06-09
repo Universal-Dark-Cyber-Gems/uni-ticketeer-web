@@ -1,5 +1,5 @@
 import './App.css';
-import { RouterProvider, createBrowserRouter} from 'react-router-dom'
+import { Outlet, RouterProvider, createBrowserRouter} from 'react-router-dom'
 import Home from './Screens/Home';
 import IndexLayout from './Screens/IndexLayout';
 import Events from './Screens/Events';
@@ -20,6 +20,8 @@ import EditEvent from './Screens/DashboardScreens/EditEvent';
 import ViewEventTickets from './Screens/DashboardScreens/ViewEventTickets';
 import Settings from './Screens/DashboardScreens/Settings';
 import AuthWrapper from './Screens/AuthWrapper';
+import EditTicket from './Screens/DashboardScreens/EditTicket';
+import { UserProvider } from './contexts/UserContext';
 
 register();
 
@@ -60,7 +62,7 @@ function App() {
     ]},
     {
       path: "/dashboard",
-      element: <AuthWrapper><DashboardLayout /></AuthWrapper>,
+      element: <UserProvider><AuthWrapper><DashboardLayout /></AuthWrapper></UserProvider>,
       children: [
         {
           path: "/dashboard",
@@ -93,6 +95,10 @@ function App() {
           {
             path: 'tickets/:id',
             element: <ViewEventTickets />
+          },
+          {
+            path: ':eventname/tickets/edit/:eventid/:ticketid',
+            element: <EditTicket />
           }]
         },
         {

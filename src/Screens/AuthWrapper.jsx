@@ -9,6 +9,7 @@ export default function AuthWrapper({children}){
     
     if(!isLoggedIn){
         navigate("/auth/login")
+        return
     }
 
     return children
