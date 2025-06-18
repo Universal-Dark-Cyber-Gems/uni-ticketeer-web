@@ -4,6 +4,7 @@ import AddEventTicketInfo from "../../modules/Events/AddEventTicketInfo"
 import {ToastContainer, toast} from "react-toastify"
 import { InfoTab } from "../../modules/Events/InfoTab"
 import useEvents from "../../hooks/useEvents"
+import CustomModal from "../../components/CustomModal"
 
 export default function EditEvent(){
     let navigate = useNavigate()
@@ -38,7 +39,6 @@ export default function EditEvent(){
                 &&
                 <AddEventTicketInfo eventId={eventId} eventName={eventName} />
             }
-            <ToastContainer />
             </div>
         </div>
     )

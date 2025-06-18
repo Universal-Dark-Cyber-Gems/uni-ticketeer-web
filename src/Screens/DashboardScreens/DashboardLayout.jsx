@@ -4,9 +4,10 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import useLogin from "../../hooks/useLogin";
 import { useUserProvider } from "../../contexts/UserContext" ;
 import { isUserOrganiser } from "../../global/helpers"
-import ReactModal from "react-modal";
 import { EventProvider } from "../../contexts/EventContext";
 import { ToastContainer } from "react-toastify";
+import { useScreenLoaderProvider } from "../../contexts/ScreenLoaderContext";
+import NetworkError from "../../components/NetworkError";
 
 export default function DashboardLayout(){
     let { logout } = useLogin()
@@ -18,6 +19,7 @@ export default function DashboardLayout(){
         setIsMenuOpen(!isMenuOpen)
     }
 
+    useScreenLoaderProvider(userProvider?.userLoading, "Loading User detials")
     console.log("user from userprovider in dashboard layout", userProvider?.user)
 
     return(
@@ -74,17 +76,9 @@ export default function DashboardLayout(){
 
                     <div className="w-full md:w-[82%] px-3 min-h-[100vh] bg-[#EEEEEE] ml-auto">
                         {
-                            userProvider?.userLoading
-                            ?
-                            <div className="text-center text-primary-dark font-medium">
-                                Loading user details ...
-                            </div>
-                            :
                             userProvider?.userStatus.error
                             ?
-                            <div className="text-center text-red-500 font-medium">
-                                {userProvider?.userStatus.message}
-                            </div>
+                            <NetworkError />
                             :
                             <Outlet context={{toggleMenu}} />
                         }

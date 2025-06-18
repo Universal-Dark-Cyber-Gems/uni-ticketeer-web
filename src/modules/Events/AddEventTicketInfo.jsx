@@ -54,10 +54,14 @@ export default function AddEventTicketInfo({eventName, eventId}){
     function addNewTicket(){
         let valResult = validateTicketArray(ticketsDataArr)
         if(valResult.error){
-            showError(valResult.message)
+            toast(valResult.message, {position: 'top-center'})
             return
         }
-        ticketTypesCountSet(ticketsDataArr.length + 1)
+        if(ticketsDataArr.length < 4){
+            ticketTypesCountSet(ticketsDataArr.length + 1)
+        }else{
+            toast.info("maximum amount of ticket reached")
+        }
     }
 
     function removeLastTicket(){
@@ -74,8 +78,13 @@ export default function AddEventTicketInfo({eventName, eventId}){
             for(let i=0; i < ticketsDataArr.length; i++){
                 let result = await createTicket(ticketsDataArr[i])
                 if(!result.success){
+                    setTicketsDataArr([...ticketsDataArr])
                     toast(ticketStatus.message)
                     return
+                }else{
+                    ticketsDataArr.filter((ticket, index)=>{
+                        return index !== i
+                    })
                 }
             }
             let editEventRes = await editEvent(eventId, {status: 'published'})
@@ -246,18 +255,33 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
         let imageUrl = await uploadImage(ticketImage.blob)
             console.log("image url:", imageUrl)
 
-            if(imageStatus.error) return
+            if(imageStatus.error){
+                return
+            }else{
 
-            handleInputChange({
-                target: {
-                    name: "ticket_banner_url",
-                    value: imageUrl
-                }
-            }, index)
+                handleInputChange({
+                    target: {
+                        name: "ticket_banner_url",
+                        value: imageUrl
+                    }
+                }, index)
+    
+                setTicketImage((prev)=>{
+                    return { ...prev, isUploaded: true}
+                })
+            } 
 
-            setTicketImage((prev)=>{
-                return { ...prev, isUploaded: true}
-            })
+    }
+
+    function removeImage(){
+        handleInputChange({
+            target: {
+                name: "ticket_banner_url",
+                value: ""
+            }
+        }, index)
+
+        setTicketImage({blob: "", isUploaded: false})
     }
 
     console.log("ticket image", ticketImage)
@@ -297,6 +321,13 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                             : 
                             <span>upload image</span>
                         }
+                    </div>
+                }
+                {
+                    ticketImage.blob
+                    &&
+                    <div onClick={removeImage} className="cursor-pointer text-[12px] text-center border-[1px] border-primary-dark rounded-md p-[2px] w-full m-auto">
+                        Remove Image
                     </div>
                 }
                 <input type="file" accept="image/*" onInput={selectImage} hidden={true} id={`ticket${index}`} />

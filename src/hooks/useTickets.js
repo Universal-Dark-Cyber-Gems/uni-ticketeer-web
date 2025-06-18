@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createTicketApi, editTicketApi, getAllTicketsByEvent, getSingleTicketApi } from "../api/ticketsapi";
+import { createTicketApi, deleteTicketApi, editTicketApi, getAllTicketsByEvent, getSingleTicketApi } from "../api/ticketsapi";
 import getErrorMsg from "../utils/getErrorMsg";
 import useLogin from "./useLogin";
 import { toast } from "react-toastify";
@@ -15,17 +15,17 @@ export default function useTickets(id){
         setTicketsLoading(true)
         let response = await getAllTicketsByEvent(id)
         console.log(response)
-        if(response.err){
+        if(response?.err){
             let errormsg = getErrorMsg(response)
-            if(response.error?.response?.status === 401){
+            if(response?.error?.response?.status === 401){
                 logout()
                 return
             }
-            setTicketStatus({error: true, success: false, message: errormsg, status: response.error.response.status})
+            setTicketStatus({error: true, success: false, message: errormsg, status: response?.error?.response?.status})
             toast.error(errormsg, {position: "top-center"})
             setTicketsLoading(false)
         }else{
-            setTickets(response.result?.data?.data)
+            setTickets(response?.result?.data?.data)
             setTicketsLoading(false)
         }
     }
@@ -34,9 +34,9 @@ export default function useTickets(id){
         setTicketsLoading(true)
         let response = await createTicketApi(payload, accessToken)
         console.log("create ticket response", response)
-        if(response.err){
+        if(response?.err){
             let errormsg = getErrorMsg(response)
-            if(response.error?.response?.status === 401){
+            if(response?.error?.response?.status === 401){
                 logout()
                 return
             }
@@ -55,9 +55,9 @@ export default function useTickets(id){
         setTicketsLoading(true)
         let response = await editTicketApi(id, payload, accessToken)
         console.log("edit ticket response", response)
-        if(response.err){
+        if(response?.err){
             let errormsg = getErrorMsg(response)
-            if(response.error?.response?.status === 401){
+            if(response?.error?.response?.status === 401){
                 logout()
                 return
             }
@@ -76,9 +76,9 @@ export default function useTickets(id){
         setTicketsLoading(true)
         let result = await getSingleTicketApi(ticketid, accessToken)
         console.log("result from getting single ticket", result)
-        if(result.err){
-            let errormsg = getErrorMsg(response)
-            if(response.error?.response?.status === 401){
+        if(result?.err){
+            let errormsg = getErrorMsg(result)
+            if(result?.error?.response?.status === 401){
                 logout()
                 return
             }
@@ -88,6 +88,25 @@ export default function useTickets(id){
         }else{
             setTicketsLoading(false)
             return { success: true, ticket: result.result.data.data }
+        }
+    }
+
+    async function deleteTicket(ticketid){
+        setTicketsLoading(true)
+        let result = await deleteTicketApi(ticketid, accessToken)
+        console.log("result from deleting single ticket", result)
+        if(result?.err){
+            let errormsg = getErrorMsg(result)
+            if(result?.error?.response?.status === 401){
+                logout()
+                return
+            }
+            toast.error(JSON.stringify(errormsg), {position: 'top-center'})
+            setTicketsLoading(false)
+            return { success: false}
+        }else{
+            setTicketsLoading(false)
+            return { success: true, ticket: result.result.data.data}
         }
     }
 
@@ -103,6 +122,7 @@ export default function useTickets(id){
         ticketStatus, 
         createTicket,
         editTicket,
-        getSingleTicket
+        getSingleTicket,
+        deleteTicket
     }
 }

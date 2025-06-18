@@ -12,7 +12,7 @@ import Dashboard from './Screens/DashboardScreens/Dashboard';
 import DashEvent from './Screens/DashboardScreens/DashEvent';
 import DashWallet from './Screens/DashboardScreens/DashWallet';
 import {register} from 'swiper/element/bundle'
-import Error from './Screens/Error';
+import Error from './Screens/NotFound';
 import ViewEventStats from './Screens/DashboardScreens/ViewEventStats';
 import EventLayout from './Screens/DashboardScreens/EventLayout';
 import CreateEvent from './Screens/DashboardScreens/CreateEvent';
@@ -21,7 +21,9 @@ import ViewEventTickets from './Screens/DashboardScreens/ViewEventTickets';
 import Settings from './Screens/DashboardScreens/Settings';
 import AuthWrapper from './Screens/AuthWrapper';
 import EditTicket from './Screens/DashboardScreens/EditTicket';
+import ViewOrganiserTicket from './Screens/DashboardScreens/ViewOrganiserTicket'
 import { UserProvider } from './contexts/UserContext';
+import { ScreenLoaderProvider } from './contexts/ScreenLoaderContext';
 
 register();
 
@@ -62,7 +64,15 @@ function App() {
     ]},
     {
       path: "/dashboard",
-      element: <UserProvider><AuthWrapper><DashboardLayout /></AuthWrapper></UserProvider>,
+      element: (
+        <AuthWrapper>
+          <UserProvider>
+            <ScreenLoaderProvider>
+              <DashboardLayout />
+            </ScreenLoaderProvider>
+          </UserProvider>
+        </AuthWrapper>
+      ),
       children: [
         {
           path: "/dashboard",
@@ -99,6 +109,10 @@ function App() {
           {
             path: ':eventname/tickets/edit/:eventid/:ticketid',
             element: <EditTicket />
+          },
+          {
+            path: ':eventname/organiser/view/ticket/:ticketid',
+            element: <ViewOrganiserTicket />
           }]
         },
         {

@@ -18,6 +18,7 @@ import { useUserProvider } from "../../contexts/UserContext";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { useEventProvider } from "../../contexts/EventContext";
+import CustomModal from "../../components/CustomModal";
 
 
 
@@ -49,6 +50,8 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
             additional_information: undefined
         }
     )
+
+    let [showAddMoreTicketOption, setShowAddMoreTicketOption] = useState(false)
 
     function handleCreateEventChange(e){
         //console.log(e)
@@ -104,10 +107,13 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
             result = await editEvent(event._id, eventData)
             if(!result.success) return;
             toast.success("Event Edited Successfully")
-            setTimeout(()=>{
-                navigate("/dashboard")
-
-            }, 1000)
+            if(eventData.is_ticketed){
+                setShowAddMoreTicketOption(true)
+            }else{
+                setTimeout(()=>{
+                    navigate("/dashboard")
+                }, 1000)
+            }
         }
     }
 
@@ -365,6 +371,32 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                             }
                         </button>
                     </div>
+                     <CustomModal
+                        isOpen={showAddMoreTicketOption}
+                        showCloseBtn={false}
+                    >
+                        <div className="pt-4 pb-4">
+                            <p className="text-center text-[20px]">
+                                Would you like to add more tickets to this event?
+                            </p>
+                            <div className="flex justify-center gap-4 pt-8">
+                                <div 
+                                    className="w-[100px] cursor-pointer text-center bg-primary-dark text-primary-orange pt-2 pb-2 pr-6 pl-6 rounded-full"
+                                    onClick={()=> navigate("/dashboard")}
+                                >
+                                    No
+                                </div>
+                                <div 
+                                    className="w-[100px] cursor-pointer text-center bg-primary-dark text-primary-orange pt-2 pb-2 pr-6 pl-6 rounded-full"
+                                    onClick={()=>{
+                                        moveToTickets(event._id, event .title)
+                                    }}
+                                >
+                                    Yes
+                                </div>
+                            </div>
+                        </div>
+                    </CustomModal>
                 </form>
     )
 }

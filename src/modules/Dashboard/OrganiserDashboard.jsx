@@ -7,7 +7,7 @@ import useEvents from "../../hooks/useEvents";
 import useTickets from "../../hooks/useTickets";
 import { useNavigate } from "react-router-dom";
 import { UserContext, useUserProvider } from "../../contexts/UserContext";
-import { checkMissingTickets } from "../../global/helpers";
+import { checkMissingTickets, isEventPast } from "../../global/helpers";
 import CustomModal from "../../components/CustomModal";
 
 export default function OrganiserDashboard(){
@@ -19,6 +19,7 @@ export default function OrganiserDashboard(){
     const { events, eventsLoading, eventsStatus } = useEvents()
 
     let [organiserActiveEvents, setOrganiserActiveEvents] = useState([])
+    let [organiserPastEvents, setOrganiserPastEvents] = useState([])
     let [organiserAllEvents, setOrganiserAllEvents] = useState([])
     let [needTicketModalOpen, setNeedTicketModalOpen] = useState(false)
     let [eventNeedingTickets, setEventNeedingTickets] = useState("")
@@ -28,14 +29,18 @@ export default function OrganiserDashboard(){
             console.log("events from organiser dashboard", events)
             let allEvents = []
             let activeEvents = []
+            let pastEvents = []
             for(let i=0; i < events.length; i++){
                 if(events[i].organiser === user._id){
-                    let comparisonDate = new Date(events[i].end_date || events[i].start_date)
                     allEvents.push(events[i])
                     setOrganiserAllEvents(allEvents)
-                    if(comparisonDate > Date.now()){
+                    if(!isEventPast(events[i].start_date)){
                         activeEvents.push(events[i])
                         setOrganiserActiveEvents(activeEvents)
+                    }
+                    if(isEventPast(events[i].start_date)){
+                        pastEvents.push(events[i])
+                        setOrganiserPastEvents(pastEvents)
                     }
                 }
             }
@@ -89,9 +94,38 @@ export default function OrganiserDashboard(){
                             ?
                             <div className="pt-8 text-center text-red-500 font-medium"> {eventsStatus.message} </div>
                             :
-                            <div className="flex justify-even gap-2 flex-wrap">
+                            <div>
+                                <div className="text-primary-dark font-medium text-xl py-4">
+                                    Active Events
+                                </div>
                                 {
-                                    organiserAllEvents?.map((event, i)=>(<DashEventCard key={"event"+i} event={event} link={`/dashboard/event/details/${event._id}`}  />))
+                                    organiserActiveEvents.length == 0
+                                    ?
+                                    <div className="p-4 text-center text-primary-dark">
+                                        You have no active events
+                                    </div>
+                                    :
+                                    <div className="flex justify-even gap-2 mb-4 flex-wrap">
+                                        {
+                                            organiserActiveEvents?.map((event, i)=>(<DashEventCard key={"event"+i} event={event} link={`/dashboard/event/details/${event._id}`}  />))
+                                        }
+                                    </div>
+                                }
+                                <div className="text-primary-dark font-medium text-xl py-4">
+                                    Past Events
+                                </div>
+                                {
+                                    organiserPastEvents.length == 0
+                                    ?
+                                    <div className="p-4 text-center text-primary-dark">
+                                        No Past Events were found
+                                    </div>
+                                    :
+                                    <div className="flex justify-even gap-2 flex-wrap">
+                                        {
+                                            organiserPastEvents?.map((event, i)=>(<DashEventCard key={"event"+i} event={event} link={`/dashboard/event/details/${event._id}`}    />))
+                                        }
+                                    </div>
                                 }
                             </div>
                         }

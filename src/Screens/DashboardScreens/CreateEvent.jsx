@@ -35,7 +35,6 @@ export default function CreateEvent(){
                 &&
                 <AddEventTicketInfo eventId={eventId} eventName={eventName} />
             }
-            <ToastContainer />
             </div>
         </div>
     )
