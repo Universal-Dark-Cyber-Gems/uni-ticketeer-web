@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { editEventApi } from "../../api/eventsapi";
 import useEvents from "../../hooks/useEvents";
 import { toast } from "react-toastify";
+import { useScreenLoaderProvider } from "../../contexts/ScreenLoaderContext";
 
 export default function AddEventTicketInfo({eventName, eventId}){
     let ticketsData = {
@@ -19,20 +20,28 @@ export default function AddEventTicketInfo({eventName, eventId}){
         restrictions: undefined
     }
 
-    let { editEvent } = useEvents()
-    let { createTicket, ticketsLoading, ticketStatus } = useTickets(eventId)
+    let { editEvent, eventsLoading } = useEvents()
+    let { createTicket, tickets: formerTickets, ticketsLoading, ticketStatus } = useTickets(eventId)
     let navigate = useNavigate()
 
     let [ticketTypesCount, setTicketTypesCount] = useState(1)
     let [ticketsDataArr, setTicketsDataArr] = useState([ticketsData])
-    let [error, setError] = useState({error: false, message: ""})
+    let [loaderMessage, setLoaderMessage] = useState("fetching event tickets info")
 
     let tickets = ticketsDataArr?.map((ticketData, i)=>{
         return (
             <TicketTypeTab key={"Tab"+i} ticketData={ticketData} index={i} handleInputChange={handleInputChange} />
         )
     })
+
+    let previousTickets = formerTickets?.map((ticket, i)=>{
+        return(
+            <FormerTicketCard key={`Card${i}`} ticketData={ticket} index={i} />
+        )
+    })
     
+
+    console.log("former created tickets", formerTickets)
 
     function handleInputChange(e, index){
         console.log(ticketsDataArr)
@@ -52,12 +61,13 @@ export default function AddEventTicketInfo({eventName, eventId}){
     }
 
     function addNewTicket(){
+        let formerTicketsLength = formerTickets?.length || 0
         let valResult = validateTicketArray(ticketsDataArr)
         if(valResult.error){
             toast(valResult.message, {position: 'top-center'})
             return
         }
-        if(ticketsDataArr.length < 4){
+        if(ticketsDataArr.length + formerTicketsLength < 4){
             ticketTypesCountSet(ticketsDataArr.length + 1)
         }else{
             toast.info("maximum amount of ticket reached")
@@ -70,11 +80,17 @@ export default function AddEventTicketInfo({eventName, eventId}){
 
     async function submitTicketForm(e){
         e.preventDefault()
+        let formerTicketsLength = formerTickets?.length || 0
         console.log(ticketsDataArr)
         let validationResult = validateTicketArray(ticketsDataArr)
-        if(validationResult.error) {
+        if(validationResult.error || formerTicketsLength == 4) {
+            if(formerTickets.length == 4){
+                toast.warning("Maximum amount of tickets reached", {position: "top-center"})
+                return
+            }
             toast(validationResult.message, {position: "top-center"})
         }else {
+            setLoaderMessage("Uploading tickets")
             for(let i=0; i < ticketsDataArr.length; i++){
                 let result = await createTicket(ticketsDataArr[i])
                 if(!result.success){
@@ -85,11 +101,17 @@ export default function AddEventTicketInfo({eventName, eventId}){
                     ticketsDataArr.filter((ticket, index)=>{
                         return index !== i
                     })
+                    setTicketsDataArr(ticketsDataArr)
                 }
             }
+            setLoaderMessage("Updating Event Status")
             let editEventRes = await editEvent(eventId, {status: 'published'})
+            toast.success("Ticket Creation successfull")
             if(editEventRes.success){
-                navigate("/dashboard")
+                setTimeout(()=>{
+                    navigate("/dashboard")
+                }, 100)
+                
             }
         }
     }
@@ -100,6 +122,8 @@ export default function AddEventTicketInfo({eventName, eventId}){
         }  
     },[ticketTypesCount])
 
+    useScreenLoaderProvider(ticketsLoading || eventsLoading, loaderMessage)
+
     return (
         <form onSubmit={submitTicketForm} className="py-12 relative">
             {/* <div className="flex flex-col items-center">
@@ -109,13 +133,9 @@ export default function AddEventTicketInfo({eventName, eventId}){
             <div className="text-bold text-center text-[20px]"> {eventName} </div>
             
             <div className="md:w-[70%] m-auto">
-                {
-                    error.error 
-                    && 
-                    <div className="text-center text-red-500 text-bold">
-                        {error.message}
-                    </div>
-                }
+                <div className="flex flex-wrap gap-2 my-4">
+                    {previousTickets}
+                </div>
                 {tickets}
                 {
                     tickets.length > 1
@@ -140,6 +160,22 @@ export default function AddEventTicketInfo({eventName, eventId}){
                 </button>
             </div>
         </form>
+    )
+}
+
+function FormerTicketCard({ticketData, index}){
+    return(
+        <div className="md:w-[45%] flex">
+            <img className="w-[60%]" src={ticketData?.ticket_banner_url} />
+            <div className="flex flex-col justify-between bg-[#FFF] text-primary-dark font-medium p-4">
+                <div>
+                    {ticketData?.ticket_type}
+                </div>
+                <div>
+                    {ticketData?.ticket_price}
+                </div>
+            </div>
+        </div>
     )
 }
 
@@ -286,8 +322,8 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
 
     console.log("ticket image", ticketImage)
     return(
-        <div className="flex justify-between w-full my-4 bg-[#FFF] p-4 my-2 border border-primary-dark rounded-md">
-            <div className="w-[50%] my-4 items-center justify-between bg-[#D9D9D9] rounded-md">
+        <div className="md:flex justify-between w-full my-4 bg-[#FFF] p-4 my-2 border border-primary-dark rounded-md">
+            <div className="md:w-[50%] my-4 items-center justify-between bg-[#D9D9D9] rounded-md">
                 <label htmlFor={`ticket${index}`}>
                     {
                         ticketImage.blob
@@ -332,7 +368,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                 }
                 <input type="file" accept="image/*" onInput={selectImage} hidden={true} id={`ticket${index}`} />
             </div>
-            <div className="w-[45%]">
+            <div className="md:w-[45%]">
                 <div>
                     <div className="font-regular text-primary-dark">Ticket Name</div>
                     <input type="text" value={ticketData.ticket_type} name="ticket_type" placeholder="Enter ticket type/name" onChange={(e)=>{handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md w-full p-[2px] m-[2px]" required />

@@ -26,7 +26,10 @@ export default function ViewOrganiserTicket(){
         let res = await deleteTicket(ticketid)
         if(res.success){
             toast.success("Ticket Deleted Successfully", {position: 'top-center'})
-            navigate("/dashboard")
+            setTimeout(()=>{
+                navigate("/dashboard")
+            }, 100)
+            
         }
     }
 
@@ -70,7 +73,15 @@ export default function ViewOrganiserTicket(){
                     </div>
                     <div className="md:w-[50%] h-[100%]">
                         <div className="font-medium text-center mb-4">Sales Progress</div>
-                        <ProgressBar sold={ticketDetails?.quantity_sold} total={200} />
+                        {
+                            ticketDetails?.ticket_quantity > 0
+                            ?
+                            <ProgressBar sold={ticketDetails?.quantity_sold} total={ticketDetails?.ticket_quantity} />
+                            :
+                            <div className="text-[12px] text-center">
+                                progress bar can't be shown for unlimited amounts of ticket
+                            </div>
+                        }
                     </div>
                 </div>
                 <Line />

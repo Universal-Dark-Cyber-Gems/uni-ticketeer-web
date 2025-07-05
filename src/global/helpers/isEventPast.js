@@ -6,12 +6,8 @@ function isEventPast(eventDateString, eventTimeString){
     let eventHour = parseInt(eventTimeString?.split(":")[0])
     let eventMinute = parseInt(eventTimeString?.split(":")[1])
 
-    console.log("current Hour", currentHour, "currentMinute", currentMinute,  "eventHour", eventHour, "eventMinute", eventMinute)
-    console.log("date current", today, "date event", eventDate)
-
 
     if(today > eventDate){
-        console.log("date don pass")
         return true
     } 
 
@@ -25,7 +21,6 @@ function isEventPast(eventDateString, eventTimeString){
         return true
     }
 
-    console.log("date never pass")
     return false
 }
 

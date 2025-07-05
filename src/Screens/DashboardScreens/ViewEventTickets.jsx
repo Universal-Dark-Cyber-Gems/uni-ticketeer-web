@@ -6,34 +6,76 @@ import { useEffect, useState, useContext } from 'react'
 import useTickets from "../../hooks/useTickets"
 import useEvents from "../../hooks/useEvents"
 import { formatTime, formatDay, isEventPast, isUserOrganiser } from "../../global/helpers"
-import { UserContext } from "../../contexts/UserContext"
+import { UserContext, useUserProvider } from "../../contexts/UserContext"
+import { toast } from 'react-toastify'
+import { useScreenLoaderProvider } from '../../contexts/ScreenLoaderContext'
 
 export default function ViewEventTickets(){
     let { id } = useParams()
-    let user = useContext(UserContext)
-    let { tickets, ticketsLoading, ticketStatus } = useTickets(id)
+    let userProvider = useUserProvider()
+    let { tickets, addTicketToCart, ticketsLoading, ticketStatus } = useTickets(id)
     let { events, eventsLoading, eventsStatus } = useEvents()
+
     let [ticketsToBuy, setTicketsToBuy] = useState([])
     let [singleEvent, setSingleEvent] = useState(null)
 
-    function setTicketAmount(i, newAmount){
-        ticketsToBuy[i].amount = newAmount
-        setTicketsToBuy([...tickets])
+    let [addToCartLoading, setAddToCartLoading] = useState(false)
+
+    function setTicketQuantity(i, newQuantity){
+        console.log("ticket index to set", i, "ticket quantity", newQuantity)
+        ticketsToBuy[i].quantity = newQuantity
+        setTicketsToBuy([...ticketsToBuy])
+    }
+
+    async function addToCart(){
+        setAddToCartLoading(true)
+        for(let i=0; i < ticketsToBuy.length; i++){
+            console.log("item being added to cart", ticketsToBuy[i])
+            if(ticketsToBuy[i].quantity > 0){
+                let result = await addTicketToCart(ticketsToBuy[i].ticket_info._id, ticketsToBuy[i])
+                if(!result.success){
+                    setTicketsToBuy([...ticketsToBuy])
+                    setAddToCartLoading(false)
+                    return
+                }else{
+                    ticketsToBuy.filter((ticket, index)=>{
+                        return index !== i
+                    })
+                    setTicketsToBuy(ticketsToBuy)
+                }
+            }
+        }
+        toast.success("Ticket(s) added to cart", {position: 'top-center'})
+        setAddToCartLoading(false)
     }
 
     
     useEffect(()=>{
+        let _ticketsToBuy = tickets?.map((ticket)=> (
+            {
+                ticket_info: ticket, 
+                user_info: {
+                    user_id: userProvider?.user?._id,
+                    user_name: userProvider?.user?.username,
+                    user_email: userProvider?.user?.email
+                },
+                quantity: 0
+            }
+        ))
+        console.log("tickets to buy", _ticketsToBuy)
         setSingleEvent(events?.find((event)=>event._id == id))
-        setTicketsToBuy([{category: "Regular", price: 1000, amount: 0} , {category: "VIP", price: 3000, amount: 0}])
-    },[events])
+        setTicketsToBuy(_ticketsToBuy)
+    },[events, tickets, userProvider?.user])
+
+    useScreenLoaderProvider(addToCartLoading, "adding Tickets to cart")
 
     return(
         <>
-            <div>
+            <div className="text-primary-dark">
                 <div className='md:w-[50%] h-[45vh] m-auto border-4 border-primary-dark rounded-lg'>
                     <img src={singleEvent?.banner_image_url} alt='event banner' className='w-[100%] h-[100%] rounded-md' />
                 </div>
-                <div className='md:w-[70%] m-auto my-2 py-2'>
+                <div className='md:w-[70%] m-auto my-2 py-2 text-primary-dark'>
                     <h3 className='text-center text-lg font-medium'>{singleEvent?.title}</h3>
                     <p className='font-bold text-primary-dark'>About:</p>
                     <p>
@@ -67,11 +109,11 @@ export default function ViewEventTickets(){
                     </div>
                 </div>
                 {
-                    isUserOrganiser(user)
+                    isUserOrganiser(userProvider?.user)
                     ?
                     <div className='text-center'> Organiser Accounts cannot purchase Tickets </div>
                     :
-                    isEventPast(singleEvent?.end_date || singleEvent?.start_date)
+                    isEventPast(singleEvent?.start_date, singleEvent?.start_time)
                     ?
                     <div className='text-center'> This Event has ended and you can no longer purchase tickets </div>
                     :
@@ -87,15 +129,20 @@ export default function ViewEventTickets(){
                         <h3 className='font-medium text-primary-dark text-center'>Choose Ticket</h3>
                         <div className='border-2 border-primary-dark rounded-md p-4 my-4'>
                             <div className='flex justify-between'>
-                                <p className='w-[30%] font-bold' >Categories</p>
-                                <p className='w-[30%] font-bold' >Price</p>
-                                <p className='font-bold'>Amount</p>
+                                <p className='w-[30%] font-bold'>Categories</p>
+                                <p className='w-[30%] font-bold'>Price</p>
+                                <p className='font-bold'>Quantity</p>
                             </div>
                             {
-                                ticketsToBuy.map((ticket, i)=><TicketDetailsTab key={i} index={i} category={ticket.category} price={ticket.price} amount={ticket.amount} setAmount={setTicketAmount} />)
+                                ticketsToBuy?.map((ticket, i)=><TicketDetailsTab key={i} index={i} category={ticket.ticket_info?.ticket_type} price={ticket?.ticket_info?.ticket_price} quantity={ticket.quantity} setQuantity={setTicketQuantity} />)
                             }
                         </div>
-                        <div className='bg-primary-dark w-[50%] md:w-[20%] p-2 text-primary-orange text-center rounded-full m-auto cursor-pointer'>Add to cart</div>
+                        <div 
+                            className='bg-primary-dark w-[50%] md:w-[20%] p-2 text-primary-orange text-center rounded-full m-auto cursor-pointer'
+                            onClick={addToCart}
+                        >
+                            Add to cart
+                        </div>
                     </div>
                 }
             </div>
@@ -110,32 +157,30 @@ export default function ViewEventTickets(){
     )
 }
 
-function TicketDetailsTab({category, index, price, amount = 0, setAmount}){
+function TicketDetailsTab({category, index, price, quantity = 0, setQuantity}){
 
-    function decreaseTicketAmount(){
-        if(amount > 0){
-            let newamount = amount - 1
-            setAmount(index, newamount)
+    function decreaseTicketQuantity(){
+        if(quantity > 0){
+            console.log("ticket index", index, "ticket quantity", quantity)
+            let newquantity = quantity - 1
+            setQuantity(index, newquantity)
         }
     }
 
-    function increaseTicketAmount(){
-        let newamount = amount + 1
-        setAmount(index, newamount)
+    function increaseTicketQuantity(){
+        let newquantity = quantity + 1
+        console.log("ticket index", index, "ticket quantity", newquantity)
+        setQuantity(index, newquantity)
     }
 
-    function setAmountManually(e){
-        console.log(e.target.value)
-        setAmount(index, e.target.value)
-    }
     return(
         <div className='flex justify-between my-2'>
             <p className='w-[30%]'>{category}</p>
             <p className='w-[30%]'>{price}</p>
             <div className='flex justify-between'>
-                <div onClick={decreaseTicketAmount} className='flex justify-center items-center cursor-pointer rounded-md text-primary-dark border-[1px] border-primary-dark w-[20px] h-[20px] bg-primary-orange'>-</div>
-                <input value={amount} onChange={setAmountManually} className='w-[20px] h-[20px] mx-2' />
-                <div onClick={increaseTicketAmount} className='flex justify-center items-center cursor-pointer rounded-md text-primary-dark border-[1px] border-primary-dark w-[20px] h-[20px] bg-primary-orange'>+</div>
+                <div onClick={decreaseTicketQuantity} className='flex justify-center items-center cursor-pointer rounded-md text-primary-dark border-[1px] border-primary-dark w-[20px] h-[20px] bg-primary-orange'>-</div>
+                <input value={quantity} disabled className='w-[20px] h-[20px] mx-2' />
+                <div onClick={increaseTicketQuantity} className='flex justify-center items-center cursor-pointer rounded-md text-primary-dark border-[1px] border-primary-dark w-[20px] h-[20px] bg-primary-orange'>+</div>
             </div>
         </div>
     )

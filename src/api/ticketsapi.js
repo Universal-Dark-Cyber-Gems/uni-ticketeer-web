@@ -74,4 +74,20 @@ async function deleteTicketApi(ticketid, token){
         return { err: true, error: e}
     }
 }
-export { getAllTicketsByEvent, createTicketApi, editTicketApi, getSingleTicketApi, deleteTicketApi }
+
+async function addTicketToCartApi(ticketid, payload, token) {
+    try{
+        let res = await axios.post(`${baseApiUrlTest}${apiVersion}/tickets/generate/${ticketid}`, payload, {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "ticketeer-auth-token": token
+            }
+        } )
+
+        return {err: false, result: res}
+    }catch(err){
+        return {err: true, error: err}
+    }
+}
+export { getAllTicketsByEvent, createTicketApi, editTicketApi, getSingleTicketApi, addTicketToCartApi, deleteTicketApi }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createTicketApi, deleteTicketApi, editTicketApi, getAllTicketsByEvent, getSingleTicketApi } from "../api/ticketsapi";
+import { addTicketToCartApi, createTicketApi, deleteTicketApi, editTicketApi, getAllTicketsByEvent, getSingleTicketApi } from "../api/ticketsapi";
 import getErrorMsg from "../utils/getErrorMsg";
 import useLogin from "./useLogin";
 import { toast } from "react-toastify";
@@ -66,8 +66,8 @@ export default function useTickets(id){
             setTicketsLoading(false)
             return { success: false }
         }else{
-            setTicketStatus({error: false, success: true, message: "Ticket created successfully" })
             setTicketsLoading(false)
+            setTicketStatus({error: false, success: true, message: "Ticket created successfully" })
             return { success: true }
         }
     }
@@ -110,6 +110,24 @@ export default function useTickets(id){
         }
     }
 
+    async function addTicketToCart(ticketid, payload){
+        setTicketsLoading(true)
+        let result = await addTicketToCartApi(ticketid, payload, accessToken)
+        if(result?.err){
+            let errormsg = getErrorMsg(result)
+            if(result?.error?.response?.status === 401){
+                logout()
+                return
+            }
+            toast.error(JSON.stringify(errormsg), {position: 'top-center'})
+            setTicketsLoading(false)
+            return { success: false}
+        }else{
+            setTicketsLoading(false)
+            return { success: true }
+        }
+    }
+
     useEffect(()=>{
         if(id){
             getTicketsByEventId()
@@ -123,6 +141,7 @@ export default function useTickets(id){
         createTicket,
         editTicket,
         getSingleTicket,
-        deleteTicket
+        deleteTicket,
+        addTicketToCart
     }
 }

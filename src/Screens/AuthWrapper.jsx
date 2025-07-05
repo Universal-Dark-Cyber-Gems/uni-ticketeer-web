@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import useLogin from "../hooks/useLogin";
+import { useEffect } from "react";
 
 export default function AuthWrapper({children}){
     let { isLoggedIn } = useLogin()
@@ -7,10 +8,12 @@ export default function AuthWrapper({children}){
     
     console.log("isuserloggedin:", isLoggedIn)
     
-    if(!isLoggedIn){
-        navigate("/auth/login")
-        return
-    }
+    useEffect(()=>{
+        if(!isLoggedIn){
+            navigate("/auth/login")
+            return
+        }
+    }, [isLoggedIn])
 
     return children
 }

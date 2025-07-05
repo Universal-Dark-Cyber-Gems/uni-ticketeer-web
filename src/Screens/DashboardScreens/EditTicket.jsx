@@ -8,6 +8,7 @@ import { editEventApi } from "../../api/eventsapi";
 import useEvents from "../../hooks/useEvents";
 import { toast } from "react-toastify";
 import { useEventProvider } from "../../contexts/EventContext";
+import { useScreenLoaderProvider } from "../../contexts/ScreenLoaderContext";
 
 export default function EditTicket(){
     let {eventid, ticketid, eventname} = useParams()
@@ -23,7 +24,7 @@ export default function EditTicket(){
 
     let { tickets, ticketStatus, getSingleTicket, editTicket, ticketsLoading } = useTickets()
     let navigate = useNavigate()
-    let [error, setError] = useState({error: false, message: ""})
+    let [loaderMessage, setLoaderMessage] = useState("fetching Ticket info")
 
 
     function handleInputChange(e, index){
@@ -34,6 +35,7 @@ export default function EditTicket(){
 
     async function submitTicketForm(e){
         e.preventDefault()
+        setLoaderMessage("updating ticket details")
         console.log("data being submited", ticketData)
         let result = await editTicket(ticketid, ticketData)
         if(!result.success){
@@ -41,7 +43,9 @@ export default function EditTicket(){
             return
         }else{
             toast.success("Ticket edited Successfully", {position: "top-center"})
-            navigate("/dashboard")
+            setTimeout(()=>{
+                navigate("/dashboard")
+            }, 100)
         }
     }
 
@@ -60,6 +64,8 @@ export default function EditTicket(){
        })
     },[tickets])
 
+    useScreenLoaderProvider(ticketsLoading, loaderMessage)
+
     return (
         <form onSubmit={submitTicketForm} className="py-12 relative">
             {/* <div className="flex flex-col items-center">
@@ -69,13 +75,6 @@ export default function EditTicket(){
             <div className="text-bold text-center text-[20px]"> {eventname} </div>
             
             <div className="md:w-[70%] m-auto">
-                {
-                    error.error 
-                    && 
-                    <div className="text-center text-red-500 text-bold">
-                        {error.message}
-                    </div>
-                }
                 <TicketTypeTab ticketData={ticketData} handleInputChange={handleInputChange} />
             </div>
             <div className="flex gap-2 justify-center items-center">
@@ -218,10 +217,23 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
             })
     }
 
+    useEffect(()=>{
+        
+        if(ticketData?.restrictions){
+            setRestrictions(ticketData.restrictions)
+            setIsRestriction(true)
+        }
+        if(ticketData?.restrictions?.age){
+            setIsAgeRestriction(true)
+        }
+        if(ticketData?.restrictions?.gender){
+            setIsGenderRestriction(true)
+        }
+    }, [ticketData])
     console.log("ticket image", ticketImage)
     return(
-        <div className="flex justify-between w-full my-4 bg-[#FFF] p-4 my-2 border border-primary-dark rounded-md">
-            <div className="w-[50%] my-4 items-center justify-between bg-[#D9D9D9] rounded-md">
+        <div className="md:flex justify-between w-full my-4 bg-[#FFF] p-4 my-2 border border-primary-dark rounded-md">
+            <div className="md:w-[50%] my-4 items-center justify-between bg-[#D9D9D9] rounded-md">
                 <label htmlFor={`ticket${index}`}>
                     {
                         ticketImage.blob
@@ -258,7 +270,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                 }
                 <input type="file" accept="image/*" onInput={selectImage} hidden={true} id={`ticket${index}`} />
             </div>
-            <div className="w-[45%]">
+            <div className="md:w-[45%]">
                 <div>
                     <div className="font-regular text-primary-dark">Ticket Name</div>
                     <input type="text" value={ticketData?.ticket_type} name="ticket_type" placeholder="Enter ticket type/name" onChange={(e)=>{handleInputChange(e, index)}} className="border-2 border-primary-dark rounded-md w-full p-[2px] m-[2px]" required />
@@ -296,8 +308,8 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                                 <div>
                                     <p className="text-[14px]">Range</p>
                                     <div className="flex">
-                                        <AgeRangeTab range={"over"} selectedRange={restrictions?.age.range} handleChange={handleRestrictionDataChange} />
-                                        <AgeRangeTab range={"under"} selectedRange={restrictions?.age.range} handleChange={handleRestrictionDataChange} />
+                                        <AgeRangeTab range={"over"} selectedRange={restrictions?.age?.range} handleChange={handleRestrictionDataChange} />
+                                        <AgeRangeTab range={"under"} selectedRange={restrictions?.age?.range} handleChange={handleRestrictionDataChange} />
                                     </div>
                                 </div>
                             }
@@ -306,7 +318,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                                 &&
                                 <div>
                                     <p className="text-[14px]">Benchmark</p>
-                                    <input type="number" name="benchmark" value={restrictions?.age.benchmark} onChange={handleRestrictionDataChange} className="w-10 border-2 border-primary-dark rounded-md" required={isAgeRestriction} />
+                                    <input type="number" name="benchmark" value={restrictions?.age?.benchmark} onChange={handleRestrictionDataChange} className="w-10 border-2 border-primary-dark rounded-md" required={isAgeRestriction} />
                                 </div>
                             }
                         </div>
@@ -327,11 +339,11 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                                 <div className="flex">
                                     <div className="mx-2">
                                         <label>male</label>
-                                        <input type="radio" name="gender" value={"male"} onChange={handleRestrictionDataChange} />
+                                        <input type="radio" name="gender" checked={ticketData?.restrictions?.gender === "male"} value={"male"} onChange={handleRestrictionDataChange} />
                                     </div>
                                     <div className="mx-2">
                                         <label>female</label>
-                                        <input type="radio" name="gender" value={"female"} onChange={handleRestrictionDataChange} />
+                                        <input type="radio" name="gender" checked={ticketData?.restrictions?.gender === "female"} value={"female"} onChange={handleRestrictionDataChange} />
                                     </div>
                                 </div>
                             }
