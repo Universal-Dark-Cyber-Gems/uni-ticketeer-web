@@ -22,8 +22,10 @@ import Settings from './Screens/DashboardScreens/Settings';
 import AuthWrapper from './Screens/AuthWrapper';
 import EditTicket from './Screens/DashboardScreens/EditTicket';
 import ViewOrganiserTicket from './Screens/DashboardScreens/ViewOrganiserTicket'
+import Cart from './Screens/DashboardScreens/Cart'
 import { UserProvider } from './contexts/UserContext';
 import { ScreenLoaderProvider } from './contexts/ScreenLoaderContext';
+import { CartProvider } from './contexts/CartContext';
 
 register();
 
@@ -68,7 +70,9 @@ function App() {
         <AuthWrapper>
           <UserProvider>
             <ScreenLoaderProvider>
-              <DashboardLayout />
+              <CartProvider>
+                <DashboardLayout />
+              </CartProvider>
             </ScreenLoaderProvider>
           </UserProvider>
         </AuthWrapper>
@@ -114,6 +118,13 @@ function App() {
             path: ':eventname/organiser/view/ticket/:ticketid',
             element: <ViewOrganiserTicket />
           }]
+        },
+        {
+          path: "cart",
+          element: <Cart />
+        },
+        {
+          path: "verify"
         },
         {
           path: "settings",
