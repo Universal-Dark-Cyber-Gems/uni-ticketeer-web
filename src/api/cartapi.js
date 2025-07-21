@@ -18,7 +18,7 @@ async function getCartByUserApi(userId, accessToken){
 
 async function checkoutCartApi(payload, accessToken){
     try{
-        let res = await axios.post(`${baseApiUrlTest}${apiVersion}/checkout`, payload, {
+        let res = await axios.post(`${baseApiUrlTest}${apiVersion}/cart/checkout`, payload, {
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
@@ -30,4 +30,19 @@ async function checkoutCartApi(payload, accessToken){
         return {err: true, error: err}
     }
 }
-export { getCartByUserApi, checkoutCartApi }
+
+async function deleteCartItemApi(id, accessToken){
+    try{
+        let res = await axios.delete(`${baseApiUrlTest}${apiVersion}/cart/delete_item/${id}`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "ticketeer-auth-token": accessToken
+            }
+        })
+        return {err: false, result: res}
+    }catch(err){
+        return {err: true, error: err}
+    }
+}
+export { getCartByUserApi, checkoutCartApi, deleteCartItemApi }
