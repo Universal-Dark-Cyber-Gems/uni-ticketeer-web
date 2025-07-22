@@ -9,10 +9,13 @@ import { formatTime, formatDay, isEventPast, isUserOrganiser } from "../../globa
 import { UserContext, useUserProvider } from "../../contexts/UserContext"
 import { toast } from 'react-toastify'
 import { useScreenLoaderProvider } from '../../contexts/ScreenLoaderContext'
+import useCart from '../../hooks/useCart'
+import { useCartProvider } from '../../contexts/CartContext'
 
 export default function ViewEventTickets(){
     let { id } = useParams()
     let userProvider = useUserProvider()
+    let cartProvider = useCartProvider()
     let { tickets, addTicketToCart, ticketsLoading, ticketStatus } = useTickets(id)
     let { events, eventsLoading, eventsStatus } = useEvents()
 
@@ -28,23 +31,25 @@ export default function ViewEventTickets(){
     }
 
     async function addToCart(){
+        if(!ticketsToBuy.find((ticket)=> ticket.quantity > 0)){
+            toast.warn("No Ticket(s) selected", {position: 'top-center'})
+            return
+        }
         setAddToCartLoading(true)
         for(let i=0; i < ticketsToBuy.length; i++){
             console.log("item being added to cart", ticketsToBuy[i])
             if(ticketsToBuy[i].quantity > 0){
                 let result = await addTicketToCart(ticketsToBuy[i].ticket_info._id, ticketsToBuy[i])
                 if(!result.success){
-                    setTicketsToBuy([...ticketsToBuy])
                     setAddToCartLoading(false)
                     return
                 }else{
-                    ticketsToBuy.filter((ticket, index)=>{
-                        return index !== i
-                    })
-                    setTicketsToBuy(ticketsToBuy)
+                    ticketsToBuy[i].quantity = 0
+                    setTicketsToBuy([...ticketsToBuy])
                 }
             }
         }
+        await cartProvider.getCart()
         toast.success("Ticket(s) added to cart", {position: 'top-center'})
         setAddToCartLoading(false)
     }

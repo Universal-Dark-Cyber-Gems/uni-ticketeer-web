@@ -3,6 +3,8 @@ import { addTicketToCartApi, createTicketApi, deleteTicketApi, editTicketApi, ge
 import getErrorMsg from "../utils/getErrorMsg";
 import useLogin from "./useLogin";
 import { toast } from "react-toastify";
+import handleErrorCase from "../utils/handleErrorCase";
+import { useCartProvider } from "../contexts/CartContext";
 
 export default function useTickets(id){
     const { accessToken, logout } = useLogin()
@@ -114,13 +116,8 @@ export default function useTickets(id){
         setTicketsLoading(true)
         let result = await addTicketToCartApi(ticketid, payload, accessToken)
         if(result?.err){
-            let errormsg = getErrorMsg(result)
-            if(result?.error?.response?.status === 401){
-                logout()
-                return
-            }
+            handleErrorCase(result, logout,setTicketsLoading, setTicketStatus)
             toast.error(JSON.stringify(errormsg), {position: 'top-center'})
-            setTicketsLoading(false)
             return { success: false}
         }else{
             setTicketsLoading(false)

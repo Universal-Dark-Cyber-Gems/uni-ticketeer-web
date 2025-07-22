@@ -8,12 +8,30 @@ import { IoTrashBinOutline } from "react-icons/io5"
 import { calculateCartSubTotal } from "../../global/helpers/calculateCartSubTotal";
 import { useState } from "react";
 import CustomModal from "../../components/CustomModal"
+import { toast } from "react-toastify";
 
 export default function Cart(){
     let {toggleMenu} = useOutletContext()
-    let { cart, cartLoading } = useCartProvider()
+    let { cart, cartLoading, deleteCartItem  } = useCartProvider()
 
-    let [showDeleteCartModal, setShowDeleteCartModal] = useState(true)
+    let [showDeleteCartModal, setShowDeleteCartModal] = useState(false)
+    let [itemIdToDelete, setItemIdToDelete] = useState("")
+
+    async function deleteItemFromCart(){
+        closeModal()
+        let res = await deleteCartItem(itemIdToDelete)
+        console.log("response from deletecart", res)
+        if(res.success){
+            toast.success("Item Deleted From Cart")
+        }
+    }
+
+    function closeModal(){
+        setItemIdToDelete("")
+        setShowDeleteCartModal(false)
+    }
+
+    console.log("item to delete", itemIdToDelete)
 
     return(
         <div>
@@ -42,7 +60,10 @@ export default function Cart(){
                                     <div key={`cart${i+1}`}>
                                         <div className="flex gap-4 relative">
                                             <div
-                                                onClick={()=>{setShowDeleteCartModal(true)}}
+                                                onClick={()=>{
+                                                    setItemIdToDelete(c._id)
+                                                    setShowDeleteCartModal(true)
+                                                }}
                                                 className="absolute cursor-pointer right-0 p-2 rounded-full bg-primary-dark"
                                             >
                                                 <IoTrashBinOutline className="text-primary-orange" />
@@ -87,15 +108,21 @@ export default function Cart(){
 
             <CustomModal
                 isOpen={showDeleteCartModal}
-                closeModal={()=>{setShowDeleteCartModal(false)}}
+                closeModal={closeModal}
             >
                 <div>
                     <p>Are you sure you want to remove this item from cart?</p>
                     <div className="flex pt-4 justify-center gap-5">
-                        <div className="text-primary-dark cursor-pointer border-[1px] py-2 px-4 rounded-full border-primary-dark">
+                        <div 
+                            className="text-primary-dark cursor-pointer border-[1px] py-2 px-4 rounded-full border-primary-dark"
+                            onClick={closeModal}
+                        >
                             Cancel
                         </div>
-                        <div className="text-white bg-red-500 cursor-pointer border-[1px] py-2 px-4 rounded-full border-red-500">
+                        <div
+                            className="text-white bg-red-500 cursor-pointer border-[1px] py-2 px-4 rounded-full border-red-500"
+                            onClick={deleteItemFromCart}
+                        >
                             Remove from cart
                         </div>
                     </div>
