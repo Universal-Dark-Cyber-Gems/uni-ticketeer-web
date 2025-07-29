@@ -46,7 +46,7 @@ export default function useCart(){
         let response = await deleteCartItemApi(id, accessToken)
         console.log("response from delete cart", response)
         if(response.err){
-            handleErrorCase(response, logout, setCartStatus, setCartLoading)
+            handleErrorCase(response, logout, setCartStatus, setCartLoading, true)
             return { success: false }
         }else{
             let res = await getCart()

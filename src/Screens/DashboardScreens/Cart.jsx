@@ -102,7 +102,9 @@ export default function Cart(){
                             <p><NairaSymbol /> {calculateCartSubTotal(cart)}</p>
                         </div>
                     </div>
-
+                    <div className="text-center cursor-pointer font-medium text-primary-orange bg-primary-dark p-2 my-4 rounded-full">
+                        Checkout
+                    </div>
                 </div>
             </div>
 

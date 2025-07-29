@@ -1,7 +1,11 @@
+import { toast } from "react-toastify"
 import getErrorMsg from "./getErrorMsg"
 
-export default function handleErrorCase(response, logout, setStatusState, setLoadingState){
+export default function handleErrorCase(response, logout, setStatusState, setLoadingState, showError=false){
     let errormsg = getErrorMsg(response)
+    if(showError){
+        toast.error(errormsg, {position: 'top-center'})
+    }
     if(response.error?.response?.status === 401){
         logout()
         return

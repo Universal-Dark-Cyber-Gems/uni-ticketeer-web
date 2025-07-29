@@ -11,6 +11,21 @@ async function getAllTicketsByEvent(event_id){
     }
 }
 
+async function getPurchasedTicketsApi(token){
+    try{
+        let res = await axios.get(`${baseApiUrlTest}${apiVersion}/tickets/purchased/user`, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "ticketeer-auth-token": token
+            }
+        })
+        return {err: false, result: res}
+    }catch(e){
+        return { err: true, error: e}
+    }
+}
+
 async function createTicketApi(payload, token){
     try{
         let res = await axios.post(`${baseApiUrlTest}${apiVersion}/tickets/`, payload, {
@@ -20,7 +35,6 @@ async function createTicketApi(payload, token){
                 "ticketeer-auth-token": token
             }
         })
-
         return {err: false, result: res}
     }catch(e){
         console.log(e)
@@ -90,4 +104,4 @@ async function addTicketToCartApi(ticketid, payload, token) {
         return {err: true, error: err}
     }
 }
-export { getAllTicketsByEvent, createTicketApi, editTicketApi, getSingleTicketApi, addTicketToCartApi, deleteTicketApi }
+export { getAllTicketsByEvent, getPurchasedTicketsApi, createTicketApi, editTicketApi, getSingleTicketApi, addTicketToCartApi, deleteTicketApi }

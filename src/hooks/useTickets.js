@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { addTicketToCartApi, createTicketApi, deleteTicketApi, editTicketApi, getAllTicketsByEvent, getSingleTicketApi } from "../api/ticketsapi";
+import { addTicketToCartApi, createTicketApi, deleteTicketApi, editTicketApi, getAllTicketsByEvent, getPurchasedTicketsApi, getSingleTicketApi } from "../api/ticketsapi";
 import getErrorMsg from "../utils/getErrorMsg";
 import useLogin from "./useLogin";
 import { toast } from "react-toastify";
@@ -9,8 +9,10 @@ import { useCartProvider } from "../contexts/CartContext";
 export default function useTickets(id){
     const { accessToken, logout } = useLogin()
     let [tickets, setTickets] = useState(null)
+    let [purchasedTickets, setPurchasedTickets] = useState(null)
     let [ticketsLoading, setTicketsLoading] = useState(false)
     let [ticketStatus, setTicketStatus] = useState({error: false, success: false, message: ""})
+    let [purchasedTicketsStatus, setPurchasedTicketsStatus] = useState({error: false, success: false, message: "" })
 
  
     async function getTicketsByEventId(){
@@ -18,16 +20,20 @@ export default function useTickets(id){
         let response = await getAllTicketsByEvent(id)
         console.log(response)
         if(response?.err){
-            let errormsg = getErrorMsg(response)
-            if(response?.error?.response?.status === 401){
-                logout()
-                return
-            }
-            setTicketStatus({error: true, success: false, message: errormsg, status: response?.error?.response?.status})
-            toast.error(errormsg, {position: "top-center"})
-            setTicketsLoading(false)
+            handleErrorCase(response, logout, setTicketStatus, setTicketsLoading, true)
         }else{
             setTickets(response?.result?.data?.data)
+            setTicketsLoading(false)
+        }
+    }
+
+    async function getPurchasedTickets(){
+        setTicketsLoading(true)
+        let response = await getPurchasedTicketsApi(accessToken)
+        if(response.err){
+            handleErrorCase(response, logout, setTicketsLoading, setPurchasedTicketsStatus)
+        }else{
+            setPurchasedTickets(response?.result?.data?.data)
             setTicketsLoading(false)
         }
     }
@@ -133,11 +139,13 @@ export default function useTickets(id){
 
     return { 
         tickets,
+        purchasedTickets,
         ticketsLoading, 
         ticketStatus, 
         createTicket,
         editTicket,
         getSingleTicket,
+        getPurchasedTickets,
         deleteTicket,
         addTicketToCart
     }
