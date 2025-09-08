@@ -26,6 +26,9 @@ import Cart from './Screens/DashboardScreens/Cart'
 import { UserProvider } from './contexts/UserContext';
 import { ScreenLoaderProvider } from './contexts/ScreenLoaderContext';
 import { CartProvider } from './contexts/CartContext';
+import VerifyPayment from './Screens/VerifyPayment';
+import ForgotPassword from './Screens/AuthScreens/ForgotPassword';
+import ResetPassword from './Screens/AuthScreens/ResetPassword';
 
 register();
 
@@ -62,6 +65,14 @@ function App() {
         {
           path: "signup",
           element: <SignUp />
+        },
+        {
+          path: "forgot-password",
+          element: <ForgotPassword />
+        },
+        {
+          path: "reset-password",
+          element: <ResetPassword />
         }
     ]},
     {
@@ -124,7 +135,8 @@ function App() {
           element: <Cart />
         },
         {
-          path: "verify"
+          path: "verifypayment",
+          element: <VerifyPayment />
         },
         {
           path: "settings",

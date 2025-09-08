@@ -1,4 +1,4 @@
-import { Link, useOutletContext } from "react-router-dom";
+import { Link, useNavigate, useOutletContext } from "react-router-dom";
 import DashHeader from "../../components/DashHeader";
 import Line from "../../components/Line";
 import CustomLoader from "../../components/CustomLoader";
@@ -11,8 +11,9 @@ import CustomModal from "../../components/CustomModal"
 import { toast } from "react-toastify";
 
 export default function Cart(){
+    let navigate = useNavigate()
     let {toggleMenu} = useOutletContext()
-    let { cart, cartLoading, deleteCartItem  } = useCartProvider()
+    let { cart, cartLoading, deleteCartItem, checkoutCart  } = useCartProvider()
 
     let [showDeleteCartModal, setShowDeleteCartModal] = useState(false)
     let [itemIdToDelete, setItemIdToDelete] = useState("")
@@ -29,6 +30,14 @@ export default function Cart(){
     function closeModal(){
         setItemIdToDelete("")
         setShowDeleteCartModal(false)
+    }
+
+    async function onCheckoutCart(){
+        let res = await checkoutCart({cart_items: cart})
+        if(res.success){
+            console.log("link to redirect to", res.link)
+            window.location.replace(res.link)
+        }
     }
 
     console.log("item to delete", itemIdToDelete)
@@ -102,8 +111,8 @@ export default function Cart(){
                             <p><NairaSymbol /> {calculateCartSubTotal(cart)}</p>
                         </div>
                     </div>
-                    <div className="text-center cursor-pointer font-medium text-primary-orange bg-primary-dark p-2 my-4 rounded-full">
-                        Checkout
+                    <div onClick={cartLoading ? undefined : onCheckoutCart} className={`text-center cursor-pointer font-medium text-primary-orange ${cartLoading ? "bg-[#EEE]" : "bg-primary-dark"} p-2 my-4 rounded-full`}>
+                        {cartLoading ? "Checkout..." : "Checkout"}
                     </div>
                 </div>
             </div>

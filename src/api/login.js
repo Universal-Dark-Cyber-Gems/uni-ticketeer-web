@@ -20,6 +20,32 @@ async function loginUser(payload){
    
 }
 
+async function getResetPasswordLinkApi(email){
+    try{
+        let res = await axios.get(baseApiUrlTest+apiVersion+"/users/forgot-password?email="+email)
+        return{err: false, data: res}
+    }catch(err){
+        return {err: true, error: err}
+    }
+
+}
+
+async function resetPasswordApi(token, userid, payload){
+    try{
+        let res = await axios.post(baseApiUrlTest+apiVersion+"/users/reset-password?userid="+userid+"&token="+token, payload, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        } )
+        return {err: false, data: res}
+    }catch(err){
+        return {err: true, error: err}
+    }
+}
+
 export {
-    loginUser
+    loginUser,
+    getResetPasswordLinkApi,
+    resetPasswordApi
 }

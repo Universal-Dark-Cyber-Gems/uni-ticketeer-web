@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { loginUser } from "../api/login";
+import { getResetPasswordLinkApi, loginUser, resetPasswordApi } from "../api/login";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import handleErrorCase from "../utils/handleErrorCase";
 
 
 let authToken = "ticketeerAuthToken"
@@ -55,6 +56,31 @@ export default function useLogin(){
         
     }
 
+    async function getResetPasswordLink(email){
+        setLoginLoading(true)
+        let response = await getResetPasswordLinkApi(email)
+        if(response.err){
+            handleErrorCase(response, logout, setStatus, setLoginLoading, true)
+        }else{
+            setLoginLoading(false)
+            setStatus({error: false, success: true, message: response.data.data.message})
+            toast.success("Link has been sent to your email")
+        }
+    }
+
+    async function resetPassword(userid, token, payload){
+        setLoginLoading(true)
+        let response = await resetPasswordApi(token, userid, payload)
+        if(response.err){
+            handleErrorCase(response, logout, setStatus, setLoginLoading, true)
+        }else{
+            setLoginLoading(false)
+            setStatus({error: false, success: true, message: response.data.data.message})
+            navigate("/auth/login")
+            toast.success("Password reset successfully.")
+        }
+    }
+
     function logout(){
         localStorage.removeItem(authToken)
         accessToken = ""
@@ -62,5 +88,5 @@ export default function useLogin(){
         navigate("/auth/login")
     }
 
-    return { login, logout, isLoggedIn, loginLoading, status, accessToken }
+    return { login, logout, getResetPasswordLink, resetPassword, isLoggedIn, loginLoading, status, accessToken }
 }

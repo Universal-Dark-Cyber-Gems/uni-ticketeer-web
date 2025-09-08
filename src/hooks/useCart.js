@@ -33,7 +33,8 @@ export default function useCart(){
         setCartLoading(true)
         let response = await checkoutCartApi(payload, accessToken)
         if(response.err){
-            handleErrorCase(response, logout, setCartStatus, setCartLoading)
+            console.log(response)
+            handleErrorCase(response, logout, setCartStatus, setCartLoading, true)
             return {success: false}
         }else{
             getCart()

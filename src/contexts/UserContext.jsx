@@ -4,9 +4,9 @@ import useUser from "../hooks/useUser"
 export const UserContext = createContext(null)
 
 export function UserProvider({children}){
-    let { user, accountDetails, userLoading, userStatus } = useUser()
+    let { user, accountDetails, userLoading, resendVerifMail, userStatus } = useUser()
     return(
-        <UserContext.Provider value={{user, accountDetails, userLoading, userStatus}}>
+        <UserContext.Provider value={{user, accountDetails, userLoading, resendVerifMail, userStatus}}>
             {children}
         </UserContext.Provider>
     )

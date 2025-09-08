@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 export default function UserDashboard(){
     let { purchasedTickets, getPurchasedTickets, ticketsLoading } = useTickets()
 
+
     return(
         <div className="py-4 w-[100%]">
             {/* <h2 className="text-xl py-4 font-bold text-primary-dark">Purchased Tickets Overview</h2> */}
@@ -29,7 +30,7 @@ export default function UserDashboard(){
                 <div>
                     <div className="text-center">
                         <p className="text-primary-dark">You don't have any active tickets</p>
-                        <Link className="text-primary-orange underline">Go get it</Link>
+                        <Link to={"/dashboard/events"} className="text-primary-orange underline">Go get it</Link>
                     </div>
                 </div>
             }
@@ -51,7 +52,7 @@ export default function UserDashboard(){
                 <div>
                     <div className="text-center">
                         <p className="text-primary-dark">You haven't purchased any tickets yet</p>
-                        <Link className="text-primary-orange underline">Go get it</Link>
+                        <Link to={"/dashboard/events"} className="text-primary-orange underline">Go get it</Link>
                     </div>
                 </div>
             }

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { addUserAccountDetailsApi, getUserAccountDetailsApi, getUserApi } from "../api/usersapi";
+import { addUserAccountDetailsApi, getUserAccountDetailsApi, getUserApi, resendVerifMailApi } from "../api/usersapi";
 import useLogin from "./useLogin";
 import getErrorMsg from "../utils/getErrorMsg";
+import handleErrorCase from "../utils/handleErrorCase";
 
 export default function useUser(){
     let { accessToken, logout } = useLogin()
@@ -73,6 +74,16 @@ export default function useUser(){
         }
     }
 
+    async function resendVerifMail(email){
+        setUserLoading(true)
+        let response = await resendVerifMailApi({email})
+        if(response.err){
+            handleErrorCase(response, logout, setUserStatus, setUserLoading, true)
+        }else{
+            setUserLoading(false)
+        }
+    }
+
     useEffect(()=>{
         if(user===null){
             async function getInitialUser(){
@@ -90,6 +101,7 @@ export default function useUser(){
         accountLoading, 
         userStatus, 
         accountStatus ,
-        addUserAccountDetails
+        addUserAccountDetails,
+        resendVerifMail
     }
 }

@@ -81,6 +81,21 @@ export async function editUserAccountDetailsApi(accessToken, body){
     }
 }
 
+export async function resendVerifMailApi(body){
+    try{
+        let result = await axios.post(`${baseApiUrlTest}${apiVersion}/users/generate/verifcationtoken`, body, {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+        console.log("result from resend verification", result)
+        return {err: false, result}
+    }catch(err){
+        return {err: true, error: err}
+    }
+}
+
 export async function getBankListApi(){
     try{
         let result = await axios.get(`${baseApiUrlTest}/flutterwave-banklist`)

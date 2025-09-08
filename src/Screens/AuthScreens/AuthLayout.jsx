@@ -1,6 +1,7 @@
 import {useEffect} from "react"
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom"
 import useLogin from "../../hooks/useLogin"
+import { ToastContainer } from "react-toastify"
 
 
 export default function AuthLayout(){
@@ -22,10 +23,11 @@ export default function AuthLayout(){
                     <h1 className="text-4xl text-white font-bold">Emume</h1>
                     <p className="text-primary-orange text-xl">{location.pathname === "/auth/login" ? "Login" : location.pathname === "/auth/signup" ? "Sign up" : ""}</p>
                 </div>
-                <div className="w-full md:w-[80%] min-h-[100vh] ml-auto py-4 bg-[#EEE] items-center justify-center flex">
-                    <h2 className="text-primary-dark absolute md:hidden top-5 left-10 text-xl font-bold cursor-pointer"><Link to={"/"}>Emume</Link></h2>
+                <div className="w-full flex flex-col md:w-[80%] min-h-[100vh] ml-auto py-4 bg-[#EEE] items-center justify-center flex">
+                    <h2 className="text-primary-dark md:hidden top-5 left-10 text-xl font-bold cursor-pointer"><Link to={"/"}>Emume</Link></h2>
                     <Outlet />
                 </div>
+                <ToastContainer />
             </div>
         </>
     )
