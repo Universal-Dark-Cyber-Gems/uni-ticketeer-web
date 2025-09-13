@@ -7,9 +7,9 @@ import { useCartProvider } from "../contexts/CartContext";
 export default function DashHeader({title, dashnavtoggle}){
     let navigate = useNavigate()
     let userProvider = useUserProvider()
-    let { cart, cartLoading } = useCartProvider()
+    let cartProvider = useCartProvider()
 
-    console.log("cart", cart)
+    console.log("cart", cartProvider?.cart)
 
     return(
         <div className="w-full flex justify-between items-center py-4">
@@ -17,10 +17,10 @@ export default function DashHeader({title, dashnavtoggle}){
             <div className="flex items-center w-[auto] justify-around">
                 <div onClick={()=> navigate("/dashboard/cart")} className="relative mx-2 p-2">
                     {
-                        cart?.length > 0
+                        cartProvider?.cart?.length > 0
                         &&
                         <div className="absolute bottom-[20px] left-[20px] w-[20px] h-[20px] flex justify-center items-center bg-red-500 rounded-full text-[10px] text-white text-center">
-                            {cart?.length}
+                            {cartProvider?.cart?.length}
                         </div>
                     }
                     <IoCartOutline className="cursor-pointer" size={25} />

@@ -33,6 +33,21 @@ export async function editUserApi(accessToken, userId, body){
     }
 }
 
+export async function getOrganiserStatsApi(accessToken){
+    try{
+        let result = await axios.get(`${baseApiUrlTest}${apiVersion}/users/organiserstats`, {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "ticketeer-auth-token": accessToken
+            }
+        })
+        return {err: false, result}
+    }catch(err){
+        return {err: true, error: err}
+    }
+}
+
 export async function getUserAccountDetailsApi(accessToken){
     try{
         let result = await axios.get(`${baseApiUrlTest}${apiVersion}/users/accountdetails`, {
@@ -78,21 +93,6 @@ export async function editUserAccountDetailsApi(accessToken, body){
         return { err: false, result }
     }catch(err){
         return { err: true, error: err}
-    }
-}
-
-export async function resendVerifMailApi(body){
-    try{
-        let result = await axios.post(`${baseApiUrlTest}${apiVersion}/users/generate/verifcationtoken`, body, {
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json"
-            }
-        })
-        console.log("result from resend verification", result)
-        return {err: false, result}
-    }catch(err){
-        return {err: true, error: err}
     }
 }
 

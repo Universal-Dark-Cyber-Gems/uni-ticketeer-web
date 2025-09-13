@@ -12,7 +12,7 @@ import CustomModal from "../../components/CustomModal";
 
 export default function OrganiserDashboard(){
     let navigate = useNavigate()
-    const {user} = useUserProvider()
+    const {user, organiserStats } = useUserProvider()
 
     let [activeOrganiserTab, setActiveOrganiserTab] = useState("ongoing events")
     
@@ -34,11 +34,11 @@ export default function OrganiserDashboard(){
                 if(events[i].organiser === user._id){
                     allEvents.push(events[i])
                     setOrganiserAllEvents(allEvents)
-                    if(!isEventPast(events[i].start_date)){
+                    if(!isEventPast(events[i].start_date, events[i].start_time)){
                         activeEvents.push(events[i])
                         setOrganiserActiveEvents(activeEvents)
                     }
-                    if(isEventPast(events[i].start_date)){
+                    if(isEventPast(events[i].start_date, events[i].start_time)){
                         pastEvents.push(events[i])
                         setOrganiserPastEvents(pastEvents)
                     }
@@ -68,18 +68,18 @@ export default function OrganiserDashboard(){
         <div className="w-[100%]">
                     <h2 className="text-xl py-8 font-bold text-primary-dark">Overview</h2>
                     <div className="md:grid grid-cols-3 grid-rows-3 gap-5">
-                        <OverviewCard title={"ongoing events"} amount={organiserActiveEvents.length} />          
-                        <OverviewCard title={"ongoing ticket sales"} amount={24} />
-                        <OverviewCard title={"all time events"} amount={organiserAllEvents.length} />
-                        <OverviewCard title={"all time ticket sales"} amount={400} />
-                        <OverviewCard title={"active tickets"} amount={0} />
-                        <OverviewCard title={"all time sales"} amount={0} />             
+                        <OverviewCard title={"ongoing events"} amount={organiserStats?.ongoingEvents || 0} />          
+                        <OverviewCard title={"ongoing ticket sales"} amount={organiserStats?.ongoingTicketSales || 0} />
+                        <OverviewCard title={"all time events"} amount={organiserStats?.allTimeEvents || 0} />
+                        <OverviewCard title={"all time ticket sales"} amount={organiserStats?.allTimeTicketSales || 0} />
+                        <OverviewCard title={"active tickets"} amount={organiserStats?.activeTickets || 0} />
+                        <OverviewCard title={"all time sales"} isCurrencyCard={true} amount={organiserStats?.allTimeSales || 0} />             
                     </div>
                     <div>
-                        <div className="flex justify-between pt-12 pb-8">
+                        <div className="flex justify-between items-center pt-12 pb-8">
                             <h2 className="text-xl font-bold text-primary-dark">Your Events</h2>
                             <Link to={"/dashboard/event/create"}>
-                                <div className="flex items-center bg-primary-orange p-2 mr-8 rounded-full font-medium"> 
+                                <div className="flex text-primary-dark items-center bg-primary-orange p-2 mr-8 rounded-full font-medium"> 
                                     New Event 
                                     <IoAdd size={20} className=" cursor-pointer"/>
                                 </div>
@@ -88,16 +88,13 @@ export default function OrganiserDashboard(){
                         {
                             eventsLoading
                             ?
-                            <div className="pt-8 text-center text-primary-dark font-medium"> Loading Events .... </div>
+                            <div className="pt-8 h-[200px] text-center text-primary-dark font-medium"> Loading Events .... </div>
                             :
                             eventsStatus?.error
                             ?
-                            <div className="pt-8 text-center text-red-500 font-medium"> {eventsStatus.message} </div>
+                            <div className="pt-8 h-[200px] text-center text-red-500 font-medium"> {eventsStatus.message} </div>
                             :
                             <div>
-                                <div className="text-primary-dark font-medium text-xl py-4">
-                                    Active Events
-                                </div>
                                 {
                                     organiserActiveEvents.length == 0
                                     ?
@@ -111,21 +108,19 @@ export default function OrganiserDashboard(){
                                         }
                                     </div>
                                 }
-                                <div className="text-primary-dark font-medium text-xl py-4">
-                                    Past Events
-                                </div>
                                 {
-                                    organiserPastEvents.length == 0
-                                    ?
-                                    <div className="p-4 text-center text-primary-dark">
-                                        No Past Events were found
-                                    </div>
-                                    :
-                                    <div className="flex justify-even gap-2 flex-wrap">
-                                        {
-                                            organiserPastEvents?.map((event, i)=>(<DashEventCard key={"event"+i} event={event} link={`/dashboard/event/details/${event._id}`}    />))
-                                        }
-                                    </div>
+                                    organiserPastEvents.length > 0
+                                    &&
+                                    <>
+                                        <div className="text-primary-dark font-medium text-xl py-4">
+                                            Past Events
+                                        </div>
+                                        <div className="flex justify-even gap-2 flex-wrap">
+                                            {
+                                                organiserPastEvents?.map((event, i)=>(<DashEventCard key={"event"+i} event={event} link={`/dashboard/event/details/${event._id}`}    />))
+                                            }
+                                        </div>
+                                    </>
                                 }
                             </div>
                         }
@@ -156,7 +151,7 @@ export default function OrganiserDashboard(){
                                     Edit Event
                                 </div>
                                 <div 
-                                    onClick={()=>navigate(`/dashboard/event/create?current_tab=ticket&event=${eventNeedingTickets.name}&ev_id=${eventNeedingTickets.id}`)} 
+                                    onClick={()=>navigate(`/dashboard/event/create?current_tab=ticket&event=${eventNeedingTickets.name}&ev_id=${eventNeedingTickets.id}&organiser_id=${user?._id}`)} 
                                     className="bg-primary-dark text-primary-orange font-medium cursor-pointer p-2 border-[1px] border-primary-dark rounded-full"
                                 >
                                     Add Tickets

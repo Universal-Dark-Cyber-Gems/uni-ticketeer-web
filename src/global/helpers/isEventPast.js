@@ -8,17 +8,13 @@ function isEventPast(eventDateString, eventTimeString){
 
 
     if(today > eventDate){
-        return true
-    } 
-
-    if(today === eventDate && currentHour > eventHour){
-        console.log("date don pass by Hours")
-        return true
-    }
-
-    if(today === eventDate && currentHour === eventHour && currentMinute > eventMinute){
-        console.log("date don pass by minutes")
-        return true
+        if(today === eventDate && currentHour > eventHour){
+            console.log("date don pass by Hours", "current hour", currentHour, "event hour", eventHour)
+            if(today === eventDate && currentHour === eventHour && currentMinute > eventMinute){
+                console.log("date don pass by minutes")
+                return true
+            }
+        }
     }
 
     return false

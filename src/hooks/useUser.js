@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { addUserAccountDetailsApi, getUserAccountDetailsApi, getUserApi, resendVerifMailApi } from "../api/usersapi";
+import { addUserAccountDetailsApi, getOrganiserStatsApi, getUserAccountDetailsApi, getUserApi } from "../api/usersapi";
 import useLogin from "./useLogin";
 import getErrorMsg from "../utils/getErrorMsg";
 import handleErrorCase from "../utils/handleErrorCase";
+import { isUserOrganiser } from "../global/helpers";
 
 export default function useUser(){
     let { accessToken, logout } = useLogin()
     let [user, setUser] = useState(null)
+    let [organiserStats, setOrganiserStats] = useState(null)
     let [accountDetails, setAccountDetails] = useState(null)
     let [userLoading, setUserLoading] = useState(false)
     let [accountLoading, setAccountLoading] = useState(false)
@@ -53,6 +55,20 @@ export default function useUser(){
         }
     }
 
+    async function getOrganiserStats(){
+        console.log("getting statistics")
+        setUserLoading(true)
+        let response = await getOrganiserStatsApi(accessToken)
+        if(response.err){
+            console.log("error from stats", response)
+            handleErrorCase(response, logout, setUserStatus, setUserLoading, true)
+        }else{
+            console.log("stats", response.result.data.data)
+            setOrganiserStats(response.result.data.data)
+            setUserLoading(false)
+        }
+    }
+
     async function getUserProfile(){
         setUserLoading(true)
         console.log("accesstoken", accessToken)
@@ -74,34 +90,35 @@ export default function useUser(){
         }
     }
 
-    async function resendVerifMail(email){
-        setUserLoading(true)
-        let response = await resendVerifMailApi({email})
-        if(response.err){
-            handleErrorCase(response, logout, setUserStatus, setUserLoading, true)
-        }else{
-            setUserLoading(false)
-        }
-    }
-
     useEffect(()=>{
         if(user===null){
             async function getInitialUser(){
                 await getUserProfile()
-                await getUserAccountDetails()
             }
             getInitialUser()
+        }
+    }, [user])
+
+    useEffect(()=>{
+        if(isUserOrganiser(user)){
+            async function getOrganiserRelatedInfo(){
+                console.log("getting organiser stats..")
+                await getOrganiserStats() 
+                console.log("getting user account details")
+                await getUserAccountDetails()
+            }
+            getOrganiserRelatedInfo()
         }
     }, [user])
     
     return { 
         user, 
-        accountDetails, 
+        accountDetails,
+        organiserStats, 
         userLoading, 
         accountLoading, 
         userStatus, 
         accountStatus ,
-        addUserAccountDetails,
-        resendVerifMail
+        addUserAccountDetails
     }
 }

@@ -22,9 +22,12 @@ export default function UserDashboard(){
                 :
                 purchasedTickets
                 ?
-                <div className="md:flex justify-even">
-                    <DashTicket />
-                    <DashTicket />
+                <div className="md:flex flex-wrap justify-evenly">
+                    {
+                        purchasedTickets?.map((ticket)=>(
+                            <DashTicket details={ticket} />
+                        ))
+                    }
                 </div>
                 :
                 <div>

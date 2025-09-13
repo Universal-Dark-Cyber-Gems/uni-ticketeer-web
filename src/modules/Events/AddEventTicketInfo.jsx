@@ -9,9 +9,10 @@ import useEvents from "../../hooks/useEvents";
 import { toast } from "react-toastify";
 import { useScreenLoaderProvider } from "../../contexts/ScreenLoaderContext";
 
-export default function AddEventTicketInfo({eventName, eventId}){
+export default function AddEventTicketInfo({eventName, eventId, organiserId}){
     let ticketsData = {
-        event_id: eventId, 
+        event_id: eventId,
+        organiser_id: organiserId, 
         ticket_type: "", 
         ticket_price: "", 
         event_name: eventName,
@@ -64,7 +65,7 @@ export default function AddEventTicketInfo({eventName, eventId}){
         let formerTicketsLength = formerTickets?.length || 0
         let valResult = validateTicketArray(ticketsDataArr)
         if(valResult.error){
-            toast(valResult.message, {position: 'top-center'})
+            toast.warn(valResult.message, {position: 'top-center'})
             return
         }
         if(ticketsDataArr.length + formerTicketsLength < 4){
@@ -95,7 +96,6 @@ export default function AddEventTicketInfo({eventName, eventId}){
                 let result = await createTicket(ticketsDataArr[i])
                 if(!result.success){
                     setTicketsDataArr([...ticketsDataArr])
-                    toast(ticketStatus.message)
                     return
                 }else{
                     ticketsDataArr.filter((ticket, index)=>{
@@ -121,6 +121,8 @@ export default function AddEventTicketInfo({eventName, eventId}){
             setTicketTypesCount(1)
         }  
     },[ticketTypesCount])
+
+    console.log("organiser id", organiserId, eventId)
 
     useScreenLoaderProvider(ticketsLoading || eventsLoading, loaderMessage)
 
@@ -341,7 +343,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                 {
                     ticketImage.blob
                     &&
-                    <div className={`${ticketImage.isUploaded ? "" : "cursor-pointer"} text-[12px] text-center border-[1px] border-primary-dark rounded-md p-[2px] w-full m-auto`} onClick={ticketImage.isUploaded ? undefined : uploadimageAndGetUrl}>
+                    <div className={`${ticketImage.isUploaded ? "" : "cursor-pointer"} text-primary-dark text-[12px] text-center border-[1px] border-primary-dark rounded-md p-[2px] w-full m-auto`} onClick={ticketImage.isUploaded ? undefined : uploadimageAndGetUrl}>
                         {
                             imageStatus.error
                             ?
@@ -362,7 +364,7 @@ function TicketTypeTab({ticketData, index, handleInputChange}){
                 {
                     ticketImage.blob
                     &&
-                    <div onClick={removeImage} className="cursor-pointer text-[12px] text-center border-[1px] border-primary-dark rounded-md p-[2px] w-full m-auto">
+                    <div onClick={removeImage} className="cursor-pointer text-primary-dark text-[12px] text-center border-[1px] border-primary-dark rounded-md p-[2px] w-full m-auto">
                         Remove Image
                     </div>
                 }

@@ -10,10 +10,11 @@ import { toast } from "react-toastify";
 import { AuthInput } from "../../modules/Auth/AuthInput";
 import { useUserProvider } from "../../contexts/UserContext";
 import CustomLoader from "../../components/CustomLoader";
+import useLogin from "../../hooks/useLogin";
 
 export default function SignUp(){
     let {signup, signupLoading, signupStatus} = useSignup()
-    let userProvider = useUserProvider()
+    let {resendVerifMail} = useLogin()
     let [currentStage, setCurrentStage] = useState(1)
     let [passType, setPassType] = useState('password')
 
@@ -53,7 +54,7 @@ export default function SignUp(){
     }
 
     function resendVerificationMail(){
-        userProvider?.resendVerifMail(signupData.email)
+        resendVerifMail(signupData.email)
     }
 
     function changeStage(stage){

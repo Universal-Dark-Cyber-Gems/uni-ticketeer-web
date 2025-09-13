@@ -3,6 +3,7 @@ import { createEventApi, editEventApi, getAllEvents, getSingleEvent } from "../a
 import useLogin from "./useLogin";
 import getErrorMsg from "../utils/getErrorMsg";
 import { toast } from "react-toastify";
+import handleErrorCase from "../utils/handleErrorCase";
 
 export default function useEvents(){
     const {accessToken, logout} = useLogin()
@@ -35,14 +36,7 @@ export default function useEvents(){
         let response = await editEventApi(id, payload, accessToken)
         console.log("res from editing event", response)
         if(response?.err){
-            let errmsg = getErrorMsg(response)
-            if(response?.error?.response?.status === 401){
-                logout()
-                return
-            }
-            setEventsStatus({error: true, success: false, message: errmsg})
-            toast.error(errmsg, {position: "top-center"})
-            setEventsLoading(false)
+            handleErrorCase(response, logout, setEventsStatus, setEventsLoading, true)
             return {success: false}
         }else{
             await getEvents()

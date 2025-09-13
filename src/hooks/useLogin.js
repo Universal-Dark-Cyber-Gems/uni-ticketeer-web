@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getResetPasswordLinkApi, loginUser, resetPasswordApi } from "../api/login";
+import { getResetPasswordLinkApi, loginUser, resendVerifMailApi, resetPasswordApi, verifyUserEmailApi } from "../api/login";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import handleErrorCase from "../utils/handleErrorCase";
@@ -81,6 +81,28 @@ export default function useLogin(){
         }
     }
 
+        async function resendVerifMail(email){
+            setLoginLoading(true)
+            let response = await resendVerifMailApi({email})
+            if(response.err){
+                handleErrorCase(response, logout, setStatus, setLoginLoading, true)
+            }else{
+                setLoginLoading(false)
+            }
+        }
+    
+        async function verifyUserMail(userid, verifcationtoken){
+            console.log("verif mail running..")
+            setLoginLoading(true)
+            let response = await verifyUserEmailApi(userid, verifcationtoken)
+            if(response.err){
+                handleErrorCase(response, logout, setStatus, setLoginLoading, true)
+            }else{
+                setLoginLoading(false)
+                setStatus({error: false, success: true, message: "Verification Complete"})
+            }
+        }
+
     function logout(){
         localStorage.removeItem(authToken)
         accessToken = ""
@@ -88,5 +110,16 @@ export default function useLogin(){
         navigate("/auth/login")
     }
 
-    return { login, logout, getResetPasswordLink, resetPassword, isLoggedIn, loginLoading, status, accessToken }
+    return { 
+        login, 
+        logout, 
+        getResetPasswordLink, 
+        resetPassword, 
+        isLoggedIn, 
+        loginLoading, 
+        status, 
+        accessToken,
+        resendVerifMail,
+        verifyUserMail
+    }
 }

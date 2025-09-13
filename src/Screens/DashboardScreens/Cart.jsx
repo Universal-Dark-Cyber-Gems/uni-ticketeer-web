@@ -84,10 +84,10 @@ export default function Cart(){
                                             <div className="font-medium w-full">
                                                 <p>{c.ticket_info?.event_name}</p>
                                                 <p>{c.quantity}x {c.ticket_info?.ticket_type}</p>
-                                                <p className="font-bold text-lg"><NairaSymbol /> {c.final_price} </p>
+                                                <p className="font-bold text-lg"><NairaSymbol /> {c.ticket_info?.ticket_price} </p>
                                                 <div className="p-2 w-full text-primary-orange text-xl text-right">
                                                     <NairaSymbol />
-                                                    {`${c.final_price * c.quantity}`}
+                                                    {`${c.final_price}`}
                                                 </div>
                                             </div>
                                         </div>

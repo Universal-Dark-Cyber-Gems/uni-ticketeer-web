@@ -30,6 +30,7 @@ export default function useTickets(id){
     async function getPurchasedTickets(){
         setTicketsLoading(true)
         let response = await getPurchasedTicketsApi(accessToken)
+        console.log("purchased tickets", response)
         if(response.err){
             handleErrorCase(response, logout, setTicketsLoading, setPurchasedTicketsStatus)
         }else{
@@ -43,14 +44,7 @@ export default function useTickets(id){
         let response = await createTicketApi(payload, accessToken)
         console.log("create ticket response", response)
         if(response?.err){
-            let errormsg = getErrorMsg(response)
-            if(response?.error?.response?.status === 401){
-                logout()
-                return
-            }
-            setTicketStatus({error: true, success: false, message: errormsg})
-            toast.error(JSON.stringify(errormsg), {position: 'top-center'})
-            setTicketsLoading(false)
+            handleErrorCase(response, logout, setTicketStatus, setTicketsLoading, true)
             return { success: false }
         }else{
             setTicketStatus({error: false, success: true, message: "Ticket created successfully" })
@@ -64,14 +58,7 @@ export default function useTickets(id){
         let response = await editTicketApi(id, payload, accessToken)
         console.log("edit ticket response", response)
         if(response?.err){
-            let errormsg = getErrorMsg(response)
-            if(response?.error?.response?.status === 401){
-                logout()
-                return
-            }
-            setTicketStatus({error: true, success: false, message: errormsg})
-            toast.error(JSON.stringify(errormsg), {position: 'top-center'})
-            setTicketsLoading(false)
+            handleErrorCase(response, logout, setTicketStatus, setTicketsLoading, true)
             return { success: false }
         }else{
             setTicketsLoading(false)
@@ -122,8 +109,7 @@ export default function useTickets(id){
         setTicketsLoading(true)
         let result = await addTicketToCartApi(ticketid, payload, accessToken)
         if(result?.err){
-            handleErrorCase(result, logout,setTicketsLoading, setTicketStatus)
-            toast.error(JSON.stringify(errormsg), {position: 'top-center'})
+            handleErrorCase(result, logout,setTicketsLoading, setTicketStatus, true)
             return { success: false}
         }else{
             setTicketsLoading(false)
@@ -136,6 +122,10 @@ export default function useTickets(id){
             getTicketsByEventId()
         }
     }, [id])
+
+    useEffect(()=>{
+        getPurchasedTickets()
+    }, [])
 
     return { 
         tickets,

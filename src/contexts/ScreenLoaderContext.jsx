@@ -17,7 +17,7 @@ export function ScreenLoaderProvider({children}){
             >
                 <div className="md:w-[500px] w-[100%]">
                     <CustomLoader />
-                    <div className="text-center text-sm text-primary-dark">
+                    <div className="text-center mt-4 text-sm text-primary-dark">
                         {loaderText}
                     </div>
                 </div>

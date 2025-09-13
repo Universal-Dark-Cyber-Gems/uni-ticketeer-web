@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { useEventProvider } from "../../contexts/EventContext";
 import CustomModal from "../../components/CustomModal";
+import CustomLoader from "../../components/CustomLoader";
 
 
 
@@ -29,7 +30,7 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
     const {isImageLoading, imageStatus, uploadImage} = useImage()
     let { createEvent, editEvent, eventsLoading, eventsStatus } = useEventProvider()
     let [isTicketed, setIsTicketed] = useState(false)
-    let [bannerImg, setBannerImg] = useState(null)
+    let [bannerImg, setBannerImg] = useState({blob: "", isUploaded: false})
     let [statesArr, setStatesArr] = useState([])
     let [citiesArr, setCitiesArr] = useState([])
     let [state, setState] = useState("")
@@ -79,8 +80,12 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
     }
 
     async function handleSubmitEvent(e){
-        console.log("location", userProvider?.user)
         e.preventDefault();
+        console.log("location", userProvider?.user)
+        if(createEventFormData.banner_image_url === ""){
+            toast.error("Select and Upload image")
+            return
+        }
         let eventData = {
             ...createEventFormData, 
             is_ticketed: isTicketed,
@@ -99,7 +104,7 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
             if(!result.success) return;
             toast.success("Event Created Successfully", {position: 'top-center'})
             if(eventData.is_ticketed){
-                moveToTickets(result.eventId, eventData.title)
+                moveToTickets(result.eventId, eventData.title, eventData.organiser)
             }else{
                 navigate("/dashboard")
             }
@@ -118,8 +123,8 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
     }
 
     async function handleUploadImage(){
-        if(bannerImg){
-            let imageUrl = await uploadImage(bannerImg)
+        if(bannerImg.blob){
+            let imageUrl = await uploadImage(bannerImg.blob)
             console.log("image url:", imageUrl)
             handleCreateEventChange({
                 target: {
@@ -127,6 +132,7 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                     value: imageUrl
                 }
             })
+            setBannerImg({...bannerImg, isUploaded: true})
         }
     }
 
@@ -163,6 +169,12 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
             setCitiesArr(st.lgas)
         }
     },[state])
+
+    useEffect(()=>{
+        if(userProvider?.user?._id == undefined){
+            navigate("/dashboard")
+        }
+    })
 
     return(
         <form onSubmit={handleSubmitEvent} className="md:w-[70%] py-4 m-auto">
@@ -313,10 +325,10 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                         <div className="w-[50%] m-auto border border-primary-dark flex flex-col justify-center items-center pb-4">
                             <div className="text-[10px] text-primary-dark">click on the banner to select an image </div>
                             {
-                                bannerImg !== null
+                                bannerImg.blob !== ""
                                 ?
                                 <label htmlFor="event_banner">
-                                    <img src={URL.createObjectURL(bannerImg)} alt="banner" className="w-[70%] m-auto" />
+                                    <img src={URL.createObjectURL(bannerImg.blob)} alt="banner" className="w-[70%] m-auto" />
                                 </label>
                                 :
                                 <label htmlFor="event_banner" className="cursor-pointer border border-primary-dark">
@@ -330,14 +342,37 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                                     <p className="text-[12px] text-center">select image</p>
                                 </label>
                             }
-                            <input type="file" id="event_banner" accept="image/*" hidden={true} onInput={(e)=>{setBannerImg(e.target.files[0] || bannerImg); console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0])}} />
-                            { imageStatus.error && <div className="text-center text-red-500 font-medium"> {imageStatus.message} </div>}
-                            { imageStatus.success && <div className="text-center text-green-500 font-medium"> {imageStatus.message} </div>}
+                            <input 
+                                type="file" 
+                                id="event_banner" 
+                                accept="image/*" 
+                                hidden={true}
+                                onInput={(e)=>{
+                                    setBannerImg({
+                                        blob: e.target.files[0] || bannerImg.blob,
+                                        isUploaded: false
+                                    }); 
+                                    console.log(URL.createObjectURL(e.target.files[0]), e.target.files[0])
+                                }} />
                             {
-                                bannerImg
+                                bannerImg.blob
                                 && 
-                                <div onClick={isImageLoading ? undefined : handleUploadImage} className="py-[3px] cursor-pointer px-4 border border-primary-dark my-2 w-auto">
-                                    { isImageLoading ? "Uploading..." : "Upload file" }
+                                <div onClick={isImageLoading ? undefined : handleUploadImage} className="py-[3px] text-primary-dark cursor-pointer px-4 border border-primary-dark rounded-sm my-2 w-auto">
+                                    { 
+                                        imageStatus.error
+                                        ?
+                                        <span>{imageStatus.message}.. Try again</span>
+                                        :
+                                        isImageLoading
+                                        ?
+                                        <span>uploading image ...</span>
+                                        :
+                                        bannerImg.isUploaded
+                                        ?
+                                        <span className="text-green-500">Image has been uploaded</span>
+                                        :
+                                        <span>Upload Image</span> 
+                                    }
                                 </div>
                             }
                         </div>
@@ -357,7 +392,7 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                             {
                                 eventsLoading
                                 ?
-                                "..."
+                                <CustomLoader size={20} />
                                 :
                                 event
                                 ?
@@ -389,7 +424,7 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                                 <div 
                                     className="w-[100px] cursor-pointer text-center bg-primary-dark text-primary-orange pt-2 pb-2 pr-6 pl-6 rounded-full"
                                     onClick={()=>{
-                                        moveToTickets(event._id, event .title)
+                                        moveToTickets(event._id, event.title, event.organiser)
                                     }}
                                 >
                                     Yes

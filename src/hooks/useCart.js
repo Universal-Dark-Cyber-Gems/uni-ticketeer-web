@@ -13,12 +13,10 @@ export default function useCart(){
     let [cartLoading, setCartLoading] = useState(false)
     let [cartStatus, setCartStatus] = useState({error: false, success: false, message: ""})
 
-    let userId = user?._id
-
-    console.log("user id fed into useCart hook from userprovider", userId)
+    console.log("user id fed into useCart hook from userprovider", user?._id)
     async function getCart(){
         setCartLoading(true)
-        let response = await getCartByUserApi(userId, accessToken)
+        let response = await getCartByUserApi(user?._id, accessToken)
         if(response.err){
             handleErrorCase(response, logout, setCartStatus, setCartLoading)
             return {success: false}
@@ -60,8 +58,10 @@ export default function useCart(){
     }
 
     useEffect(()=>{
-        getCart()
-    }, [userId])
+        if(user){
+            getCart()
+        }
+    }, [user])
 
     return{
         cart,

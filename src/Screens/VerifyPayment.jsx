@@ -4,11 +4,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { apiVersion, baseApiUrlTest } from "../config";
-import { useUserProvider } from "../contexts/UserContext";
 
 export default function VerifyPayment(){
     let navigate = useNavigate()
-    let {user} = useUserProvider()
     let [searchParams, setSearchParams] = useSearchParams()
     let [verifyingPayment, setVerifyingPayment] = useState(true)
     let [paymentStatus, setPaymentStatus] = useState({error: false, success: false, msg: ""})
@@ -17,25 +15,33 @@ export default function VerifyPayment(){
     let tx_ref = searchParams.get("tx_ref")
     let transaction_id = searchParams.get("transaction_id")
 
+    let hasRequested = false
+
     console.log("all qury params", searchParams.get("tx_ref"))
 
     async function verifyPayment(){
+        console.log("running verification endpoint...")
         try{
             let result = await axios.get(`${baseApiUrlTest}/verifypayment?tx_ref=${tx_ref}&status=${status}&transaction_id=${transaction_id}`)
             setVerifyingPayment(false)
             console.log("verification success", result.data)
             setPaymentStatus({error: false, success: true, msg: result.data.message})
-            navigate("/dashboard")
+            setTimeout(()=>{
+                navigate("/dashboard")
+            }, 2000)
         }catch(err){
             setVerifyingPayment(false)
-            console.log('verification fail', err.response)
+            console.log('verification fail', err)
             setPaymentStatus({error: true, success: false, msg: err.response.message || err.response.data.message})
         }
     }
 
     useEffect(()=>{
-        verifyPayment()
-    }, [user])
+        if(hasRequested == false){
+            verifyPayment()
+            hasRequested = true
+        }
+    }, [])
 
     return(
         <div className="h-[100vh] flex justify-center items-center">

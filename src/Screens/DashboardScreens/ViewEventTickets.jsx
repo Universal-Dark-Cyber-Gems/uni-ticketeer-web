@@ -75,18 +75,18 @@ export default function ViewEventTickets(){
     useScreenLoaderProvider(addToCartLoading, "adding Tickets to cart")
 
     return(
-        <>
-            <div className="text-primary-dark">
-                <div className='md:w-[50%] h-[45vh] m-auto border-4 border-primary-dark rounded-lg'>
+        <div className='md:w-[80%] md:m-auto'>
+            <div className="text-primary-dark w-full md:justify-between md:flex gap-4">
+                <div className='md:w-[40%] h-[45vh] m-auto border-4 border-primary-dark rounded-lg'>
                     <img src={singleEvent?.banner_image_url} alt='event banner' className='w-[100%] h-[100%] rounded-md' />
                 </div>
-                <div className='md:w-[70%] m-auto my-2 py-2 text-primary-dark'>
+                <div className='md:w-[50%] m-auto my-2 py-2 text-primary-dark'>
                     <h3 className='text-center text-lg font-medium'>{singleEvent?.title}</h3>
                     <p className='font-bold text-primary-dark'>About:</p>
                     <p>
                        {singleEvent?.additional_information}
                     </p>
-                    <div className='flex justify-between my-2 py-2'>
+                    <div className='md:flex justify-between my-2 py-2'>
                         <div>
                             <div className='flex items-center my-4'>
                                 <div className="border-[1px] border-primary-dark p-[4px] rounded-md">
@@ -113,52 +113,52 @@ export default function ViewEventTickets(){
                         </div>
                     </div>
                 </div>
-                {
-                    isUserOrganiser(userProvider?.user)
-                    ?
-                    <div className='text-center'> Organiser Accounts cannot purchase Tickets </div>
-                    :
-                    isEventPast(singleEvent?.start_date, singleEvent?.start_time)
-                    ?
-                    <div className='text-center'> This Event has ended and you can no longer purchase tickets </div>
-                    :
-                    ticketsLoading
-                    ?
-                    <div className='text-center'>Loading ... </div>
-                    :
-                    ticketStatus.status === 404
-                    ?
-                    <div className='text-center'> No ticket(s) found for this event </div>
-                    :
-                    <div className='my-4'>
-                        <h3 className='font-medium text-primary-dark text-center'>Choose Ticket</h3>
-                        <div className='border-2 border-primary-dark rounded-md p-4 my-4'>
-                            <div className='flex justify-between'>
-                                <p className='w-[30%] font-bold'>Categories</p>
-                                <p className='w-[30%] font-bold'>Price</p>
-                                <p className='font-bold'>Quantity</p>
-                            </div>
-                            {
-                                ticketsToBuy?.map((ticket, i)=><TicketDetailsTab key={i} index={i} category={ticket.ticket_info?.ticket_type} price={ticket?.ticket_info?.ticket_price} quantity={ticket.quantity} setQuantity={setTicketQuantity} />)
-                            }
-                        </div>
-                        <div 
-                            className='bg-primary-dark w-[50%] md:w-[20%] p-2 text-primary-orange text-center rounded-full m-auto cursor-pointer'
-                            onClick={addToCart}
-                        >
-                            Add to cart
-                        </div>
-                    </div>
-                }
             </div>
+            {
+                isUserOrganiser(userProvider?.user)
+                ?
+                <div className='text-center'> Organiser Accounts cannot purchase Tickets </div>
+                :
+                isEventPast(singleEvent?.start_date, singleEvent?.start_time)
+                ?
+                <div className='text-center'> This Event has ended and you can no longer purchase tickets </div>
+                :
+                ticketsLoading
+                ?
+                <div className='text-center'>Loading ... </div>
+                :
+                ticketStatus.status === 404
+                ?
+                <div className='text-center'> No ticket(s) found for this event </div>
+                :
+                <div className='my-4 text-primary-dark'>
+                    <h3 className='font-medium text-primary-dark text-center'>Choose Ticket</h3>
+                    <div className='border-2 border-primary-dark rounded-md p-4 my-4'>
+                        <div className='flex justify-between'>
+                            <p className='w-[30%] font-bold'>Categories</p>
+                            <p className='w-[30%] font-bold'>Price</p>
+                            <p className='font-bold'>Quantity</p>
+                        </div>
+                        {
+                            ticketsToBuy?.map((ticket, i)=><TicketDetailsTab key={i} index={i} category={ticket.ticket_info?.ticket_type} price={ticket?.ticket_info?.ticket_price} quantity={ticket.quantity} setQuantity={setTicketQuantity} />)
+                        }
+                    </div>
+                    <div 
+                        className='bg-primary-dark w-[50%] md:w-[20%] p-2 text-primary-orange text-center rounded-full m-auto cursor-pointer'
+                        onClick={addToCart}
+                    >
+                        Add to cart
+                    </div>
+                </div>
+            }
 
-            <div>
+            <div className='text-primary-dark'>
                 <h3>More Events Like This</h3>
                 <div>
                     
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

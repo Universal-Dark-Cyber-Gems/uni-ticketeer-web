@@ -25,14 +25,14 @@ export default function DashboardLayout(){
     return(
             <EventProvider>
                 <div className="flex z-[-10]">
-                    <div className={`w-auto md:w-[18%] ${!isMenuOpen ? 'hidden' : 'block'} md:block h-[100vh] z-[20] bg-primary-dark p-6 fixed`}>
+                    <div className={`w-auto md:w-[18%] ${!isMenuOpen ? 'hidden' : 'block'} md:block h-[100vh] z-[20] bg-primary-dark px-6 pt-6 fixed`}>
                         <h2 className="text-white text-xl font-bold pb-4 cursor-pointer"><Link to={"/"}>Emume</Link></h2>
                         <div className="pt-8 pb-6">
                             <h4 className="text-[#CCCCCC] font-medium">Welcome,</h4>
                             <h3 className="text-white font-bold">{userProvider?.user?.firstname} {userProvider?.user?.lastname}</h3>
                         </div>
                         <hr />
-                        <div className="py-4">
+                        <div className="py-4 flex flex-col justify-between">
                             <DashNavLinkCont toggleMenu={toggleMenu} active={location.pathname === '/dashboard' ? true : false} >
                                 <IoGridOutline size={25} />
                                 <Link to={"/dashboard"} className="ml-2 cursor-pointer">
@@ -64,8 +64,8 @@ export default function DashboardLayout(){
 
                         </div>
 
-                        <div>
-                            <div onClick={logout} className="text-[#CCCCCC] flex font-medium align-center py-6 absolute bottom-10">
+                        <div className="absolute bottom-[-10px]">
+                            <div onClick={logout} className="text-[#CCCCCC] flex font-medium align-center absolute bottom-10">
                                 <IoLogOutOutline size={25} />
                                 <div className="ml-2 cursor-pointer">
                                     Logout
@@ -76,7 +76,7 @@ export default function DashboardLayout(){
 
                     <div className="w-full md:w-[82%] px-3 min-h-[100vh] bg-[#EEEEEE] ml-auto">
                         {
-                            userProvider?.userStatus.error
+                            userProvider?.userStatus.message.toLowerCase() == "network error"
                             ?
                             <NetworkError />
                             :

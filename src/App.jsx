@@ -29,6 +29,7 @@ import { CartProvider } from './contexts/CartContext';
 import VerifyPayment from './Screens/VerifyPayment';
 import ForgotPassword from './Screens/AuthScreens/ForgotPassword';
 import ResetPassword from './Screens/AuthScreens/ResetPassword';
+import VerifyEmail from './Screens/AuthScreens/VerifyEmail';
 
 register();
 
@@ -73,6 +74,10 @@ function App() {
         {
           path: "reset-password",
           element: <ResetPassword />
+        },
+        {
+          path: "verify-mail",
+          element: <VerifyEmail />
         }
     ]},
     {
@@ -135,14 +140,14 @@ function App() {
           element: <Cart />
         },
         {
-          path: "verifypayment",
-          element: <VerifyPayment />
-        },
-        {
           path: "settings",
           element: <Settings />
         }
       ]
+    },
+    {
+      path: "/verifypayment",
+      element: <VerifyPayment />
     }
   ])
   return (

@@ -17,8 +17,8 @@ export default function EditEvent(){
 
     let singleEvent = getSingleEvent(id)
 
-    function moveToTicketInfo(event_id, event_name){
-        navigate(`/dashboard/event/create?current_tab=ticket&event=${event_name}&ev_id=${event_id}`)
+    function moveToTicketInfo(event_id, event_name, organiser_id){
+        navigate(`/dashboard/event/create?current_tab=ticket&event=${event_name}&ev_id=${event_id}&organiser_id=${organiser_id}`)
     }
 
     console.log("current tab", currentTab)

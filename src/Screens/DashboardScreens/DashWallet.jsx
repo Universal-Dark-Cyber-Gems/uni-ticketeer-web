@@ -2,11 +2,80 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import DashHeader from "../../components/DashHeader";
 import { IoCash, IoPencil } from "react-icons/io5";
 import {useUserProvider} from "../../contexts/UserContext"
+import DataTable from "react-data-table-component"
+import { useEffect, useState } from "react";
 
 export default function DashWallet(){
     const navigate = useNavigate()
     const {toggleMenu, accountDetails} = useOutletContext()
     const userProvider = useUserProvider()
+
+    const customStyles = {
+        rows: {
+            style: {
+                color: "#3F1860"
+            }
+        },
+        headCells: {
+            style: {
+                color: "#3F1860"
+            }
+        }
+    }
+
+    const columns = [
+        {
+            name: 'Transaction Ref',
+            selector: row => row.ref,
+            sortable: true
+        },
+        {
+            name: 'Transaction Type',
+            selector: row => row.type
+        },
+        {
+            name: 'Currency',
+            selector: row => row.currency
+        },
+        {
+            name: 'Amount',
+            selector: row => row.amount
+        },
+        {
+            name: 'Status',
+            selector: row => row.status,
+            conditionalCellStyles: [
+                {
+                    when: row => row.status == 'completed',
+                    style: {
+                        color: "green",
+                        fontWeight: "normal"
+                    }
+                },
+                {
+                    when: row => row.status != 'completed',
+                    style: {
+                        color: "red",
+                        fontWeight: "normal"
+                    }
+                }
+            ]
+        }
+    ]
+
+    const data = userProvider?.user?.account?.transactions
+
+    function MyTable(){
+        return(
+            <DataTable 
+                columns={columns}
+                data={data}
+                pagination
+                customStyles={customStyles}
+            />
+        )
+    }
+
 
     return(
         <>
@@ -50,64 +119,18 @@ export default function DashWallet(){
                     </div>
                 </div>
 
-                <div>
+                <div className="text-primary-dark">
                     <h2 className="text-primary-dark text-xl font-bold my-4 py-2">Transaction History</h2>
                     <div className="w-[100%] overflow-scroll md:overflow-hidden">
                     {
                         userProvider?.user?.account?.transactions.length > 0
                         ?
-                        <table className="bg-white md:w-full table-auto border-collapse border border-slate-400">
-                            <thead className="bg-[#EEEEEE]">
-                                <tr>
-                                    <th className="border border-slate-300 border-collapse p-3">S/N</th>
-                                    <th className="border border-slate-300 border-collapse p-3">Transaction Ref</th>
-                                    <th className="border border-slate-300 border-collapse p-3">Transaction Type</th>
-                                    <th className="border border-slate-300 border-collapse p-3">Currency</th>
-                                    <th className="border border-slate-300 border-collapse p-3">Amount</th>
-                                    <th className="border border-slate-300 border-collapse p-3">Status</th>
-                                </tr>
-                            </thead>
-                                <tbody>
-                                    {
-                                        userProvider?.user?.account?.transactions?.map((transaction, i)=>(
-                                            <tr>
-                                                <td className="border border-slate-300 p-3">{index + 1}</td>
-                                                <td className="border border-slate-300 p-3">{transaction?.ref}</td>
-                                                <td className="border border-slate-300 p-3">{transaction?.type}</td>
-                                                <td className="border border-slate-300 p-3">{transaction?.currency}</td>
-                                                <td className="border border-slate-300 p-3">{transaction?.amount}</td>
-                                                <td className="border border-slate-300 p-3">{transaction?.status}</td>
-                                            </tr>
-                                        ))
-                                    }
-                                    <tr>
-                                        <td className="border border-slate-300 p-3">1</td>
-                                        <td className="border border-slate-300 p-3">4848393_checkout_iererer</td>
-                                        <td className="border border-slate-300 p-3">Checkout</td>
-                                        <td className="border border-slate-300 p-3">NGN</td>
-                                        <td className="border border-slate-300 p-3">2,000</td>
-                                        <td className="border border-slate-300 p-3">Completed</td>
-                                    </tr>
-                                </tbody>
-                        </table>
+                        <MyTable />
                         :
-                            <div className="py-4 text-center text-[12px] text-primary-dark">
-                                No transaction history recorded yet
-                            </div>
-                        }
-                        <div className="flex justify-between p-3">
-                            <div>
-                                <span className="cursor-pointer">Rows per page</span>
-                                <select>
-                                    <option value='10'>10</option>
-                                    <option value='20'>20</option>
-                                    <option value='50'>50</option>
-                                </select>
-                            </div>
-                            <div>
-                                page 2 of 3
-                            </div>
+                        <div className="py-4 text-center text-[12px] text-primary-dark">
+                            No transaction history recorded yet
                         </div>
+                        }
                     </div>
                 </div>
             </div>

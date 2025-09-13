@@ -11,9 +11,10 @@ import { useEventProvider } from "../../contexts/EventContext";
 import { useScreenLoaderProvider } from "../../contexts/ScreenLoaderContext";
 
 export default function EditTicket(){
-    let {eventid, ticketid, eventname} = useParams()
+    let {eventid, ticketid, eventname, organiserid} = useParams()
     let [ticketData, setTicketData] = useState({
         event_id: eventid,
+        organiser_id: "",
         ticket_type: "", 
         ticket_price: "", 
         event_name: eventname,
@@ -59,7 +60,8 @@ export default function EditTicket(){
                 event_name: res?.ticket.event_name,
                 ticket_banner_url: res?.ticket.ticket_banner_url,
                 ticket_quantity: res?.ticket.ticket_quantity || undefined,
-                restrictions: res?.ticket.restrictions || undefined
+                restrictions: res?.ticket.restrictions || undefined,
+                organiser_id: res?.ticket.organiser_id || undefined
            })
        })
     },[tickets])

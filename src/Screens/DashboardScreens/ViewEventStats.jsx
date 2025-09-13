@@ -5,7 +5,7 @@ import ProgressBar from '../../components/ProgressBar'
 import IconsWrap from '../../components/IconsWrap'
 import Tooltip from '../../components/Tooltip'
 import { useNavigate, useNavigation, useParams } from 'react-router-dom'
-import { UserContext } from '../../contexts/UserContext'
+import { UserContext, useUserProvider } from '../../contexts/UserContext'
 import { useContext, useEffect, useState } from 'react'
 import useTickets from '../../hooks/useTickets'
 import useEvents from '../../hooks/useEvents'
@@ -19,7 +19,7 @@ import { useEventProvider } from '../../contexts/EventContext'
 export default function ViewEventStats(){
     const navigate = useNavigate()
     const { id } = useParams()
-    let user = useContext(UserContext)
+    let userProvider = useUserProvider()
     let { tickets, ticketStatus, ticketsLoading } = useTickets(id)
     let { events, getSingleEvent, editEvent, eventsLoading, eventsStatus } = useEventProvider()
 
@@ -39,6 +39,14 @@ export default function ViewEventStats(){
         setSingleEvent(getSingleEvent(id))
     }, [events])
 
+    function getTicketsSoldForSingleEvent(tickets){
+        let total = 0
+        tickets.forEach((ticket)=>{
+            total += ticket.quantity_sold
+        })
+        return total
+    }
+
     useScreenLoaderProvider(eventsLoading, "Loading Event Details")
 
     console.log("tickets inside event stats", tickets)
@@ -47,9 +55,6 @@ export default function ViewEventStats(){
         <>
             <div className='py-4 my-4'>
                 <div className='md:w-[90%] p-4 relative m-auto md:border-[1px] md:border-primary-dark rounded-xl'>
-                    {/* <div onClick={()=>{ navigate(`/dashboard/event/edit/${id}`) }} className='absolute cursor-pointer shadow-lg right-2 top-2 bg-white flex w-[30px] h-[30px] rounded-full justify-center items-center'>
-                        <IoPencil />
-                    </div> */}
                     <div className='md:flex w-[100%]'>
                         <div className='md:w-[50%] md:h-[100%]'>
                             <img src={singleEvent?.banner_image_url} className='w-[100%] h-[100%] rounded-xl' alt='event banner' />
@@ -121,7 +126,7 @@ export default function ViewEventStats(){
                                     <div className='font-medium'><span className='font-bold text-[16px]'>Has Ticket(s) :</span> {singleEvent?.is_ticketed ? "True" : "False"}</div>
                                     <div className='font-medium'><span className='font-bold text-[16px]'>Categories :</span> {getCategoryString(singleEvent?.category)}</div>
                                     <div className='font-medium'><span className='font-bold text-[16px]'>Organiser : </span>{singleEvent?.organiser_name}</div>
-                                    <div className='font-medium'><span className='font-bold text-[16px]'>Total Number of Tickets Sold :</span> 32</div>
+                                    <div className='font-medium'><span className='font-bold text-[16px]'>Total Number of Tickets Sold :</span> {tickets ? getTicketsSoldForSingleEvent(tickets) : 0}</div>
                                 </div>
                             </div>
                         </div>
@@ -161,7 +166,7 @@ export default function ViewEventStats(){
                                     <div className="font-bold text-xl text-primary-dark">Tickets</div>
                                     <div 
                                         className="text-sm text-primary-dark underline cursor-pointer hover:text-primary-orange"
-                                        onClick={()=>{navigate(`/dashboard/event/create?current_tab=ticket&event=${singleEvent?.title}&ev_id=${singleEvent?._id}`)}}
+                                        onClick={()=>{navigate(`/dashboard/event/create?current_tab=ticket&event=${singleEvent?.title}&ev_id=${singleEvent?._id}&organiser_id=${userProvider?.user?._id}`)}}
                                     > 
                                         + Add more Tickets
                                     </div>
