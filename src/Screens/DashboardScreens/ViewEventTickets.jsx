@@ -11,6 +11,8 @@ import { toast } from 'react-toastify'
 import { useScreenLoaderProvider } from '../../contexts/ScreenLoaderContext'
 import useCart from '../../hooks/useCart'
 import { useCartProvider } from '../../contexts/CartContext'
+import CustomLoader from '../../components/CustomLoader'
+import Line from '../../components/Line'
 
 export default function ViewEventTickets(){
     let { id } = useParams()
@@ -82,10 +84,6 @@ export default function ViewEventTickets(){
                 </div>
                 <div className='md:w-[50%] m-auto my-2 py-2 text-primary-dark'>
                     <h3 className='text-center text-lg font-medium'>{singleEvent?.title}</h3>
-                    <p className='font-bold text-primary-dark'>About:</p>
-                    <p>
-                       {singleEvent?.additional_information}
-                    </p>
                     <div className='md:flex justify-between my-2 py-2'>
                         <div>
                             <div className='flex items-center my-4'>
@@ -114,18 +112,36 @@ export default function ViewEventTickets(){
                     </div>
                 </div>
             </div>
+            <Line />
+            {
+                singleEvent?.additional_information
+                &&
+                <div className='text-center text-primary-dark my-4'>
+                    <p className='font-bold'>About</p>
+                    <p className='font-medium'>
+                       {singleEvent?.additional_information}
+                    </p>
+                    <Line />
+                </div>
+            }
             {
                 isUserOrganiser(userProvider?.user)
                 ?
-                <div className='text-center'> Organiser Accounts cannot purchase Tickets </div>
+                <div className='text-center text-primary-dark p-4'> 
+                    Organiser Accounts cannot purchase Tickets 
+                </div>
                 :
-                isEventPast(singleEvent?.start_date, singleEvent?.start_time)
+                isEventPast(singleEvent?.start_at)
                 ?
-                <div className='text-center'> This Event has ended and you can no longer purchase tickets </div>
+                <div className='text-center flex justify-center items-center text-primary-dark p-4 h-[20vh]'> 
+                    This Event has ended and you can no longer purchase tickets 
+                </div>
                 :
                 ticketsLoading
                 ?
-                <div className='text-center'>Loading ... </div>
+                <div className='text-center p-4 text'>
+                    <CustomLoader />
+                </div>
                 :
                 ticketStatus.status === 404
                 ?
@@ -153,7 +169,7 @@ export default function ViewEventTickets(){
             }
 
             <div className='text-primary-dark'>
-                <h3>More Events Like This</h3>
+                <h3 className='text-2xl font-bold'>More Events Like This</h3>
                 <div>
                     
                 </div>

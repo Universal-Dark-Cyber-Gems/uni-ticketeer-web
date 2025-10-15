@@ -96,9 +96,25 @@ export async function editUserAccountDetailsApi(accessToken, body){
     }
 }
 
+export async function withdrawOrganiserFundsApi(accessToken, body){
+    try{
+        let result = await axios.post(`${baseApiUrlTest}${apiVersion}/users/withdraw`, body, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "ticketeer-auth-token": accessToken
+            }
+        })
+
+        return {err: false, result}
+    }catch(err){
+        return {err: true, error: err}
+    }
+}
+
 export async function getBankListApi(){
     try{
-        let result = await axios.get(`${baseApiUrlTest}/flutterwave-banklist`)
+        let result = await axios.get(`${baseApiUrlTest}/paystack-banklist`)
         console.log("get banklist", result)
         return { err: false, result}
     }catch(err){

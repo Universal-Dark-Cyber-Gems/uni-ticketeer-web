@@ -122,7 +122,6 @@ export default function ViewEventStats(){
                                 <Line />
                                 <div className='text-primary-dark text-[14px] gap-2 flex flex-col'>
                                     <div><span className='font-bold text-[16px]'>Status :</span> <span className={`${singleEvent?.status == "published" ? "text-green-500" : "text-red-500"} capitalize font-medium`}>{singleEvent?.status}</span></div>
-                                    { singleEvent?.additional_information && <div className='font-bold'><span className='font-medium'>Additional Information:</span> {singleEvent?.additional_information}</div>}
                                     <div className='font-medium'><span className='font-bold text-[16px]'>Has Ticket(s) :</span> {singleEvent?.is_ticketed ? "True" : "False"}</div>
                                     <div className='font-medium'><span className='font-bold text-[16px]'>Categories :</span> {getCategoryString(singleEvent?.category)}</div>
                                     <div className='font-medium'><span className='font-bold text-[16px]'>Organiser : </span>{singleEvent?.organiser_name}</div>
@@ -131,6 +130,14 @@ export default function ViewEventStats(){
                             </div>
                         </div>
                     </div>
+                    { 
+                        singleEvent?.additional_information 
+                        && 
+                        <div className='text-primary-dark my-4 text-center'>
+                            <div className='font-bold'>About Event</div> 
+                            {singleEvent?.additional_information}
+                        </div>
+                    }
                     <Line />
                     <div>
                         <div className='flex flex-wrap justify-end items-center gap-4'>

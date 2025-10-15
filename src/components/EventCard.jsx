@@ -1,23 +1,31 @@
 import Event1 from '../images/Event-1.jpg'
 import { IoCalendar, IoLocationOutline, IoTimerOutline } from "react-icons/io5";
 import { Link } from 'react-router-dom'
+import { formatDay, formatTime } from '../global/helpers';
 
-export default function EventCard({link}){
+export default function EventCard({link, details}){
     return(
-            <div className="group md:w-[30%] my-4 rounded-xl border-2 border-white relative">
-                <img src={Event1} className="contrast-30 group-hover:contrast-50 rounded-xl" alt="first event" />
+            <div className="group md:w-[30%] my-4 rounded-xl border-2 border-white text-primary-dark relative">
+                <img src={details?.banner_image_url} className="contrast-30 group-hover:contrast-50 rounded-xl" alt="first event" />
                 <div className="absolute w-[98%] border-2 border-white bg-white/30 group-hover:bg-white/80 bottom-1 p-2 text-center rounded-xl left-[50%] translate-x-[-50%]">
-                    <h3 className="font-bold capitalize text-primary-light group-hover:text-primary-dark group-hover:text-left">Money Heist</h3>
+                    <h3 className="font-bold capitalize text-primary-dark group-hover:text-primary-dark group-hover:text-left">{details?.title}</h3>
                     <div className="hidden group-hover:block">
-                        <p className="text-left capitalize">small description if any...</p>
+                        {
+                            details?.additional_information
+                            &&
+                            <p className="text-left capitalize">
+                                {details?.additional_information.slice(0, 25)}
+                                {details?.additional_information.length > 25 && "..."}
+                            </p>
+                        }
                         <div className="md:flex justify-between p-2">
                             <div className="flex items-center">
                                 <IoCalendar />
-                                <div className="text-sm ml-2 font-medium">24th July 2023</div>
+                                <div className="text-sm ml-2 font-medium">{details ? formatDay(details.start_date, "DD MMM YYYY") : ""}</div>
                             </div>
                             <div className="flex items-center">
                                 <IoTimerOutline />
-                                <div className="text-sm ml-2 font-medium">12pm</div>
+                                <div className="text-sm ml-2 font-medium">{details ? formatTime(details.start_time) : ""}</div>
                             </div>
                         </div>
                         <div className="flex justify-between p-2">

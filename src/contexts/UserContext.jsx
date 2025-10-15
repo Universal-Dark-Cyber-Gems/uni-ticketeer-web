@@ -6,20 +6,28 @@ export const UserContext = createContext(null)
 export function UserProvider({children}){
     let { 
         user, 
+        bankList,
         accountDetails, 
         userLoading, 
         organiserStats, 
-        userStatus 
+        userStatus,
+        addUserAccountDetails,
+        editUserAccountDetails,
+        withdrawOrganiserFunds
     } = useUser()
 
 
     return(
         <UserContext.Provider value={{
             user, 
+            bankList,
             accountDetails, 
             userLoading,
             organiserStats, 
-            userStatus
+            userStatus,
+            addUserAccountDetails,
+            editUserAccountDetails,
+            withdrawOrganiserFunds
         }}>
             {children}
         </UserContext.Provider>

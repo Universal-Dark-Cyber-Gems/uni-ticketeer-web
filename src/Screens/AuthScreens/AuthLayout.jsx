@@ -9,6 +9,8 @@ export default function AuthLayout(){
     const navigate = useNavigate()
     const {isLoggedIn} = useLogin()
 
+    console.log(location.pathname)
+
     useEffect(()=>{
         if(isLoggedIn){
             navigate("/dashboard")

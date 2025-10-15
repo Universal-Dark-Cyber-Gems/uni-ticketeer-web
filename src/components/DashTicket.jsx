@@ -4,7 +4,7 @@ import NairaSymbol from './NairaSymbol'
 
 export default function DashTicket({details}){
     return(
-        <Link to={"/dashboard"} className='flex items-center justify-center md:w-[40%] h-[150px] relative border-[1px] border-primary-dark m-2'>
+        <Link to={`/dashboard/purchased-tickets/${details?._id}`} className='flex items-center justify-center md:w-[40%] h-[150px] relative border-[1px] border-primary-dark m-2'>
             <img 
                 className='h-[100%] w-[100%] brightness-50 object-cover' 
                 src={details?.ticket_info.ticket_banner_url} 

@@ -1,9 +1,9 @@
 import { CiCamera } from "react-icons/ci";
 import TicketInput from "../../components/TicketInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ProfileSettingsForm({userData}){
-    let [profileFormData, setProfileFormData] = useState({...userData})
+    let [profileFormData, setProfileFormData] = useState("")
 
     let genderOptions = ["male","female"]
 
@@ -19,6 +19,10 @@ export default function ProfileSettingsForm({userData}){
     function submitProfileSettings(e){
         e.preventDefault()
     }
+
+    useEffect(()=>{
+        setProfileFormData({...userData})
+    }, [userData])
     return(
         <form onSubmit={submitProfileSettings} className="relative p-4 pb-16 bg-[#FFF] my-4">
             <div className="flex items-center">

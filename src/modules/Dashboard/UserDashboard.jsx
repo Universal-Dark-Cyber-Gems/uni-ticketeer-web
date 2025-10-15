@@ -24,8 +24,8 @@ export default function UserDashboard(){
                 ?
                 <div className="md:flex flex-wrap justify-evenly">
                     {
-                        purchasedTickets?.map((ticket)=>(
-                            <DashTicket details={ticket} />
+                        purchasedTickets?.map((ticket, i)=>(
+                            <DashTicket key={"ticket"+i} details={ticket} />
                         ))
                     }
                 </div>

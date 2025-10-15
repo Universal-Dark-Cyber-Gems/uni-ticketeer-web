@@ -34,7 +34,7 @@ export default function Settings(){
                 {
                     currentSettingsTab === "bank account" && isUserOrganiser(userProvider?.user)
                     &&
-                    <BankAccountSettingsForm accountData={accountDetails} userData={userProvider?.user} />
+                    <BankAccountSettingsForm userData={userProvider} />
                 }
                 {
                     currentSettingsTab === "security settings"

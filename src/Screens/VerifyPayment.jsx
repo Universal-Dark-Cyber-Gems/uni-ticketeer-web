@@ -11,18 +11,17 @@ export default function VerifyPayment(){
     let [verifyingPayment, setVerifyingPayment] = useState(true)
     let [paymentStatus, setPaymentStatus] = useState({error: false, success: false, msg: ""})
 
-    let status = searchParams.get("status")
-    let tx_ref = searchParams.get("tx_ref")
-    let transaction_id = searchParams.get("transaction_id")
+    let trxref = searchParams.get("trxref")
+    let reference = searchParams.get("reference")
 
     let hasRequested = false
 
-    console.log("all qury params", searchParams.get("tx_ref"))
+    console.log("all qury params", searchParams.get("trxref"))
 
     async function verifyPayment(){
         console.log("running verification endpoint...")
         try{
-            let result = await axios.get(`${baseApiUrlTest}/verifypayment?tx_ref=${tx_ref}&status=${status}&transaction_id=${transaction_id}`)
+            let result = await axios.get(`${baseApiUrlTest}/verifypayment?trxref=${trxref}&reference=${reference}`)
             setVerifyingPayment(false)
             console.log("verification success", result.data)
             setPaymentStatus({error: false, success: true, msg: result.data.message})
@@ -32,7 +31,7 @@ export default function VerifyPayment(){
         }catch(err){
             setVerifyingPayment(false)
             console.log('verification fail', err)
-            setPaymentStatus({error: true, success: false, msg: err.response.message || err.response.data.message})
+            setPaymentStatus({error: true, success: false, msg: err?.response?.data?.message || err?.response?.message || err?.message})
         }
     }
 

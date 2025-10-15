@@ -34,11 +34,11 @@ export default function OrganiserDashboard(){
                 if(events[i].organiser === user._id){
                     allEvents.push(events[i])
                     setOrganiserAllEvents(allEvents)
-                    if(!isEventPast(events[i].start_date, events[i].start_time)){
+                    if(!isEventPast(events[i].start_at)){
                         activeEvents.push(events[i])
                         setOrganiserActiveEvents(activeEvents)
                     }
-                    if(isEventPast(events[i].start_date, events[i].start_time)){
+                    if(isEventPast(events[i].start_at)){
                         pastEvents.push(events[i])
                         setOrganiserPastEvents(pastEvents)
                     }
@@ -73,7 +73,7 @@ export default function OrganiserDashboard(){
                         <OverviewCard title={"all time events"} amount={organiserStats?.allTimeEvents || 0} />
                         <OverviewCard title={"all time ticket sales"} amount={organiserStats?.allTimeTicketSales || 0} />
                         <OverviewCard title={"active tickets"} amount={organiserStats?.activeTickets || 0} />
-                        <OverviewCard title={"all time sales"} isCurrencyCard={true} amount={organiserStats?.allTimeSales || 0} />             
+                        <OverviewCard title={"all time sales"} isCurrencyCard={true} amount={organiserStats?.allTimeSales.toLocaleString() || 0} />             
                     </div>
                     <div>
                         <div className="flex justify-between items-center pt-12 pb-8">

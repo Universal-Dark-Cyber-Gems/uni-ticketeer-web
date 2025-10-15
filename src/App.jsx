@@ -30,6 +30,7 @@ import VerifyPayment from './Screens/VerifyPayment';
 import ForgotPassword from './Screens/AuthScreens/ForgotPassword';
 import ResetPassword from './Screens/AuthScreens/ResetPassword';
 import VerifyEmail from './Screens/AuthScreens/VerifyEmail';
+import ViewUserTicket from './Screens/DashboardScreens/ViewUserTicket';
 
 register();
 
@@ -134,6 +135,10 @@ function App() {
             path: ':eventname/organiser/view/ticket/:ticketid',
             element: <ViewOrganiserTicket />
           }]
+        },
+        {
+          path: "purchased-tickets/:id",
+          element: <ViewUserTicket />
         },
         {
           path: "cart",

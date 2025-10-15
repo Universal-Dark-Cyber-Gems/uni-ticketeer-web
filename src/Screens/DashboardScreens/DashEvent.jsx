@@ -34,9 +34,9 @@ export default function DashEvent(){
                     :
                     <div className="md:flex justify-even gap-1 flex-wrap px-4 py-8 mb-4">
                         {
-                            events?.map((evt)=>{
-                                if(!isEventPast(evt?.start_date, evt?.start_time)){
-                                    return <DashEventCard event={evt} link={`/dashboard/event/tickets/${evt._id}`} />
+                            events?.map((evt, i)=>{
+                                if(!isEventPast(evt?.start_at)){
+                                    return <DashEventCard key={"evt"+i} event={evt} link={`/dashboard/event/tickets/${evt._id}`} />
                                 }
                             })
                         }

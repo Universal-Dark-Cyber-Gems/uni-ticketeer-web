@@ -59,6 +59,7 @@ export default function useLogin(){
     async function getResetPasswordLink(email){
         setLoginLoading(true)
         let response = await getResetPasswordLinkApi(email)
+        console.log("get reset password response", response)
         if(response.err){
             handleErrorCase(response, logout, setStatus, setLoginLoading, true)
         }else{

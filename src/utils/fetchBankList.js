@@ -3,7 +3,7 @@ import { baseApiUrlTest } from "../config"
 
 export default async function fetchBankList(){
     try{
-        let response = await axios.get(`${baseApiUrlTest}/flutterwave-banklist`)
+        let response = await axios.get(`${baseApiUrlTest}/paystack-banklist`)
         console.log("banklist", response)
         return response.data.data 
     }catch(err){

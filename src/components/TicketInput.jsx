@@ -1,4 +1,4 @@
-export default function TicketInput({type, required=false, placeholder, tagType="input", options, value, name, label, onChange, min, ...props }){
+export default function TicketInput({type, required=false, list, placeholder, tagType="input", options, value, name, label, onChange, min, ...props }){
     return(
         <div className="w-full my-2">
             {label && <div className="text-left font-medium">{label} {required && "*"}</div>}
@@ -8,7 +8,7 @@ export default function TicketInput({type, required=false, placeholder, tagType=
                 {
                     tagType === "select"
                     &&
-                    <select value={value} name={name} onChange={onChange} className="w-full">
+                    <select value={value} autoComplete="on" name={name} onChange={onChange} className="w-full">
                         <option>{placeholder}</option>
                         {options?.map((option, i)=> {
                             return typeof option === "string" 
@@ -18,8 +18,7 @@ export default function TicketInput({type, required=false, placeholder, tagType=
                             <option key={`option${i}`} value={option.value}>{option.label}</option>
                         })}
                     </select>
-            
-                }               
+                }             
             </div>
         </div>
     )

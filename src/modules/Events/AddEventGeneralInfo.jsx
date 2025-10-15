@@ -27,6 +27,7 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
     let navigate = useNavigate()
     let userProvider = useUserProvider()
     let nextDay = dayjs().add(1, "day").format("YYYY-MM-DD")
+    let today = dayjs()
     const {isImageLoading, imageStatus, uploadImage} = useImage()
     let { createEvent, editEvent, eventsLoading, eventsStatus } = useEventProvider()
     let [isTicketed, setIsTicketed] = useState(false)
@@ -235,7 +236,12 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                     </div>
                     <div>
                         <Title title="Description" />
-                        <TicketInput tagType={"textarea"} value={createEventFormData.additional_information} name={"additional_information"} onChange={handleCreateEventChange} />
+                        <TicketInput 
+                            tagType={"textarea"} 
+                            value={createEventFormData.additional_information} 
+                            name={"additional_information"} 
+                            onChange={handleCreateEventChange} 
+                        />
                     </div>
                     <div>
                         <Title title="Location" />
@@ -285,7 +291,7 @@ export default function AddEventGeneralInfo({moveToTickets, event}){
                                 tagType={"input"}
                                 required 
                                 type={"date"} 
-                                min={nextDay}
+                                min={event ? today : nextDay}
                                 label={"start date"}
                                 name={"start_date"}
                                 value={createEventFormData.start_date.split("T")[0]}
