@@ -33,7 +33,9 @@ export default function Cart(){
     }
 
     async function onCheckoutCart(){
-        let res = await checkoutCart({cart_items: cart})
+        let callback_url = `${window.location.protocol}//${window.location.host}/verifypayment`
+        console.log("url", callback_url)
+        let res = await checkoutCart({cart_items: cart, callback_url})
         if(res.success){
             console.log("link to redirect to", res.link)
             window.location.replace(res.link)
@@ -67,7 +69,7 @@ export default function Cart(){
                             {
                                 cart?.map((c, i)=>(
                                     <div key={`cart${i+1}`}>
-                                        <div className="flex gap-4 relative">
+                                        <div className="md:flex gap-4 relative">
                                             <div
                                                 onClick={()=>{
                                                     setItemIdToDelete(c._id)
@@ -79,7 +81,7 @@ export default function Cart(){
                                             </div>
                                             <img 
                                                 src={c?.ticket_info?.ticket_banner_url} 
-                                                className="w-[30%]"
+                                                className="md:w-[30%] mb-4 md:mb-0"
                                             />
                                             <div className="font-medium w-full">
                                                 <p>{c.ticket_info?.event_name}</p>
@@ -102,7 +104,7 @@ export default function Cart(){
                         </div>
                     }
                 </div>
-                <div className="w-full md:w-[25%]">
+                <div className="w-full md:w-[25%] mt-4">
                     <div className="bg-white h-fit p-4 w-full rounded-[10px]">
                         <div className="font-medium text-lg">Summary</div>
                         <Line />

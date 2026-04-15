@@ -19,11 +19,11 @@ export default function Settings(){
     return(
         <>
             <DashHeader title={"Settings"} dashnavtoggle={toggleMenu} />
-            <div className="flex bg-[#FFF] p-[2px]">
+            <div className="flex bg-[#FFF] p-[2px] overflow-scroll">
                 <SettingsTypeTab title={"profile settings"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />
                 {isUserOrganiser(userProvider?.user) && <SettingsTypeTab title={"bank account"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />}
                 <SettingsTypeTab title={"security settings"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />
-                <SettingsTypeTab title={"coupon codes"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />
+                {isUserOrganiser(userProvider?.user) && <SettingsTypeTab title={"coupon codes"} currentTab={currentSettingsTab} setCurrentTab={setCurrentSettingsTab} />}
             </div>
             <div>
                 {
@@ -54,7 +54,10 @@ export default function Settings(){
 function SettingsTypeTab({title, currentTab, setCurrentTab}){
     let active = title === currentTab ? true : false
     return(
-        <div onClick={()=>setCurrentTab(title)} className={`cursor-pointer font-medium capitalize text- p-2 m-[2px] ${active ? "bg-primary-dark text-primary-orange" : "text-primary-dark"} rounded-md`}>
+        <div 
+            onClick={()=>setCurrentTab(title)} 
+            className={`cursor-pointer font-medium capitalize text- p-2 m-[2px] ${active ? "bg-primary-dark text-primary-orange" : "text-primary-dark"} rounded-md`}
+        >
             {title}
         </div>
     )

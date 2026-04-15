@@ -1,5 +1,5 @@
 import axios from "axios"
-import { baseApiUrlTest } from "../config";
+import { apiVersion, baseApiUrlTest } from "../config";
 
 async function uploadImageApi(blob, accessToken){
     let data = new FormData();
@@ -8,7 +8,7 @@ async function uploadImageApi(blob, accessToken){
     let config = {
       method: 'post',
       maxBodyLength: Infinity,
-      url: `${baseApiUrlTest}/uploadimage`,
+      url: `${baseApiUrlTest}${apiVersion}/uploadimage`,
       headers: { 
         'Authorization': `Bearer ${accessToken}`
       },

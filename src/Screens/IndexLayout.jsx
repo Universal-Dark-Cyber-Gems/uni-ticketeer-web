@@ -11,18 +11,17 @@ export default function IndexLayout(){
 
     useEffect(()=>{
         if(isLoggedIn && location.pathname !== "/events"){
-            navigate("/dashboard")
+            navigate("/dashboard/events")
         }
     })
     return(
-        <div className="bg-primary-dark">
+        <div className="dark:bg-primary-dark bg-[#FFFFFF]">
             <div className="relative bg-transparent z-30 w-[100%]">
-                <Header />
                 <Outlet />
                 <Footer />
             </div>
-            <div className="md:w-[300px] md:h-[300px] blur-[130px] bg-primary-orange rounded-full absolute right-0 top-[40%] z-0"></div>
-            <div className="md:w-[300px] md:h-[300px] blur-[130px] bg-primary-light rounded-full absolute left-0 top-[1%] z-0"></div>
+            {/* <div className="md:w-[300px] md:h-[300px] blur-[130px] bg-primary-orange rounded-full absolute right-0 top-[40%] z-0"></div>
+            <div className="md:w-[300px] md:h-[300px] blur-[130px] bg-primary-light rounded-full absolute left-0 top-[1%] z-0"></div> */}
         </div>
     )
 }

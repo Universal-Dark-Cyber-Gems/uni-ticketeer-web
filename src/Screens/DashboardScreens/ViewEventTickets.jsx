@@ -178,7 +178,7 @@ export default function ViewEventTickets(){
     )
 }
 
-function TicketDetailsTab({category, index, price, quantity = 0, setQuantity}){
+function TicketDetailsTab({category, quantityLeft, index, price, quantity = 0, setQuantity}){
 
     function decreaseTicketQuantity(){
         if(quantity > 0){
@@ -195,8 +195,15 @@ function TicketDetailsTab({category, index, price, quantity = 0, setQuantity}){
     }
 
     return(
-        <div className='flex justify-between my-2'>
-            <p className='w-[30%]'>{category}</p>
+        <div className='flex items-center justify-between my-2'>
+            <div className='w-[30%]'>
+                <p>{category}</p>
+                {
+                    quantityLeft
+                    &&
+                    <p className='text-[11px]'>{`(${quantityLeft} tickets remaining)`}</p>
+                }
+            </div>
             <p className='w-[30%]'>{price}</p>
             <div className='flex justify-between'>
                 <div onClick={decreaseTicketQuantity} className='flex justify-center items-center cursor-pointer rounded-md text-primary-dark border-[1px] border-primary-dark w-[20px] h-[20px] bg-primary-orange'>-</div>

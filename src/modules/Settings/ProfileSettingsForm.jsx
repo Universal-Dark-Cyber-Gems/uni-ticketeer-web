@@ -33,24 +33,24 @@ export default function ProfileSettingsForm({userData}){
                     </div> 
                 </div>
                 <div className="p-2">
-                    <p className="text-2xl text-primary-dark font-medium">Onwenu Money</p>
-                    <p>User role: Organizer</p>
+                    <p className="md:text-2xl text-primary-dark font-medium">Onwenu Money</p>
+                    <p className="text-primary-dark"><span className="font-medium">User role:</span> {userData?.usertype === "basic" ? "Ticketeer" : "Organiser"}</p>
                 </div>
             </div>
             <div className="py-2 md:w-[80%]">
-                <div className="flex gap-3">
+                <div className="md:flex gap-3">
                     <TicketInput label={"Firstname"} tagType={"input"} value={profileFormData.firstname} name={"firstname"} onChange={handleFormDataChange} />
                     <TicketInput label={"Lastname"} tagType={"input"} value={profileFormData.lastname} name={"lastname"} onChange={handleFormDataChange} />
                 </div>
-                <div className="flex gap-3">
+                <div className="md:flex gap-3">
                     <TicketInput label={"Email Address"} disabled tagType={"input"} value={profileFormData.email} name={"email"} onChange={handleFormDataChange} />
                     <TicketInput label={"Username"} tagType={"input"} value={profileFormData?.username} name={"username"} onChange={handleFormDataChange} />
                 </div>
-                <div className="flex gap-3">
+                <div className="md:flex gap-3">
                     <TicketInput label={"Country"} tagType={"input"} />
                     <TicketInput label={"State"} tagType={"input"} />
                 </div>
-                <div className="flex gap-3">
+                <div className="md:flex gap-3">
                     <TicketInput label={"Town/City"} tagType={"input"} />
                     <TicketInput label={"Date of Birth"} tagType={"input"} type={"date"} />
                     <TicketInput label={"Gender"} tagType={"select"} placeholder={"Select gender"} options={genderOptions} />

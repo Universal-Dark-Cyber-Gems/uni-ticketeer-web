@@ -4,6 +4,9 @@ import OrganiseImg from '../images/Organise-image.jpg'
 import Section from '../components/Section'
 import PaymentImg from '../images/Payment-image.png'
 import { useEffect} from 'react'
+import Header from '../components/Header'
+import GlassSearchBar from '../modules/GlassSearchBar'
+import { Images } from '../images'
 
 
 export default function Home(){
@@ -44,28 +47,57 @@ export default function Home(){
 
     return(
         <>
-        <Section>
-        <div className="flex h-[100vh] md:h-auto justify-center flex-col md:flex-row items-center">
-            <div className="md:w-[50%]">
-                <h1 className="text-5xl text-white font-bold md:leading-normal">
-                    Online Event Ticketing with <span className="text-primary-orange">Emume</span>
-                </h1>
-                <p className='my-7 text-xl text-white font-medium'>
-                    Tickets for All your favourite events,
-                    <br></br>
-                    Upload Events sell and buy tickets
-                </p>
-                <div className='md:w-[35%] text-[#6C0C49] hover:bg-transparent hover:text-primary-orange border-2 text-center font-medium py-2 bg-primary-orange rounded-full transition-all ease-in-out duration-300 cursor-pointer'>
-                    <Link to={"/auth/signup"}>
-                        Get Started
-                    </Link>
-                </div>
+        <div className='bg-[url("/Hero.png")] bg-cover bg-center relative'>
+            <div className='bg-[#000]/60 py-4'>
+                <Section>
+                    <Header />
+                    <div className="md:w-[70%] m-auto py-4 my-2">
+                        <p className='text-primary-orange text-center text-[24px] md:text-[50px] font-[oi]'>Discover Unforgettable Events Around You</p>
+                        <p className='text-center text-white tex-[14px] md:text-[20px]'>
+                            Explore handpicked events nearby, from chill hangouts to all‑night festivals. Lock in tickets fast and manage every outing without the group‑chat chaos.
+                        </p>
+                        <div className='flex justify-center my-8'>
+                            <GlassSearchBar />
+                        </div>
+                        <div className='flex justify-between md:w-[40%] md:m-auto my-4'>
+                            <Link to={"/events"}>
+                                <div className='bg-primary-dark py-2 px-4 rounded-3xl text-primary-orange'>
+                                    Browse Events
+                                </div>
+                            </Link>
+                            <Link to={"/auth/signup"}>
+                                <div className='bg-primary-orange py-2 px-4 rounded-3xl text-primary-dark'>
+                                    Sell your Events
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+                </Section>
             </div>
-            <div className='hidden md:block'>
-                <img src={HeroImg} alt='Two tickets, orange and blue with no background' />
+            {/* Ticket notch row at bottom */}
+            {/* desktop */}
+            <div className="absolute hidden bottom-0 left-0 right-0 md:flex justify-around pointer-events-none z-20">
+            {Array.from({ length: 22 }).map((_, i) => (
+                <div key={i} className="w-8 h-8 rounded-full bg-[#FFFFFF] translate-y-1/2" />
+            ))}
+            </div>
+            {/* mobile notches */}
+            <div className="absolute md:hidden bottom-0 left-0 right-0 flex justify-between pointer-events-none z-20">
+            {Array.from({ length: 11 }).map((_, i) => (
+                <div key={i} className="w-4 h-4 rounded-full bg-[#FFFFFF] translate-y-1/2" />
+            ))}
             </div>
         </div>
+        <Section>
+            <div className='flex justify-end'>
+                <img src={Images.trending} />
+            </div>
+            <div>
+                <h2 className='text-center text-primary-orange text-[28px] md:text-[50px] font-bold'><span className='text-primary-dark'>Trending</span> This Week</h2>
 
+            </div>
+        </Section>
+        <Section>
         <div className='flex flex-col md:flex-row justify-between items-center mt-4 mb-6 pt-4'>
             <div className='md:w-[40%] rounded-full'>
                 <img src={OrganiseImg}  className='rounded-[44%] rotate-[-17deg]' alt='Orange and blue cartoon figures celebrating' />

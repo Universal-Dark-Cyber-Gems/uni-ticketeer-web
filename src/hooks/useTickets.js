@@ -20,10 +20,10 @@ export default function useTickets(id){
         let response = await getAllTicketsByEvent(id)
         console.log(response)
         if(response?.err){
-            handleErrorCase(response, logout, setTicketStatus, setTicketsLoading, true)
+            handleErrorCase(response, logout, setTicketStatus, setTicketsLoading, false)
         }else{
-            setTickets(response?.result?.data?.data)
             setTicketsLoading(false)
+            setTickets(response?.result?.data?.data)
         }
     }
 
@@ -32,7 +32,7 @@ export default function useTickets(id){
         let response = await getPurchasedTicketsApi(accessToken)
         console.log("purchased tickets", response)
         if(response.err){
-            handleErrorCase(response, logout, setTicketsLoading, setPurchasedTicketsStatus)
+            handleErrorCase(response, logout, setPurchasedTicketsStatus, setTicketsLoading, false)
         }else{
             setPurchasedTickets(response?.result?.data?.data)
             setTicketsLoading(false)
@@ -109,7 +109,7 @@ export default function useTickets(id){
         setTicketsLoading(true)
         let result = await addTicketToCartApi(ticketid, payload, accessToken)
         if(result?.err){
-            handleErrorCase(result, logout,setTicketsLoading, setTicketStatus, true)
+            handleErrorCase(result, logout, setTicketStatus, setTicketsLoading, true)
             return { success: false}
         }else{
             setTicketsLoading(false)

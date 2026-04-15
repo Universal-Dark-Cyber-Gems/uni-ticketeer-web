@@ -37,7 +37,7 @@ export default function UserDashboard(){
                     </div>
                 </div>
             }
-            <h2 className="text-xl py-8 font-bold text-primary-dark">Past Tickets</h2>
+            <h2 className="text-xl py-8 font-bold text-primary-dark">All Tickets</h2>
             {
                 ticketsLoading
                 ?
@@ -48,8 +48,13 @@ export default function UserDashboard(){
                 purchasedTickets
                 ?
                 <div className="md:flex justify-even">
-                    <DashTicket />
-                    <DashTicket />
+                    {
+                        purchasedTickets.map((pt, i)=>{
+                            return(
+                                <DashTicket key={`ticket${i}`} details={pt} />
+                            )
+                        })
+                    }
                 </div>
                 :
                 <div>

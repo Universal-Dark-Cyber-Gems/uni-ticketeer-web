@@ -1,4 +1,4 @@
-const baseApiUrlTest = "https://uniticks.onrender.com"
+const baseApiUrlTest = "https://uni-ticketeer-server.onrender.com"
 const apiVersion = "/api/v1"
 
 export {

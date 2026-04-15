@@ -46,7 +46,7 @@ export default function useLogin(){
                 localStorage.setItem(authToken, tokenfromresponse)
                 accessToken = tokenfromresponse
                 isLoggedIn = true
-                navigate("/dashboard")
+                navigate("/dashboard/events")
             }
         }catch(err){
             console.log("login error", err)

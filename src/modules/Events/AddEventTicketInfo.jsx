@@ -124,7 +124,7 @@ export default function AddEventTicketInfo({eventName, eventId, organiserId}){
 
     console.log("organiser id", organiserId, eventId)
 
-    useScreenLoaderProvider(ticketsLoading || eventsLoading, loaderMessage)
+    useScreenLoaderProvider(ticketsLoading ? ticketsLoading : eventsLoading ? eventsLoading : false, loaderMessage)
 
     return (
         <form onSubmit={submitTicketForm} className="py-12 relative">

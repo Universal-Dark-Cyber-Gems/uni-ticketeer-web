@@ -14,7 +14,7 @@ export default function OrganiserDashboard(){
     let navigate = useNavigate()
     const {user, organiserStats } = useUserProvider()
 
-    let [activeOrganiserTab, setActiveOrganiserTab] = useState("ongoing events")
+    let [viewMore, setViewMore] = useState(false)
     
     const { events, eventsLoading, eventsStatus } = useEvents()
 
@@ -67,13 +67,29 @@ export default function OrganiserDashboard(){
     return(
         <div className="w-[100%]">
                     <h2 className="text-xl py-8 font-bold text-primary-dark">Overview</h2>
-                    <div className="md:grid grid-cols-3 grid-rows-3 gap-5">
+                    <div className="md:grid grid-cols-3 gap-5">
                         <OverviewCard title={"ongoing events"} amount={organiserStats?.ongoingEvents || 0} />          
                         <OverviewCard title={"ongoing ticket sales"} amount={organiserStats?.ongoingTicketSales || 0} />
-                        <OverviewCard title={"all time events"} amount={organiserStats?.allTimeEvents || 0} />
-                        <OverviewCard title={"all time ticket sales"} amount={organiserStats?.allTimeTicketSales || 0} />
                         <OverviewCard title={"active tickets"} amount={organiserStats?.activeTickets || 0} />
-                        <OverviewCard title={"all time sales"} isCurrencyCard={true} amount={organiserStats?.allTimeSales.toLocaleString() || 0} />             
+                        {viewMore && <OverviewCard title={"all time events"} amount={organiserStats?.allTimeEvents || 0} />}
+                        {viewMore && <OverviewCard title={"all time ticket sales"} amount={organiserStats?.allTimeTicketSales || 0} />}
+                        {viewMore && <OverviewCard title={"all time sales"} isCurrencyCard={true} amount={organiserStats?.allTimeSales.toLocaleString() || 0} />}          
+                    </div>
+                    <div className="flex justify-end text-primary-dark font-medium pt-4 underline text-right">
+                        <div 
+                            onClick={()=>{
+                                setViewMore((prev)=>(!prev))
+                            }} 
+                            className="cursor-pointer"
+                        >
+                            {
+                                viewMore
+                                ?
+                                "View Less"
+                                :
+                                "View More"
+                            }
+                        </div>
                     </div>
                     <div>
                         <div className="flex justify-between items-center pt-12 pb-8">

@@ -114,7 +114,7 @@ export async function withdrawOrganiserFundsApi(accessToken, body){
 
 export async function getBankListApi(){
     try{
-        let result = await axios.get(`${baseApiUrlTest}/paystack-banklist`)
+        let result = await axios.get(`${baseApiUrlTest}${apiVersion}/paystack-banklist`)
         console.log("get banklist", result)
         return { err: false, result}
     }catch(err){

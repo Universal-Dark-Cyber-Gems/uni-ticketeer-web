@@ -1,4 +1,6 @@
 import { useState } from "react"
+import { GiHamburgerMenu } from "react-icons/gi"
+import { IoSearch } from "react-icons/io5"
 import { Link } from "react-router-dom"
 
 export default function Header(){
@@ -13,28 +15,38 @@ export default function Header(){
     }
 
     return(
-        <div className={`${navOpen ? "fixed bg-primary-dark left-0 w-[100%] h-[100px] px-2 z-50" : "w-[80%] relative bg-transparent mx-auto pt-3"}`}>
-        <header className={`${navOpen && "px-4"} flex w-full justify-between items-center py-4`}>
-            <div className="text-white font-bold text-lg cursor-pointer"> 
+        <div className={`bg-white m-auto p-4 rounded-lg`}>
+        <header className={`flex justify-between gap-5 w-full items-center`}>
+            <div className="w-[15%] md:w-[54px] text-lg cursor-pointer"> 
                 <Link to={"/"}>
-                    <img src="logo.png" alt="emume-logo" className="w-[100px] md:w-[150px] p-[0px] m-[0px]"/>
+                    <img src="new-logo.png" alt="emume-logo" className="w-[33px] md:w-[150px] p-[0px] m-[0px]"/>
                 </Link>
             </div>
-            <nav className={` ${navOpen ? 'fixed flex' : 'hidden'} z-10 py-3 flex flex-col justify-center items-center text-center w-full left-0 top-[100px] md:top-0 bg-primary-dark md:visible md:flex md:relative md:w-[60%] md:bg-transparent md:flex-row shadow-2xl md:shadow-none`}>
-                <ul className="md:flex md:justify-between">
-                    <NavItems name={"Home"} url={"/"} toggleNav={closeNav} className=" cursor-pointer" />
+            <nav className={`hidden w-full md:flex items-center justify-between shadow-2xl md:shadow-none`}>
+                <ul className="flex justify-between items-center">
                     <NavItems name={"Billboard"} url={"/events"} toggleNav={closeNav} className=" cursor-pointer"/>
-                    <NavItems name={"About"} url={"/about"} toggleNav={closeNav} className=" cursor-pointer"/>
                     <NavItems name={"How it works"} url={"/how-it-works"} toggleNav={closeNav} className=" cursor-pointer"/>
+                    <NavItems name={"Organizers"} url={"/"} toggleNav={closeNav} className=" cursor-pointer" />
+                    <NavItems name={"About"} url={"/about"} toggleNav={closeNav} className=" cursor-pointer"/>
                 </ul>
-                <div className="w-[70px] bg-primary-light hover:bg-transparent hover:text-primary-orange border-2 rounded-full text-center text-[#342E7E] font-medium py-0.5 cursor-pointer transition-all ease-in-out duration-300">
-                    <Link to={'/auth/login'}>
-                        Log in
+                <div className="md:flex items-center gap-5">
+                    <Link to={"/auth/login"} className="uppercase text-primary-dark">
+                        Log In
                     </Link>
+                    <div className="bg-primary-dark uppercase text-primary-orange px-4 py-2 rounded-full">
+                        <Link to={'/auth/signup'}>
+                            Sign Up
+                        </Link>
+                    </div>
                 </div>
             </nav>
-            <div className="text-white md:hidden" onClick={toggleNav}>
-                --
+            <div className="flex items-center gap-4 md:hidden">
+                <div>
+                    <IoSearch className="text-primary-dark" size={25} />
+                </div>
+                <div onClick={toggleNav}>
+                    <GiHamburgerMenu className="text-primary-dark" size={25} />
+                </div>
             </div>
         </header>
         </div>
@@ -43,7 +55,7 @@ export default function Header(){
 
 function NavItems({name, url, toggleNav}){
     return(
-        <li className="md:w-auto md:border-0 md:last:mr-10 mx-4 py-4 text-white hover:text-primary-orange cursor-pointer">
+        <li className="md:w-auto md:text-[16px] uppercase md:border-0 md:last:mr-10 mx-4 py-4 text-primary-dark hover:text-primary-orange cursor-pointer">
             <Link onClick={toggleNav} to={url}>{name}</Link>
         </li>
     )

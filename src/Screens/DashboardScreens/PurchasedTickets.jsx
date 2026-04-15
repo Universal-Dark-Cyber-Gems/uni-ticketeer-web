@@ -11,18 +11,18 @@ import UserDashboard from "../../modules/Dashboard/UserDashboard";
 import { isUserBasic, isUserOrganiser } from "../../global/helpers"
 import { useUserProvider } from "../../contexts/UserContext";
 
-export default function Dashboard(){
+export default function PurchasedTickets(){
     const {toggleMenu} = useOutletContext()
     let userProvider = useUserProvider()
     let user = userProvider?.user
 
     return (
         <>
-            <DashHeader title={"Dashboard"} dashnavtoggle={toggleMenu} />
+            <DashHeader title={"My Tickets"} dashnavtoggle={toggleMenu} />
             {
-                isUserOrganiser(user)
+                isUserBasic(user)
                 &&
-                <OrganiserDashboard user={user} />
+                <UserDashboard />
             }
         </>
     )

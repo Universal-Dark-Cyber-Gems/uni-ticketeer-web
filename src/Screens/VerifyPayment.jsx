@@ -16,12 +16,12 @@ export default function VerifyPayment(){
 
     let hasRequested = false
 
-    console.log("all qury params", searchParams.get("trxref"))
+    console.log("all qury params", trxref, reference)
 
     async function verifyPayment(){
         console.log("running verification endpoint...")
         try{
-            let result = await axios.get(`${baseApiUrlTest}/verifypayment?trxref=${trxref}&reference=${reference}`)
+            let result = await axios.get(`${baseApiUrlTest}${apiVersion}/verifypayment?trxref=${trxref}&reference=${reference}`)
             setVerifyingPayment(false)
             console.log("verification success", result.data)
             setPaymentStatus({error: false, success: true, msg: result.data.message})
@@ -48,7 +48,7 @@ export default function VerifyPayment(){
                 paymentStatus.success
                 ?
                 <div>
-                    <div className="my-4 w-[170px] h-[170px] bg-green-500 rounded-full flex items-center justify-center">
+                    <div className="my-4 w-[170px] h-[170px] bg-green-500 rounded-full flex items-center justify-center m-auto">
                         <div className="w-[150px] h-[150px] bg-green-600 rounded-full flex items-center justify-center">
                             <IoCheckmark size={100} color="white" />
                         </div>
@@ -59,7 +59,7 @@ export default function VerifyPayment(){
                 paymentStatus.error
                 ?
                 <div>
-                    <div className="my-4 w-[170px] h-[170px] bg-red-500 rounded-full flex items-center justify-center">
+                    <div className="my-4 w-[170px] h-[170px] bg-red-500 rounded-full flex items-center justify-center m-auto">
                         <div className="w-[150px] h-[150px] bg-red-600 rounded-full flex items-center justify-center">
                             <IoClose size={100} color="white" />
                         </div>
