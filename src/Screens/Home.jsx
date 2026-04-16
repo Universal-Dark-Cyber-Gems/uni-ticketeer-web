@@ -7,6 +7,7 @@ import { useEffect} from 'react'
 import Header from '../components/Header'
 import GlassSearchBar from '../modules/GlassSearchBar'
 import { Images } from '../images'
+import NewEventCard from '../components/NewEventCard'
 
 
 export default function Home(){
@@ -59,7 +60,7 @@ export default function Home(){
                         <div className='flex justify-center my-8'>
                             <GlassSearchBar />
                         </div>
-                        <div className='flex justify-between md:w-[40%] md:m-auto my-4'>
+                        <div className='flex justify-between md:w-[40%] md:m-auto my-4 py-2'>
                             <Link to={"/events"}>
                                 <div className='bg-primary-dark py-2 px-4 rounded-3xl text-primary-orange'>
                                     Browse Events
@@ -94,7 +95,9 @@ export default function Home(){
             </div>
             <div>
                 <h2 className='text-center text-primary-orange text-[28px] md:text-[50px] font-bold'><span className='text-primary-dark'>Trending</span> This Week</h2>
-
+                <div>
+                    <NewEventCard />
+                </div>
             </div>
         </Section>
         <Section>

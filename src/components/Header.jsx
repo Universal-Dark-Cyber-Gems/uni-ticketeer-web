@@ -24,7 +24,7 @@ export default function Header(){
             </div>
             <nav className={`hidden w-full md:flex items-center justify-between shadow-2xl md:shadow-none`}>
                 <ul className="flex justify-between items-center">
-                    <NavItems name={"Billboard"} url={"/events"} toggleNav={closeNav} className=" cursor-pointer"/>
+                    <NavItems name={"Events"} url={"/events"} toggleNav={closeNav} className=" cursor-pointer"/>
                     <NavItems name={"How it works"} url={"/how-it-works"} toggleNav={closeNav} className=" cursor-pointer"/>
                     <NavItems name={"Organizers"} url={"/"} toggleNav={closeNav} className=" cursor-pointer" />
                     <NavItems name={"About"} url={"/about"} toggleNav={closeNav} className=" cursor-pointer"/>

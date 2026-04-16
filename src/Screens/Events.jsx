@@ -1,5 +1,6 @@
 import CustomLoader from "../components/CustomLoader";
 import EventCard from "../components/EventCard";
+import NewEventCard from "../components/NewEventCard";
 import Section from "../components/Section";
 import useEvents from "../hooks/useEvents";
 
@@ -27,11 +28,12 @@ export default function Events(){
                     <>
                         <h2 className="text-xl font-bold text-primary-light">Upcoming Events</h2>
                         <div className="md:flex flex-wrap gap-5 py-10">
-                            {
+                            {/* {
                                 events?.map((event, i)=>(
                                     <EventCard key={"event"+i} details={event} />
                                 ))
-                            }
+                            } */}
+                            <NewEventCard />
                         </div>
                     </>
                 }
