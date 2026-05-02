@@ -16,7 +16,7 @@ export default function IndexLayout(){
     })
     return(
         <div className="dark:bg-primary-dark bg-[#FFFFFF]">
-            <div className="relative bg-transparent z-30 w-[100%]">
+            <div className="relative bg-transparent z-30 w-full">
                 <Outlet />
                 <Footer />
             </div>

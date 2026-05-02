@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { CiCalendar, CiLocationOn } from "react-icons/ci"
+import { BsFillLightningChargeFill } from "react-icons/bs";
+
 
 export default function EventDetailCard({
   image = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80",
@@ -7,8 +10,8 @@ export default function EventDetailCard({
   date = "Sat, 29 June",
   time = "8:00 PM",
   location = "Baselandmark Event Center, Enugu",
-  price = 25,
-  currency = "$",
+  price = 5000,
+  currency = "",
   onGetTicket = () => {},
 }) {
   const [liked, setLiked] = useState(false);
@@ -66,29 +69,24 @@ export default function EventDetailCard({
       <div className="px-5 pt-5 pb-6">
         {/* Trending label */}
         {trending && (
-          <div className="flex items-center gap-1.5 mb-2">
-            <svg width="11" height="14" viewBox="0 0 11 15" fill="none">
-              <path d="M6.5 1L1 8.5h4.5L4 14l7-9H6.5L8 1z" fill="#4B1FA8" />
-            </svg>
-            <span className="text-xs font-bold tracking-widest uppercase" style={{ color: "#4B1FA8" }}>
+          <div className="flex items-center gap-1.5 mb-2 text-primary-dark">
+            <BsFillLightningChargeFill />
+
+            <span className="text-xs tracking-widest uppercase text-[12px] ">
               Trending
             </span>
           </div>
         )}
 
         {/* Title */}
-        <h2 className="font-bold mb-3 leading-tight" style={{ fontSize: "1.45rem", color: "#1a0a3a" }}>
+        <h2 className="text-[20px] font-medium mb-3 leading-tight text-primary-dark">
           {title}
         </h2>
 
         {/* Date & time */}
-        <div className="flex items-center gap-2 mb-2">
-          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-            <rect x="1" y="3" width="14" height="12" rx="2" stroke="#6b7280" strokeWidth="1.4" />
-            <path d="M1 7h14" stroke="#6b7280" strokeWidth="1.4" />
-            <path d="M5 1v3M11 1v3" stroke="#6b7280" strokeWidth="1.4" strokeLinecap="round" />
-          </svg>
-          <span className="text-sm" style={{ color: "#4a4a6a" }}>
+        <div className="flex items-center gap-2 mb-2 text-primary-dark">
+          <CiCalendar />
+          <span className="text-sm">
             {date}
             <span className="mx-2 text-gray-300">•</span>
             {time}
@@ -96,32 +94,25 @@ export default function EventDetailCard({
         </div>
 
         {/* Location */}
-        <div className="flex items-center gap-2 mb-5">
-          <svg width="13" height="16" viewBox="0 0 14 18" fill="none">
-            <path
-              d="M7 1C4.24 1 2 3.24 2 6c0 3.75 5 11 5 11s5-7.25 5-11c0-2.76-2.24-5-5-5z"
-              stroke="#6b7280"
-              strokeWidth="1.4"
-            />
-            <circle cx="7" cy="6" r="1.8" stroke="#6b7280" strokeWidth="1.3" />
-          </svg>
-          <span className="text-sm" style={{ color: "#4a4a6a" }}>
+        <div className="flex items-center gap-2 mb-5 text-primary-dark">
+          <CiLocationOn />
+          <span className="text-[16px]">
             {location}
           </span>
         </div>
 
         {/* Price */}
-        <p className="text-center mb-4">
-          <span className="font-bold text-base" style={{ color: "#1a0a3a" }}>Starting from </span>
-          <span className="font-extrabold text-2xl" style={{ color: "#1a0a3a" }}>
-            {currency}{price}
+        <p className="text-center mb-4 text-primary-dark">
+          <span className="font-bold text-base">Starting from </span>
+          <span className="font-extrabold text-2xl">
+            &#8358;{price}
           </span>
         </p>
 
         {/* CTA */}
         <button
           onClick={onGetTicket}
-          className="w-full py-4 rounded-2xl font-bold text-sm tracking-widest uppercase transition-all hover:bg-purple-50 active:scale-95"
+          className="w-full py-4 rounded-full font-bold text-sm tracking-widest uppercase transition-all hover:bg-purple-50 active:scale-95"
           style={{
             border: "1.5px solid #4B1FA8",
             color: "#4B1FA8",

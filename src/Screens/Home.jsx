@@ -8,43 +8,48 @@ import Header from '../components/Header'
 import GlassSearchBar from '../modules/GlassSearchBar'
 import { Images } from '../images'
 import NewEventCard from '../components/NewEventCard'
+import { Navigation, Pagination } from "swiper/modules"
+import { Swiper, SwiperSlide } from "swiper/react"
+
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { TbMicrophone2 } from 'react-icons/tb'
+import { MdOutlineFastfood, MdPalette } from 'react-icons/md'
+import { PiHandsPrayingFill } from 'react-icons/pi'
+import { BiParty } from 'react-icons/bi'
+import { RiBriefcase4Line } from 'react-icons/ri'
+import GenreCards from '../modules/GenreCards'
+import RibbonComponent from '../modules/RibbonComponent'
+
+const genreList = [
+    {
+        icon: <TbMicrophone2 className='text-primary-orange' size={25} />,
+        text: "Music Concert"
+    },
+    {
+        icon: <MdOutlineFastfood className='text-primary-orange' size={25} />,
+        text: "Food and Recreation"
+    },
+    {
+        icon: <MdPalette className='text-primary-orange' size={25} />,
+        text: "Art and Culture"
+    },
+    {
+        icon: <PiHandsPrayingFill className='text-primary-orange' size={25} />,
+        text: "Spirituality and Religion"
+    },
+    {
+        icon: <BiParty className='text-primary-orange' size={25} />,
+        text: "Party and Nightlife"
+    },
+    {
+        icon: <RiBriefcase4Line className='text-primary-orange' size={25} />,
+        text: "Business and Career"
+    }
+]
 
 
 export default function Home(){
-
-    function initTestimonySlider(){
-        const swiperEl = document.querySelector('swiper-container')
-        console.log(swiperEl)
-        const swiperParams = {
-            autoplay:{
-                delay: 3000,
-
-            },
-            breakpoints: {
-              640: {
-                slidesPerView: 2,
-              },
-              1024: {
-                slidesPerView: 3,
-              },
-            },
-            on: {
-              init(swiper) {
-                
-              },
-            },
-          };
-        
-          // now we need to assign all parameters to Swiper element
-          Object.assign(swiperEl, swiperParams);
-        
-          // and now initialize it
-          swiperEl.initialize();
-    }
-
-    useEffect(()=>{
-        initTestimonySlider()
-    },[])
 
     return(
         <>
@@ -53,7 +58,7 @@ export default function Home(){
                 <Section>
                     <Header />
                     <div className="md:w-[70%] m-auto py-4 my-2">
-                        <p className='text-primary-orange text-center text-[24px] md:text-[50px] font-[oi]'>Discover Unforgettable Events Around You</p>
+                        <p className='text-white text-center text-[28px] md:text-[80px]'>Discover Unforgettable <span className='text-primary-orange'>Events</span> Around You</p>
                         <p className='text-center text-white tex-[14px] md:text-[20px]'>
                             Explore handpicked events nearby, from chill hangouts to all‑night festivals. Lock in tickets fast and manage every outing without the group‑chat chaos.
                         </p>
@@ -94,34 +99,76 @@ export default function Home(){
                 <img src={Images.trending} />
             </div>
             <div>
-                <h2 className='text-center text-primary-orange text-[28px] md:text-[50px] font-bold'><span className='text-primary-dark'>Trending</span> This Week</h2>
+                <h2 className='mb-4 text-center text-primary-orange text-[28px] md:text-[50px] font-bold'><span className='text-primary-dark'>Trending</span> This Week</h2>
                 <div>
-                    <NewEventCard />
+                    <Swiper 
+                        modules={[Navigation, Pagination]}
+                        breakpoints={{
+                            640: {
+                                "slidesPerView": 2,
+                            },
+                            1024: {
+                                "slidesPerView": 3
+                            }
+                        }}
+                        slidesPerGroup={1}
+                        spaceBetween={20}
+                        direction='horizontal'
+                        pagination={{type: "bullets", dynamicBullets: true, dynamicMainBullets: 1}}
+                    >
+                        {
+                            [1, 2, 3, 4, 5].map((ev, i)=>(
+                                <SwiperSlide key={i}>
+                                    <div className='mb-4'>
+                                        <NewEventCard />
+                                    </div>
+                                </SwiperSlide>
+                            ))
+                        }
+                        
+                    </Swiper>
                 </div>
             </div>
         </Section>
+        <div className='my-6'>
+            <RibbonComponent />
+            <Section>
+                <div className='flex flex-col justify-center items-center mb-6'>
+                    <h2 className='text-primary-dark text-center text-[28px] md:text-[53px] font-bold mb-6'>We Cover all <span className='text-primary-orange'>Events Genre</span></h2>
+                    <div className='grid place-items-center gap-5 grid-cols-3 grid-rows-2 w-full md:w-[70%]'>
+                        {
+                            genreList.map((item, i)=>(
+                                <GenreCards icon={item.icon} text={item.text} />
+                            ))
+                        }
+                    </div>
+                </div>
+                
+            </Section>
+            <RibbonComponent />
+        </div>
         <Section>
-        <div className='flex flex-col md:flex-row justify-between items-center mt-4 mb-6 pt-4'>
+        <div className='flex flex-col md:flex-row gap-5 items-center mt-4 mb-6 pt-4'>
             <div className='md:w-[40%] rounded-full'>
-                <img src={OrganiseImg}  className='rounded-[44%] rotate-[-17deg]' alt='Orange and blue cartoon figures celebrating' />
+                <img src={Images.organiserImg2}  className='w-full' alt='Orange and blue cartoon figures celebrating' />
             </div>
-            <div className='md:w-[40%]'>
-                <h2 className='text-5xl text-white font-bold md:leading-normal'>
+            <div className='md:w-[45%] text-center md:text-left'>
+                <h2 className='md:text-[50px] text-[28px] text-primary-dark font-bold md:leading-normal'>
                     Get <span className='text-primary-orange'>Organised</span> and get <span className='text-primary-orange'>Selling</span>
                 </h2>
-                <p className='my-7 text-xl text-white font-medium'>
-                    We make ticketing and event management stress free, also manage and track your ticket sales online
+                <p className='my-7 text-[14px] md:text-[28px] text-primary-dark font-medium'>
+                    We make ticketing and event management stress free, also manage and track your ticket sales online with updated analytics
                 </p>
                 <div className='md:w-[45%] text-[#6C0C49] hover:bg-transparent hover:text-primary-orange border-2 text-center font-medium py-2 bg-primary-orange rounded-full cursor-pointer transition-all duration-300 ease-in-out'>
                     <Link to={"/events"}>
-                        See Events
+                        Create Event
                     </Link>
                 </div>
             </div>
         </div>
         </Section>
 
-        <div className='bg-primary-orange'>
+        {/* <div className='bg-primary-orange'>
         <Section>
             <div className='py-10 flex flex-col md:flex-row items-center'>
                 <div className='md:w-[50%]'>
@@ -142,31 +189,63 @@ export default function Home(){
                 </div>
             </div>
         </Section>
-        </div>
+        </div> */}
 
-        <Section>
+        {/* <Section>
             <div className='py-10'>
-                <h1 className='md:w-[45%] m-auto py-20 text-4xl text-white font-bold text-center'>
+                <h1 className='md:w-[45%] m-auto py-20 text-4xl text-primary-dark font-bold text-center'>
                     Here's What Our Customers Are Saying
                 </h1>
                 <div>
-                    <swiper-container init="false" space-between='20'>
-                        <swiper-slide>
+                    <Swiper spaceBetween={20}>
+                        <SwiperSlide>
                             <TestimonyTabs name={"Dj Hackangel"} title={"Disk Jockey"} testimony={""} />
-                        </swiper-slide>
-                        <swiper-slide>
+                        </SwiperSlide>
+                        <SwiperSlide>
                             <TestimonyTabs name={"Onwenu Money"} title={"User"} testimony={""} />
-                        </swiper-slide>
-                        <swiper-slide>
-                            <TestimonyTabs name={"Laurenzoh"} title={"Event Planner"} testimony={""} />
-                        </swiper-slide> 
-                    </swiper-container>
+                        </SwiperSlide>
+                        <SwiperSlide>
+                            <TestimonyTabs name={"Onwenu Money"} title={"User"} testimony={""} />
+                        </SwiperSlide>
+                    </Swiper>
                 </div>
           
             </div>
-        </Section>
+        </Section> */}
 
         <Section>
+            <h2 className='text-center text-[28px] lg:text-[50px] font-bold text-primary-dark my-8'>
+                Why Choose <span className='text-primary-orange'>Us</span>
+            </h2>
+            <div className='flex my-8 flex-col md:flex-row md:justify-between gap-5'>
+                <div className='text-primary-dark flex flex-col items-center gap-2 w-full md:w-[30%]'>
+                    <img src={Images.chooseus1} />
+                    <h3 className='text-[24px] md:text-[36px] text-center'>Secure Payments</h3>
+                    <p className='text-[16px] md:text-[20px] text-center'>
+                        Our secure and fast payment systems protect you from any financial conflict, and our rates are budget friendly 
+                    </p>
+                </div>
+                <div className='text-primary-dark flex flex-col items-center gap-2 w-full md:w-[30%]'>
+                    <img src={Images.chooseus2} />
+                    <h3 className='text-[24px] md:text-[36px] text-center'>24/7 Support</h3>
+                    <p className='text-[16px] md:text-[20px] text-center'>
+                       Our ticketing platform offers true 24/7 customer support with real agents available every second of the year via life chat, toll-free phone, WhatApp, email and social media DMs.
+                    </p>
+                </div>
+                <div className='text-primary-dark flex flex-col items-center gap-2 w-full md:w-[30%]'>
+                    <img src={Images.chooseus3} />
+                    <h3 className='text-[24px] md:text-[36px] text-center'>Hassle-free Experience</h3>
+                    <p className='text-[16px] md:text-[20px] text-center'>
+                        Easy transfers, digital wallets entry, Real-time seat maps, instant delivery, last-minute tickets, buy anytime, anywhere in seconds and exclusive presales.
+                    </p>
+                </div>
+            </div>
+            <div className='flex justify-center'>
+                <img src={Images.getTicket} />
+            </div>
+        </Section>
+
+        {/* <Section>
             <div className='w-full bg-gradient-to-r from-[#6B12B6] to-[#B07949] pt-12 pb-5 my-4 rounded-xl'>
                 <h1 className='w-[90%] md:w-[45%] text-white text-center text-4xl font-bold m-auto capitalize'>Go Get Yourself that ticket now</h1>
                 <div className='w-[90%] md:w-[30%] bg-primary-dark mx-auto mt-12 p-4 text-center text-primary-light rounded-full text-xl font-bold hover:bg-[#b07949] cursor-pointer transition-all ease-in-out duration-300'>
@@ -175,7 +254,7 @@ export default function Home(){
                     </Link>
                 </div>
             </div>
-        </Section>
+        </Section> */}
         </>
     )
 }

@@ -6,7 +6,7 @@ export default function Footer(){
         <>
         
         <Section>
-            <div className="flex flex-col-reverse text-center md:text-left md:flex-row justify-between mt-24 mb-8">
+            <div className="flex flex-col-reverse text-center md:text-left md:flex-row justify-between mt-24 mb-8 bg-primary-dark">
                 <div className="w-full md:flex justify-around">
                 <div>
                     <h2 className="text-white text-xl font-bold mb-4">Emume</h2>
