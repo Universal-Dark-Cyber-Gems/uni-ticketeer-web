@@ -5,6 +5,7 @@ import Section from '../components/Section'
 import PaymentImg from '../images/Payment-image.png'
 import { useEffect} from 'react'
 import Header from '../components/Header'
+import Footer from "../components/Footer"
 import GlassSearchBar from '../modules/GlassSearchBar'
 import { Images } from '../images'
 import NewEventCard from '../components/NewEventCard'
@@ -135,7 +136,7 @@ export default function Home(){
             <Section>
                 <div className='flex flex-col justify-center items-center mb-6'>
                     <h2 className='text-primary-dark text-center text-[28px] md:text-[53px] font-bold mb-6'>We Cover all <span className='text-primary-orange'>Events Genre</span></h2>
-                    <div className='grid place-items-center gap-5 grid-cols-3 grid-rows-2 w-full md:w-[70%]'>
+                    <div className='grid place-items-center gap-5 grid-cols-3 grid-rows-2 w-full xl:w-[70%]'>
                         {
                             genreList.map((item, i)=>(
                                 <GenreCards icon={item.icon} text={item.text} />
@@ -255,6 +256,7 @@ export default function Home(){
                 </div>
             </div>
         </Section> */}
+        <Footer />
         </>
     )
 }
