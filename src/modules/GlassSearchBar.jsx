@@ -11,7 +11,7 @@ export default function GlassSearchBar() {
             focused ? "scale-[1.02]" : "scale-100"
           }`}
           style={{
-            background: "rgba(255, 255, 255, 0.08)",
+            background: "rgba(255, 255, 255, 0.0)",
             backdropFilter: "blur(20px)",
             WebkitBackdropFilter: "blur(20px)",
             border: focused

@@ -8,6 +8,7 @@ import chooseus1 from "./chooseus1.png"
 import chooseus2 from "./chooseus2.png"
 import chooseus3 from "./chooseus3.png"
 import getTicket from "./goGetTicket.png"
+import newHero from "./newherobg.jpeg"
 
 export const Images = {
     trending,
@@ -19,5 +20,6 @@ export const Images = {
     chooseus1,
     chooseus2,
     chooseus3,
-    getTicket
+    getTicket,
+    newHero
 }

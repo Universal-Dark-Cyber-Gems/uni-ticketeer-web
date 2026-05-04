@@ -54,12 +54,12 @@ export default function Home(){
 
     return(
         <>
-        <div className='bg-[url("/Hero.png")] bg-cover bg-center relative'>
+        <div className='relative' style={{backgroundImage: `url(${Images.newHero})`, backgroundPosition: "center", backgroundSize: "cover"}}>
             <div className='bg-[#000]/60 py-4'>
                 <Section>
                     <Header />
                     <div className="md:w-[70%] m-auto py-4 my-2">
-                        <p className='text-white text-center text-[28px] md:text-[80px]'>Discover Unforgettable <span className='text-primary-orange'>Events</span> Around You</p>
+                        <p className='text-white text-center text-[28px] md:text-[80px] leading-[1.2]'>Discover Unforgettable <span className='text-primary-orange'>Events</span> Around You</p>
                         <p className='text-center text-white tex-[14px] md:text-[20px]'>
                             Explore handpicked events nearby, from chill hangouts to all‑night festivals. Lock in tickets fast and manage every outing without the group‑chat chaos.
                         </p>
