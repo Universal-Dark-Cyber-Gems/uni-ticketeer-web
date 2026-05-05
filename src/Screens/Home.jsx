@@ -9,11 +9,9 @@ import Footer from "../components/Footer"
 import GlassSearchBar from '../modules/GlassSearchBar'
 import { Images } from '../images'
 import NewEventCard from '../components/NewEventCard'
-import { Navigation, Pagination } from "swiper/modules"
 import { Swiper, SwiperSlide } from "swiper/react"
 
-import 'swiper/css';
-import 'swiper/css/pagination';
+
 import { TbMicrophone2 } from 'react-icons/tb'
 import { MdOutlineFastfood, MdPalette } from 'react-icons/md'
 import { PiHandsPrayingFill } from 'react-icons/pi'
@@ -21,6 +19,7 @@ import { BiParty } from 'react-icons/bi'
 import { RiBriefcase4Line } from 'react-icons/ri'
 import GenreCards from '../modules/GenreCards'
 import RibbonComponent from '../modules/RibbonComponent'
+import CustomSliderContainer from '../components/CustomSliderContainer'
 
 const genreList = [
     {
@@ -83,13 +82,13 @@ export default function Home(){
             </div>
             {/* Ticket notch row at bottom */}
             {/* desktop */}
-            <div className="absolute hidden bottom-0 left-0 right-0 md:flex justify-around pointer-events-none z-20">
+            <div className="absolute hidden bottom-0 left-0 right-0 md:flex justify-around pointer-events-none">
             {Array.from({ length: 22 }).map((_, i) => (
                 <div key={i} className="w-8 h-8 rounded-full bg-[#FFFFFF] translate-y-1/2" />
             ))}
             </div>
             {/* mobile notches */}
-            <div className="absolute md:hidden bottom-0 left-0 right-0 flex justify-between pointer-events-none z-20">
+            <div className="absolute md:hidden bottom-0 left-0 right-0 flex justify-between pointer-events-none">
             {Array.from({ length: 11 }).map((_, i) => (
                 <div key={i} className="w-4 h-4 rounded-full bg-[#FFFFFF] translate-y-1/2" />
             ))}
@@ -102,9 +101,9 @@ export default function Home(){
             <div>
                 <h2 className='mb-4 text-center text-primary-orange text-[28px] md:text-[50px] font-bold'><span className='text-primary-dark'>Trending</span> This Week</h2>
                 <div>
-                    <Swiper 
-                        modules={[Navigation, Pagination]}
-                        breakpoints={{
+                    <CustomSliderContainer
+                        breakpoints={
+                        {
                             640: {
                                 "slidesPerView": 2,
                             },
@@ -112,10 +111,6 @@ export default function Home(){
                                 "slidesPerView": 3
                             }
                         }}
-                        slidesPerGroup={1}
-                        spaceBetween={20}
-                        direction='horizontal'
-                        pagination={{type: "bullets", dynamicBullets: true, dynamicMainBullets: 1}}
                     >
                         {
                             [1, 2, 3, 4, 5].map((ev, i)=>(
@@ -126,8 +121,7 @@ export default function Home(){
                                 </SwiperSlide>
                             ))
                         }
-                        
-                    </Swiper>
+                    </CustomSliderContainer>
                 </div>
             </div>
         </Section>
@@ -135,7 +129,7 @@ export default function Home(){
             <RibbonComponent />
             <Section>
                 <div className='flex flex-col justify-center items-center mb-6'>
-                    <h2 className='text-primary-dark text-center text-[28px] md:text-[53px] font-bold mb-6'>We Cover all <span className='text-primary-orange'>Events Genre</span></h2>
+                    <h2 className='text-primary-dark text-center text-[28px] lg:text-[53px] font-bold mb-6'>We Cover all <span className='text-primary-orange'>Events Genre</span></h2>
                     <div className='grid place-items-center gap-5 grid-cols-3 grid-rows-2 w-full xl:w-[70%]'>
                         {
                             genreList.map((item, i)=>(

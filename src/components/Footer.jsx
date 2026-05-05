@@ -9,13 +9,13 @@ export default function Footer(){
         <div className="relative font-[Outfit] bg-gradient-to-br from-primary-dark via-primary-dark via-90% to-primary-orange to-100% mt-8">
              {/* Ticket notch row at top */}
             {/* desktop */}
-            <div className="absolute hidden top-0 left-0 right-0 md:flex justify-around pointer-events-none z-20">
+            <div className="absolute hidden top-0 left-0 right-0 md:flex justify-around pointer-events-none">
             {Array.from({ length: 22 }).map((_, i) => (
                 <div key={i} className="w-8 h-8 rounded-full bg-[#FFFFFF] -translate-y-1/2" />
             ))}
             </div>
             {/* mobile notches */}
-            <div className="absolute md:hidden top-0 left-0 right-0 flex justify-between pointer-events-none z-20">
+            <div className="absolute md:hidden top-0 left-0 right-0 flex justify-between pointer-events-none">
             {Array.from({ length: 11 }).map((_, i) => (
                 <div key={i} className="w-4 h-4 rounded-full bg-[#FFFFFF] -translate-y-1/2" />
             ))}

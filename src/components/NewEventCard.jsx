@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CiCalendar, CiLocationOn } from "react-icons/ci"
 import { BsFillLightningChargeFill } from "react-icons/bs";
+import NairaSymbol from "./NairaSymbol";
 
 
 export default function EventDetailCard({
@@ -105,7 +106,7 @@ export default function EventDetailCard({
         <p className="text-center mb-4 text-primary-dark">
           <span className="font-bold text-base">Starting from </span>
           <span className="font-extrabold text-2xl">
-            &#8358;{price}
+            <NairaSymbol />{price}
           </span>
         </p>
 
