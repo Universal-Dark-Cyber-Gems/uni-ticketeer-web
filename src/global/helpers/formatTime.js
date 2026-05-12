@@ -2,6 +2,8 @@ function formatTime(time24){
     let time24Split = time24?.split(":")
     let time12;
 
+    if(!time24Split) return 
+    
     if(parseInt(time24Split[0]) > 23 ) throw new Error("Invalid 24 hour time format");
 
     if(parseInt(time24Split[0]) % 12 > 0){

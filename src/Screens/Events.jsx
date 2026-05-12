@@ -13,6 +13,8 @@ import NairaSymbol from "../components/NairaSymbol";
 import FeaturedEventComponent from "../components/FeaturedEventComponent";
 import CustomSliderContainer from "../components/CustomSliderContainer";
 import { SwiperSlide } from "swiper/react";
+import TrendingEventComponent from "../modules/TrendingEventComponent";
+import Footer from "../components/Footer";
 
 export default function Events(){
     let {events, eventsLoading, eventsStatus} = useEvents()
@@ -28,7 +30,7 @@ export default function Events(){
                                 Featured
                             </div>
                         </div>
-                        <div className="flex justify-center py-8">
+                        <div className="py-8">
                             <CustomSliderContainer breakpoints={{
                                 640: {
                                     "slidesPerView": 1,
@@ -39,7 +41,9 @@ export default function Events(){
                             }}>
                                 {
                                     [1, 2, 3, 4].map((item, i)=>((
-                                        <div>Hello</div>
+                                        <SwiperSlide key={i}>
+                                            <FeaturedEventComponent />
+                                        </SwiperSlide>
                                         )
                                     ))
                                 }
@@ -62,38 +66,47 @@ export default function Events(){
                 </div>
             </div>
             <Section>
-            <div className="min-h-[100vh] z-10">
-                <div>
-                    {
-                        eventsLoading
-                        ?
-                        <div className="flex flex-col justify-center items-center">
-                            <CustomLoader />
+                <div className="min-h-[100vh] md:pt-6">
+                    <div className="text-[24px] md:text-[36px]  font-medium text-primary-dark my-4">
+                        Trending This Week
+                    </div>
+                    <div>
+                        <TrendingEventComponent />
+                    </div>
+                    <div className="mt-10">
+                        <div className="mt-2">
+                            <h2 className="text-[24px] font-medium md:text-[36px] font-bold text-primary-dark">Discover Events Near You</h2>
                         </div>
-                        :
-                        eventsStatus.error
-                        ?
-                        <div className="text-red-500 text-center">
-                            {eventsStatus.message}
-                        </div>
-                        :
-                        events
-                        &&
-                        <>
-                            <h2 className="text-xl font-bold text-primary-light">Upcoming Events</h2>
-                            <div className="md:flex flex-wrap gap-5 py-10">
-                                {/* {
-                                    events?.map((event, i)=>(
-                                        <EventCard key={"event"+i} details={event} />
-                                    ))
-                                } */}
-                                <NewEventCard />
+                        {
+                            eventsLoading
+                            ?
+                            <div className="flex flex-col justify-center items-center">
+                                <CustomLoader />
                             </div>
-                        </>
-                    }
+                            :
+                            eventsStatus.error
+                            ?
+                            <div className="text-red-500 text-center">
+                                {eventsStatus.message}
+                            </div>
+                            :
+                            events
+                            &&
+                            <>
+                                <div className="md:flex flex-wrap gap-5 py-4">
+                                    {
+                                        events?.map((event, i)=>(
+                                            // <EventCard key={"event"+i} details={event} />
+                                            <NewEventCard key={"event"+i} details={event}  />
+                                        ))
+                                    }
+                                </div>
+                            </>
+                        }
+                    </div>
                 </div>
-            </div>
             </Section>
+            <Footer />
         </>
     )
 }

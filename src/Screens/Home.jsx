@@ -20,6 +20,7 @@ import { RiBriefcase4Line } from 'react-icons/ri'
 import GenreCards from '../modules/GenreCards'
 import RibbonComponent from '../modules/RibbonComponent'
 import CustomSliderContainer from '../components/CustomSliderContainer'
+import TrendingEventComponent from '../modules/TrendingEventComponent'
 
 const genreList = [
     {
@@ -100,29 +101,7 @@ export default function Home(){
             </div>
             <div>
                 <h2 className='mb-4 text-center text-primary-orange text-[28px] md:text-[50px] font-bold'><span className='text-primary-dark'>Trending</span> This Week</h2>
-                <div>
-                    <CustomSliderContainer
-                        breakpoints={
-                        {
-                            640: {
-                                "slidesPerView": 2,
-                            },
-                            1024: {
-                                "slidesPerView": 3
-                            }
-                        }}
-                    >
-                        {
-                            [1, 2, 3, 4, 5].map((ev, i)=>(
-                                <SwiperSlide key={i}>
-                                    <div className='mb-4'>
-                                        <NewEventCard />
-                                    </div>
-                                </SwiperSlide>
-                            ))
-                        }
-                    </CustomSliderContainer>
-                </div>
+                <TrendingEventComponent />
             </div>
         </Section>
         <div className='my-6'>

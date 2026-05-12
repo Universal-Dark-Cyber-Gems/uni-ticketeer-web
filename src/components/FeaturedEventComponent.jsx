@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export default function FeaturedEventComponent(){
     return(
-        <div className="lg:flex lg:items-end gap-5">
+        <div className="lg:flex lg:items-end gap-5 font-regular">
             <div style={{maxWidth: 380}}>
                 <img 
                     src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80"
@@ -17,7 +17,7 @@ export default function FeaturedEventComponent(){
             </div>
             <div className="text-white">
                 <h3 className="text-[25px] lg:text-[60px]">Fun in the Sun</h3>
-                <p className="text-[16px] lg:text-[24px] lg:w-[70%]">
+                <p className="text-[16px] lg:text-[24px] lg:w-[70%] font-medium">
                     The biggest outdoor music & lifestyle festival featureing top Afrobeats stars, DJs, food vendirs, and games
                 </p>
                 <div className="flex flex-col gap-2 my-2">
