@@ -112,7 +112,7 @@ export default function Home(){
                     <div className='grid place-items-center gap-5 grid-cols-3 grid-rows-2 w-full xl:w-[70%]'>
                         {
                             genreList.map((item, i)=>(
-                                <GenreCards icon={item.icon} text={item.text} />
+                                <GenreCards key={i} icon={item.icon} text={item.text} />
                             ))
                         }
                     </div>
