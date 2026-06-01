@@ -77,7 +77,7 @@ export default function Events(){
                         <div className="mt-2">
                             <h2 className="text-[24px] font-medium md:text-[36px] font-bold text-primary-dark">Discover Events Near You</h2>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 w-full overflow-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                             {
                                 ["All", "Music", "Comedy", "Tech", "Sports"].map((item)=>(
                                     <div className="rounded-full text-primary-dark border border-primary-dark px-4 py-2">
@@ -113,7 +113,7 @@ export default function Events(){
                             </>
                         }
                     </div>
-                    <div className="my-4">
+                    {/* <div className="my-4">
                         <h3 className="md:text-[36px] text-primary-dark">Based on Your Location and Trending Events</h3>
                         <div className="flex text-primary-dark justify-between">
                             <div>Upcoming this month</div>
@@ -123,7 +123,7 @@ export default function Events(){
                                 </select>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </Section>
             <Footer />

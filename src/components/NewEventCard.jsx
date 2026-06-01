@@ -16,7 +16,7 @@ let mockDetails = {
   onGetTicket: () => {},
 }
 
-export default function EventDetailCard({details, isTrending}) {
+export default function NewEventCard({details, isTrending}) {
   const [liked, setLiked] = useState(false);
 
   return (

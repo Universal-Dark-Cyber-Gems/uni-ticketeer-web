@@ -32,6 +32,8 @@ import ForgotPassword from './Screens/AuthScreens/ForgotPassword';
 import ResetPassword from './Screens/AuthScreens/ResetPassword';
 import VerifyEmail from './Screens/AuthScreens/VerifyEmail';
 import ViewUserTicket from './Screens/DashboardScreens/ViewUserTicket';
+import HowItWorks from './Screens/HowItWorks';
+import Searchpage from './Screens/Searchpage';
 
 register();
 
@@ -53,8 +55,16 @@ function App() {
         element: <Events />
       },
       {
+        path: "how-it-works",
+        element: <HowItWorks />
+       },
+      {
         path: "about",
         element: <About />
+      },
+      {
+        path: "search",
+        element: <Searchpage />
       }
     ]},
     {

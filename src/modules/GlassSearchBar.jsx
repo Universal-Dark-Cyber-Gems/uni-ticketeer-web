@@ -1,11 +1,20 @@
 import { useState } from "react";
+import { IoArrowForward } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 export default function GlassSearchBar() {
+  const navigate = useNavigate()
   const [query, setQuery] = useState("");
   const [focused, setFocused] = useState(false);
 
+  function onSearch(e){
+    e.preventDefault()
+    if(query=="") return
+    navigate(`/search?q=${query}`)
+  }
+
   return (
-      <div className="w-full max-w-2xl">
+      <form onSubmit={onSearch} className="w-full max-w-2xl">
         <div
           className={`flex items-center gap-3 px-5 py-4 rounded-full transition-all duration-300 ${
             focused ? "scale-[1.02]" : "scale-100"
@@ -83,6 +92,15 @@ export default function GlassSearchBar() {
               </svg>
             </button>
           )}
+          <button
+            className="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-full"
+            style={{
+              background: "rgba(255,255,255,0.15)",
+              color: "rgba(255,255,255,0.7)",
+            }}
+          >
+            <IoArrowForward />
+          </button>
         </div>
 
         {/* Suggestion pills */}
@@ -107,7 +125,7 @@ export default function GlassSearchBar() {
             )
           )}
         </div>
-      </div>
+      </form>
 
       // {/* Inline placeholder style override */}
       // <style>{`
