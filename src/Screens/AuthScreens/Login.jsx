@@ -62,7 +62,7 @@ export default function Login(){
                     }
                 </button>
                 <div className="pt-2 text-primary-dark">
-                    Don't have an account? <Link className="cursor-pointer hover:underline" to={"/auth/signup"}>Sign Up</Link>
+                    Don't have an account? <Link className="cursor-pointer hover:underline" to={"/getstarted"}>Sign Up</Link>
                 </div>
             </form>
         </div>

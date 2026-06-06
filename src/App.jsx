@@ -34,6 +34,7 @@ import VerifyEmail from './Screens/AuthScreens/VerifyEmail';
 import ViewUserTicket from './Screens/DashboardScreens/ViewUserTicket';
 import HowItWorks from './Screens/HowItWorks';
 import Searchpage from './Screens/Searchpage';
+import InitSignup from './Screens/AuthScreens/InitSignup';
 
 register();
 
@@ -67,6 +68,10 @@ function App() {
         element: <Searchpage />
       }
     ]},
+    {
+      path: "/getstarted",
+      element: <InitSignup />
+    },
     {
       path: "/auth",
       element: <AuthLayout />,
