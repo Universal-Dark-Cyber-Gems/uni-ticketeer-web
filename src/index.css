@@ -1,16 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Oi&family=Outfit:wght@100..900&display=swap');
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Outfit',
-    'Ubuntu',sans-serif;
+  font-family: "Outfit",sans-serif;
+  font-weight: 100, 200, 300, 400, 500, 600, 700, 800, 900;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }
 
 @tailwind base;

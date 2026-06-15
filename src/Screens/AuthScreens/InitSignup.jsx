@@ -5,6 +5,8 @@ import { Images } from "../../images";
 import { FaRegUser } from "react-icons/fa";
 import { useState } from "react";
 import { GiCheckMark } from "react-icons/gi";
+import CustomSliderContainer from "../../components/CustomSliderContainer";
+import { SwiperSlide } from "swiper/react";
 
 let signupDetails = [
     {
@@ -37,13 +39,13 @@ export default function InitSignup(){
     
     return(
         <div 
-            className="w-[100vw] h-[100vh]"
+            className="w-[100vw] min-h-[100vh] flex flex-col gap-10 justify-between"
             style={{
                 backgroundImage: `url(${Images.signupBg})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover"
             }}
-        >
+        >   
             <Section>
                 <div className="flex justify-between">
                     <img src={"/new-logo.png"} />
@@ -51,16 +53,39 @@ export default function InitSignup(){
                         <IoClose color="black" />
                     </div>
                 </div>
-                <div className="min-h-[80vh] md:flex items-center justify-center gap-5">
+            </Section>
+            <div>
+                <CustomSliderContainer
+                    breakpoints={
+                    {
+                        321: {
+                            "slidesPerView": 1.2
+                        },
+                        640: {
+                            "slidesPerView": 2,
+                        }
+                    }}
+                    slidesPerView={1.08}
+                    spaceBetween={5}
+                >
                     {
                         signupDetails.map((det, i)=>(
-                            <SelectRoleCard
-                                details={det}
-                                currentRole={userRole}
-                                onChangeRole={(role)=>setUserRole(role)}
-                            />
+                            <SwiperSlide>
+                                <SelectRoleCard
+                                    details={det}
+                                    currentRole={userRole}
+                                    onChangeRole={(role)=>setUserRole(role)}
+                                />
+                            </SwiperSlide>
                         ))
                     }
+                </CustomSliderContainer>
+            </div>
+            <Section>
+                <div className="flex justify-end">
+                    <div className={`${userRole ? "bg-white text-primary-dark": "bg-[#CCCCCC] text-[#EEEEEE]"} px-6 py-4 mb-2 rounded-full`}>
+                        Continue
+                    </div>
                 </div>
             </Section>
         </div>
@@ -71,9 +96,9 @@ function SelectRoleCard({details, currentRole, onChangeRole}){
     let isActive = currentRole == details.role
     return(
         <div 
-            className={`relative flex flex-col items-center justify-center gap-5 w-full 
-                md:w-1/2 lg:w-1/4 h-[450px] ${isActive ? "border-2 border-primary-orange" : "border-white/50 border-t border-b"} 
-                p-8 text-white transition duration-300
+            className={`relative flex flex-col items-center justify-center gap-5 w-[300px] md:w-[380px] 
+                h-[450px] ${isActive ? "border-2 border-primary-orange" : "border-white/50 border-t border-b"} 
+                p-8 text-white transition duration-300 m-auto
                 rounded-[30px] backdrop-blur-sm bg-white/10 cursor-pointer`}
             onClick={()=>{
                 onChangeRole(details.role)
@@ -86,20 +111,22 @@ function SelectRoleCard({details, currentRole, onChangeRole}){
                     <GiCheckMark className="text-primary-dark" />
                 </div>
             }
-            <p>{details.title}</p>
-            <div className={`flex border items-center justify-center ${isActive ? "w-[80px] h-[80px] md:w-[100px] md:h-[100px]" : "w-[140px] h-[140px] md:w-[200px] md:h-[200px]"}  rounded-full`}>
+            <p className="">{details.title}</p>
+            <div className={`flex border border-neutral-500/20 items-center justify-center ${isActive ? "w-[80px] h-[80px] md:w-[100px] md:h-[100px]" : "w-[140px] h-[140px] md:w-[200px] md:h-[200px]"}  rounded-full`}>
                 <FaRegUser className={`${isActive ? "" : "text-[32px]"}`} />
             </div>
             {
                 isActive
                 &&
                 <div>
-                    <p className="text-center md:text-[16px] mb-4">{details.description}</p>
-                    {
-                        details.points.map((p, i)=>(
-                            <li className="font-regular text-[14px]">{p}</li>
-                        ))
-                    }    
+                    <p className="text-center font-medium md:text-[16px] mb-4">{details.description}</p>
+                    <ul>
+                        {
+                            details.points.map((p, i)=>(
+                                <li style={{listStyle: "circle"}} className="font-light text-[14px] md:text-[16px] ">{p}</li>
+                            ))
+                        }   
+                    </ul>
                 </div>
             }
         </div>
