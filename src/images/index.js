@@ -12,6 +12,7 @@ import newHero from "./newherobg.jpeg"
 import howItWorksHero from "./how-it-works-bg.jpeg"
 import signupBg from "./signup-bg-img.jpeg"
 import signupSideImg from "./signup-side-img.jpeg"
+import logoGray from "./logo-gray.png"
 
 export const Images = {
     trending,
@@ -27,5 +28,6 @@ export const Images = {
     newHero,
     howItWorksHero,
     signupBg,
-    signupSideImg
+    signupSideImg,
+    logoGray
 }

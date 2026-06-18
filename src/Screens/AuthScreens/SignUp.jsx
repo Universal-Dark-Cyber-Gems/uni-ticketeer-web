@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { IoArrowBack, IoEye } from "react-icons/io5"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import { FaRegUser } from "react-icons/fa";
 import { PiSuitcaseLight } from "react-icons/pi";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -13,10 +13,13 @@ import CustomLoader from "../../components/CustomLoader";
 import useLogin from "../../hooks/useLogin";
 
 export default function SignUp(){
+    let [searchParams] = useSearchParams()
     let {signup, signupLoading, signupStatus} = useSignup()
     let {resendVerifMail} = useLogin()
     let [currentStage, setCurrentStage] = useState(1)
     let [passType, setPassType] = useState('password')
+
+    let role = searchParams.get("role")
 
     let [signupData, setSignupData] = useState({
         fullname: "",
@@ -26,7 +29,7 @@ export default function SignUp(){
         location: "Nigeria",
         confirm_password: "",
         tac: false,
-        usertype: null
+        usertype: role
     })
 
     function togglePass(){
@@ -88,48 +91,10 @@ export default function SignUp(){
                     <IoArrowBack />
                 </div>
             }
-            <div className="flex justify-between">
-                <StageIndicator stageTitle="Select account type" stage="1" currentStage={currentStage} />
-                <StageIndicator stageTitle="Enter details" stage="2" currentStage={currentStage} />
-                <StageIndicator stageTitle="Confirm Email" stage="3" currentStage={currentStage} />
-            </div>
-            {
-                currentStage === 1 
-                &&
-                <div className="w-full p-2">
-                    <div className="flex flex-col md:flex-row gap-5 justify-center items-center md:justify-between pt-12">
-                        <RoleSelectionTab
-                            title="Ticketeer"
-                            description="Register as a user, to enjoy all the perks that comes with our unique services"
-                            value="basic"
-                            currentRole={signupData.usertype}
-                            onChange={handleFormDataChange}
-                        >
-                            <FaRegUser size={27} className="text-primary-dark" />
-                        </RoleSelectionTab>
-                        <RoleSelectionTab
-                            title="Organizer"
-                            description="Want to host events and create tickets? this account type is for you"
-                            value="organiser"
-                            currentRole={signupData.usertype}
-                            onChange={handleFormDataChange}
-                        >
-                            <PiSuitcaseLight size={27} className="text-primary-dark" />
-                        </RoleSelectionTab>
-                    </div>
-                    <button 
-                        disabled={signupData.usertype === null ? true : false} 
-                        onClick={()=>{changeStage(2)}} 
-                        className={`ml-auto p-2 w-full md:w-[25%] rounded-md my-4 mt-12 ${signupData.usertype === null ? "bg-transparent text-primary-dark" : "bg-primary-dark text-primary-orange"} text-center`}
-                    > 
-                        Continue 
-                    </button>
-                </div>
-            }
             {
                 signupData.usertype === "basic"
                 &&
-                currentStage === 2
+                currentStage === 1
                 &&
                 <div className="h-auto bg-white p-5 my-10 rounded-2xl">
                     <h1 className="text-2xl text-center font-bold text-primary-dark my-2">Welcome to Emume</h1>
